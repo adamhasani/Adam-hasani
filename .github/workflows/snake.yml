@@ -9,13 +9,14 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate github-contribution-grid-snake.svg
+      - name: Generate Snake SVG
         uses: Platane/snk/svg-only@v3
         with:
           github_user_name: ${{ github.repository_owner }}
+          # Ini akan membuat 2 file standar
           outputs: |
-            dist/github-contribution-grid-snake.svg?color_snake=00D4FF&color_dots=#0D1117,#0e4429,#006d32,#26a641,#39d353
-            dist/github-contribution-grid-snake-dark.svg?color_snake=00F5D4&color_dots=#0D1117,#0e4429,#006d32,#26a641,#39d353
+            dist/github-contribution-grid-snake.svg
+            dist/github-contribution-grid-snake-dark.svg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
