@@ -32,7 +32,7 @@
 
 Halo! Aku **Adam Hasani**, mahasiswa **Sains Data** yang punya ketertarikan mendalam pada dunia **Artificial Intelligence** dan teknologi emerging lainnya.
 
-
+``` python
 class AdamHasani:
     def __init__(self):
         self.role = "Data Science Student"
@@ -42,6 +42,7 @@ class AdamHasani:
     
     def code(self):
         return "Turning ideas into reality 💡"
+```
 
 </td>
 <td width="45%">
