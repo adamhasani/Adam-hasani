@@ -1,30 +1,25 @@
-
 name: Generate Snake
 
 on:
   schedule:
-    - cron: "0 */6 * * *"  # Berjalan setiap 6 jam sekali
-  workflow_dispatch:        # Bisa dijalankan manual lewat tab Actions
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
     steps:
-      # Generate Snake SVG
       - name: Generate github-contribution-grid-snake.svg
         uses: Platane/snk/svg-only@v3
         with:
-          github_user_name: adamhasani  # Ganti dengan username kamu
+          github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+            dist/github-contribution-grid-snake.svg?color_snake=00D4FF&color_dots=#0D1117,#0e4429,#006d32,#26a641,#39d353
+            dist/github-contribution-grid-snake-dark.svg?color_snake=00F5D4&color_dots=#0D1117,#0e4429,#006d32,#26a641,#39d353
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Push hasil SVG ke branch "output"
-      - name: Push github-contribution-grid-snake.svg to the output branch
+      - name: Push to output branch
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
