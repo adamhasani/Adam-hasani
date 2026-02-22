@@ -1,187 +1,292 @@
+<img width="100%" src="https://capsule-render.vercel.app/api?type=venom&color=0:000000,30:050510,60:0a0020,100:000000&height=300&section=header&text=adam%20hasani&fontSize=80&fontColor=ffffff&fontAlignY=45&desc=data%20scientist%20%E2%80%A2%20ai%20engineer%20%E2%80%A2%20builder&descSize=16&descAlignY=65&descAlign=50&animation=twinkling&stroke=7b2fff&strokeWidth=2" />
+
 <div align="center">
-
-<!-- Animated header with custom wave -->
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:0a0a0f,50:00f0ff,100:7b2fff&height=120&section=header&animation=fadeIn" />
-
-<!-- Name with glitch aesthetic -->
-<a href="https://github.com/adamhasani">
-  <img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=700&size=32&duration=3000&pause=2000&color=FFFFFF&center=true&vCenter=true&width=600&lines=adam+hasani" alt="Name" />
-</a>
-
-<!-- Role ticker -->
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=400&size=16&duration=3500&pause=800&color=00F0FF&center=true&vCenter=true&width=500&lines=data+science+student+%40+indonesia;building+flora+ai+%26+flora+ar;crafting+intelligent+systems;exploring+the+edge+of+tech" alt="Roles" />
 
 <br/>
 
-<!-- Social badges - minimal & sharp -->
-<p>
-  <a href="https://github.com/adamhasani">
-    <img src="https://img.shields.io/github/followers/adamhasani?label=followers&style=flat-square&color=00f0ff&labelColor=0d1117" />
-  </a>
-  <img src="https://img.shields.io/badge/focus-AI%20%26%20Computer%20Vision-7b2fff?style=flat-square&labelColor=0d1117" />
-  <img src="https://komarev.com/ghpvc/?username=adamhasani&color=00f0ff&style=flat-square&label=profile+views" />
-</p>
+<!-- Elite status badges -->
+<img src="https://img.shields.io/badge/◈_FLORA_AI-ARCHITECT-00f0ff?style=for-the-badge&labelColor=000000&color=000000&logoColor=00f0ff" />
+&nbsp;
+<img src="https://img.shields.io/badge/◈_COMPUTER_VISION-ENGINEER-7b2fff?style=for-the-badge&labelColor=000000&color=000000" />
+&nbsp;
+<img src="https://img.shields.io/badge/◈_OPEN_TO-COLLABS-ff2d78?style=for-the-badge&labelColor=000000&color=000000" />
+
+<br/><br/>
+
+<!-- Cinematic typing SVG -->
+<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=700&size=14&duration=4000&pause=1000&color=00F0FF&center=true&vCenter=true&width=600&lines=_%09building+the+future+with+flora+ai+%26+flora+ar;_%09turning+pixels+into+intelligence;_%09data+science+student+%7C+indonesia+%F0%9F%87%AE%F0%9F%87%A9;_%09open+source+%E2%80%A2+always+learning+%E2%80%A2+shipping" alt="Typing SVG" />
+
+<br/>
+
+<!-- Profile views & followers -->
+<img src="https://komarev.com/ghpvc/?username=adamhasani&color=00f0ff&style=flat-square&label=∞+visitors" />
+&nbsp;
+<a href="https://github.com/adamhasani?tab=followers"><img src="https://img.shields.io/github/followers/adamhasani?label=⬡+followers&style=flat-square&color=7b2fff&labelColor=0d1117" /></a>
+&nbsp;
+<a href="https://github.com/adamhasani?tab=stars"><img src="https://img.shields.io/github/stars/adamhasani?label=⭑+stars&style=flat-square&color=ff2d78&labelColor=0d1117" /></a>
 
 </div>
 
+<br/>
+
 ---
 
-<!-- About section with clean layout -->
-<table>
+<br/>
+
+<!-- LUXURY ABOUT SECTION -->
+<table width="100%" border="0">
 <tr>
-<td width="55%" valign="top">
+<td width="52%" valign="top">
 
-## `$ whoami`
+<h2><img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="28"> &nbsp;about.exe</h2>
 
-```yaml
-name       : Adam Hasani
-role       : Data Science Student
-location   : Indonesia 🇮🇩
-focus      : AI · Computer Vision · Chatbots
-status     : building in public 🚀
+```typescript
+const adam: Developer = {
+  name     : "Adam Hasani",
+  role     : "Data Science Student",
+  location : "Indonesia 🇮🇩",
+  
+  obsessions: [
+    "artificial intelligence",
+    "computer vision",
+    "building flora ecosystem",
+    "intelligent chatbots",
+  ],
+
+  currentlyBuilding: {
+    "🌿 Flora AI" : "plant intelligence platform",
+    "📡 Flora AR" : "AR meets computer vision",
+    "🤖 Chatbots" : "next-gen conversational AI",
+  },
+
+  philosophy: "ship fast · learn faster · iterate always",
+};
 ```
 
-**Currently working on:**
-- 🌿 **Flora AI** — AI-powered plant intelligence system
-- 📡 **Flora AR** — Augmented reality meets computer vision
-- 🤖 **Intelligent Chatbots** — Next-gen conversational agents
-
-**Currently learning:**
-- 🧠 Deep Learning architectures
-- 👁️ Real-time computer vision pipelines
-- ⚡ Edge AI deployment strategies
-
 </td>
-<td width="45%" valign="top">
+<td width="4%"></td>
+<td width="44%" valign="top">
 
-## `$ cat stats.json`
+<h2>📊 &nbsp;metrics</h2>
 
 <a href="https://github.com/adamhasani">
-  <img width="100%" src="https://github-readme-stats.vercel.app/api?username=adamhasani&show_icons=true&theme=transparent&hide_border=true&bg_color=0D1117&title_color=00f0ff&icon_color=7b2fff&text_color=c9d1d9&ring_color=00f0ff" />
+<img width="100%" src="https://github-readme-stats.vercel.app/api?username=adamhasani&show_icons=true&theme=transparent&hide_border=true&bg_color=00000000&title_color=00f0ff&icon_color=7b2fff&text_color=ffffff&ring_color=7b2fff&include_all_commits=true&count_private=true" />
 </a>
 
+<br/>
+
 <a href="https://github.com/adamhasani">
-  <img width="100%" src="https://github-readme-streak-stats.herokuapp.com/?user=adamhasani&theme=transparent&hide_border=true&background=0D1117&ring=00f0ff&fire=7b2fff&currStreakLabel=00f0ff&sideNums=c9d1d9&sideLabels=8b949e&dates=8b949e" />
+<img width="100%" src="https://github-readme-streak-stats.herokuapp.com/?user=adamhasani&theme=transparent&hide_border=true&background=00000000&ring=00f0ff&fire=ff2d78&currStreakLabel=00f0ff&sideNums=ffffff&sideLabels=8b949e&dates=8b949e&currStreakNum=ffffff" />
 </a>
 
 </td>
 </tr>
 </table>
 
+<br/>
+
 ---
 
-## `$ ls tech-stack/`
+<br/>
 
+<!-- TECH STACK - LUXURY GRID -->
 <div align="center">
 
-### ◈ Languages & Runtimes
+## ⬡ &nbsp;arsenal
+
+<br/>
+
+### — languages —
 
 <p>
-  <img src="https://img.shields.io/badge/Python-0D1117?style=for-the-badge&logo=python&logoColor=00f0ff" />
-  <img src="https://img.shields.io/badge/JavaScript-0D1117?style=for-the-badge&logo=javascript&logoColor=F7DF1E" />
-  <img src="https://img.shields.io/badge/Node.js-0D1117?style=for-the-badge&logo=node.js&logoColor=43853D" />
-  <img src="https://img.shields.io/badge/TypeScript-0D1117?style=for-the-badge&logo=typescript&logoColor=007ACC" />
+<img src="https://skillicons.dev/icons?i=python,js,ts,html,css&theme=dark&perline=5" />
 </p>
 
-### ◈ Frameworks & Platforms
+### — frameworks & runtime —
 
 <p>
-  <img src="https://img.shields.io/badge/Next.js-0D1117?style=for-the-badge&logo=next.js&logoColor=white" />
-  <img src="https://img.shields.io/badge/React-0D1117?style=for-the-badge&logo=react&logoColor=61DAFB" />
-  <img src="https://img.shields.io/badge/FastAPI-0D1117?style=for-the-badge&logo=fastapi&logoColor=009688" />
-  <img src="https://img.shields.io/badge/Vercel-0D1117?style=for-the-badge&logo=vercel&logoColor=white" />
+<img src="https://skillicons.dev/icons?i=nodejs,nextjs,react,fastapi,flask&theme=dark&perline=5" />
 </p>
 
-### ◈ AI / ML Stack
+### — ai · ml · vision —
 
 <p>
-  <img src="https://img.shields.io/badge/TensorFlow-0D1117?style=for-the-badge&logo=tensorflow&logoColor=FF6F00" />
-  <img src="https://img.shields.io/badge/PyTorch-0D1117?style=for-the-badge&logo=pytorch&logoColor=EE4C2C" />
-  <img src="https://img.shields.io/badge/OpenCV-0D1117?style=for-the-badge&logo=opencv&logoColor=5C3EE8" />
-  <img src="https://img.shields.io/badge/Hugging%20Face-0D1117?style=for-the-badge&logo=huggingface&logoColor=FFD21E" />
+<img src="https://skillicons.dev/icons?i=tensorflow,pytorch,opencv&theme=dark&perline=5" />
+</p>
+<p>
+  <img src="https://img.shields.io/badge/Hugging%20Face-000000?style=for-the-badge&logo=huggingface&logoColor=FFD21E" />
+  <img src="https://img.shields.io/badge/scikit--learn-000000?style=for-the-badge&logo=scikit-learn&logoColor=F7931E" />
+  <img src="https://img.shields.io/badge/Pandas-000000?style=for-the-badge&logo=pandas&logoColor=150458" />
 </p>
 
-### ◈ Tools & Infra
+### — infra & tools —
 
 <p>
-  <img src="https://img.shields.io/badge/Git-0D1117?style=for-the-badge&logo=git&logoColor=F05032" />
-  <img src="https://img.shields.io/badge/Docker-0D1117?style=for-the-badge&logo=docker&logoColor=2496ED" />
-  <img src="https://img.shields.io/badge/VS%20Code-0D1117?style=for-the-badge&logo=visual-studio-code&logoColor=007ACC" />
-  <img src="https://img.shields.io/badge/Linux-0D1117?style=for-the-badge&logo=linux&logoColor=FCC624" />
+<img src="https://skillicons.dev/icons?i=git,docker,linux,vscode,vercel&theme=dark&perline=5" />
 </p>
 
 </div>
 
+<br/>
+
 ---
 
-## `$ git log --oneline --graph`
+<br/>
 
+<!-- FEATURED PROJECTS -->
 <div align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=adamhasani&bg_color=0D1117&color=00f0ff&line=7b2fff&point=00f0ff&area=true&area_color=7b2fff&hide_border=true" width="100%" />
+
+## ✦ &nbsp;signature projects
+
 </div>
 
----
+<br/>
 
-## `$ ls featured-projects/`
-
-<div align="center">
-<table>
+<table width="100%">
 <tr>
-<td width="50%">
+<td width="50%" valign="top">
 
-### 🌿 Flora AI
-> Intelligent plant recognition & classification system powered by deep learning. Identifies species, detects diseases, and provides care recommendations.
+### &nbsp;&nbsp;`[ 001 ]`&nbsp; 🌿 Flora AI
 
-![Python](https://img.shields.io/badge/-Python-0D1117?style=flat-square&logo=python&logoColor=00f0ff)
-![TensorFlow](https://img.shields.io/badge/-TensorFlow-0D1117?style=flat-square&logo=tensorflow&logoColor=FF6F00)
-![FastAPI](https://img.shields.io/badge/-FastAPI-0D1117?style=flat-square&logo=fastapi&logoColor=009688)
+> **Plant intelligence, redefined.**  
+> A deep learning platform for real-time plant recognition, disease detection, and AI-powered care recommendations. Built for scale, designed for accuracy.
+
+<br/>
+
+![Python](https://img.shields.io/badge/Python-000?style=flat-square&logo=python&logoColor=00f0ff)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-000?style=flat-square&logo=tensorflow&logoColor=FF6F00)
+![FastAPI](https://img.shields.io/badge/FastAPI-000?style=flat-square&logo=fastapi&logoColor=00d4aa)
+![Next.js](https://img.shields.io/badge/Next.js-000?style=flat-square&logo=next.js&logoColor=white)
+
+<br/>
+
+```
+◆ 95%+ classification accuracy
+◆ Real-time inference pipeline
+◆ REST API + Web interface
+```
 
 </td>
-<td width="50%">
+<td width="50%" valign="top">
 
-### 📡 Flora AR
-> Augmented reality experience that overlays real-time plant data onto the physical world using computer vision and spatial tracking.
+### &nbsp;&nbsp;`[ 002 ]`&nbsp; 📡 Flora AR
 
-![Python](https://img.shields.io/badge/-Python-0D1117?style=flat-square&logo=python&logoColor=00f0ff)
-![OpenCV](https://img.shields.io/badge/-OpenCV-0D1117?style=flat-square&logo=opencv&logoColor=5C3EE8)
-![JavaScript](https://img.shields.io/badge/-JavaScript-0D1117?style=flat-square&logo=javascript&logoColor=F7DF1E)
+> **Where the physical meets the digital.**  
+> Augmented reality system that overlays intelligent plant data onto the real world using computer vision, spatial mapping, and real-time object tracking.
+
+<br/>
+
+![OpenCV](https://img.shields.io/badge/OpenCV-000?style=flat-square&logo=opencv&logoColor=5C3EE8)
+![Python](https://img.shields.io/badge/Python-000?style=flat-square&logo=python&logoColor=00f0ff)
+![JavaScript](https://img.shields.io/badge/JavaScript-000?style=flat-square&logo=javascript&logoColor=F7DF1E)
+![WebXR](https://img.shields.io/badge/WebXR-000?style=flat-square&logo=webgl&logoColor=ff2d78)
+
+<br/>
+
+```
+◆ Real-time spatial tracking
+◆ WebXR compatible
+◆ Marker + markerless AR
+```
 
 </td>
 </tr>
 </table>
-</div>
+
+<br/>
 
 ---
 
-## `$ top --sort lang`
+<br/>
 
+<!-- ACTIVITY GRAPH -->
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=adamhasani&layout=compact&theme=transparent&hide_border=true&bg_color=0D1117&title_color=00f0ff&text_color=c9d1d9&langs_count=8" />
+
+## 〈 contribution timeline 〉
+
+<br/>
+
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=adamhasani&bg_color=000000&color=00f0ff&line=7b2fff&point=ffffff&area=true&area_color=00f0ff&hide_border=true&radius=8&custom_title=adam's%20contribution%20graph" width="100%" />
+
 </div>
+
+<br/>
 
 ---
 
+<br/>
+
+<!-- LANGUAGE STATS -->
 <div align="center">
 
-### `> reach out`
+## 〈 language breakdown 〉
 
-<p>
-  <a href="mailto:adamhasani@email.com">
-    <img src="https://img.shields.io/badge/Email-0D1117?style=for-the-badge&logo=gmail&logoColor=EA4335" />
-  </a>
-  <a href="https://linkedin.com/in/adamhasani">
-    <img src="https://img.shields.io/badge/LinkedIn-0D1117?style=for-the-badge&logo=linkedin&logoColor=0077B5" />
-  </a>
-  <a href="https://twitter.com/adamhasani">
-    <img src="https://img.shields.io/badge/Twitter-0D1117?style=for-the-badge&logo=x&logoColor=white" />
-  </a>
-</p>
+<br/>
 
-```
-⣿⣿⣿⣿⣿ always open for collabs, ideas & interesting problems ⣿⣿⣿⣿⣿
-```
-
-<!-- Footer wave -->
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:7b2fff,50:00f0ff,100:0a0a0f&height=100&section=footer&animation=fadeIn" />
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=adamhasani&layout=donut&theme=transparent&hide_border=true&bg_color=00000000&title_color=00f0ff&text_color=ffffff&langs_count=8" />
 
 </div>
+
+<br/>
+
+---
+
+<br/>
+
+<!-- TROPHIES -->
+<div align="center">
+
+## 〈 achievements 〉
+
+<br/>
+
+<img src="https://github-profile-trophy.vercel.app/?username=adamhasani&theme=onestar&no-frame=true&no-bg=true&margin-w=8&column=7" width="100%" />
+
+</div>
+
+<br/>
+
+---
+
+<br/>
+
+<!-- CONNECT SECTION -->
+<div align="center">
+
+## ✦ &nbsp;let's connect
+
+<br/>
+
+<a href="mailto:adamhasani@email.com">
+  <img src="https://img.shields.io/badge/────────────────&nbsp;&nbsp;EMAIL&nbsp;&nbsp;────────────────-000000?style=for-the-badge&logo=gmail&logoColor=EA4335" />
+</a>
+
+<br/><br/>
+
+<a href="https://linkedin.com/in/adamhasani">
+  <img src="https://img.shields.io/badge/────────────────&nbsp;&nbsp;LINKEDIN&nbsp;&nbsp;────────────────-000000?style=for-the-badge&logo=linkedin&logoColor=0077B5" />
+</a>
+
+<br/><br/>
+
+<a href="https://twitter.com/adamhasani">
+  <img src="https://img.shields.io/badge/────────────────&nbsp;&nbsp;TWITTER&nbsp;&nbsp;────────────────-000000?style=for-the-badge&logo=x&logoColor=ffffff" />
+</a>
+
+<br/><br/><br/>
+
+<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&size=12&duration=5000&pause=2000&color=333333&center=true&vCenter=true&width=600&lines=%22+the+best+way+to+predict+the+future+is+to+build+it.+%22" />
+
+<br/><br/>
+
+<!-- Snake animation -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/adamhasani/adamhasani/output/github-contribution-grid-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/adamhasani/adamhasani/output/github-contribution-grid-snake.svg">
+  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/adamhasani/adamhasani/output/github-contribution-grid-snake-dark.svg" width="100%">
+</picture>
+
+</div>
+
+<!-- Footer -->
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:000000,40:0a0020,70:050510,100:000000&height=120&section=footer&animation=twinkling&stroke=7b2fff&strokeWidth=1" />
