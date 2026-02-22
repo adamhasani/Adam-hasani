@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="transition-colors duration-1000">
+<html lang="id" class="transition-colors duration-1000 dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,13 +39,14 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        /* LUXURY LIGHT THEME BACKGROUND */
         body {
-            background-color: #FDFBF7; color: #0A261D;
+            background: linear-gradient(135deg, #FDFBF7 0%, #F3EFE6 100%); color: #0A261D;
             overflow-x: hidden; font-family: 'Space Grotesk', sans-serif; cursor: none;
-            transition: background-color 1.5s ease, color 1.5s ease;
+            transition: background 1.5s ease, color 1.5s ease;
         }
 
-        html.dark body { background-color: #050B08; color: #FDFBF7; }
+        html.dark body { background: #050B08; color: #FDFBF7; }
         h1, h2, h3, h4, p, span, i { transition: color 1s ease; }
 
         ::-webkit-scrollbar { width: 6px; }
@@ -107,7 +108,7 @@
 
         /* PRELOADER */
         #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #0A261D;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #050B08;
             z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: clip-path 1.2s var(--luxe-ease);
         }
@@ -116,6 +117,20 @@
         .loader-progress { width: 200px; height: 1px; background: rgba(197, 160, 89, 0.2); margin-top: 2rem; position: relative; overflow: hidden; }
         .loader-progress-bar { position: absolute; left: 0; top: 0; height: 100%; background: #C5A059; width: 0%; transition: width 0.1s linear; }
         .loader-text { font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(253, 251, 247, 0.4); margin-top: 1.5rem; }
+
+        /* PAGE TRANSITION CURTAIN */
+        #curtain {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #C5A059; z-index: 9999999;
+            transform: translateY(100%); transition: transform 0.8s var(--luxe-ease);
+            display: flex; align-items: center; justify-content: center; pointer-events: none;
+        }
+        #curtain-text {
+            font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; color: #0A261D;
+            letter-spacing: 0.3em; text-transform: uppercase; opacity: 0; transition: opacity 0.3s ease;
+        }
+        #curtain.active { pointer-events: auto; }
+        #curtain.active #curtain-text { opacity: 1; transition-delay: 0.4s; }
 
         /* ANIMATED BACKGROUND SHAPES */
         .bg-shapes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; pointer-events: none; transition: opacity 1.5s ease; }
@@ -134,18 +149,18 @@
 
         #neural-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none; opacity: 0.7; }
 
-        /* GLASS PANEL */
+        /* LUXURY GLASS PANEL */
         .glass-panel {
-            background: rgba(253, 251, 247, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(197, 160, 89, 0.15); border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(10, 38, 29, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.05), inset 0 1px 2px rgba(255, 255, 255, 0.9);
             position: relative; z-index: 10; transform-style: preserve-3d; 
             transition: transform 0.4s ease, background-color 1.5s ease, border-color 1.5s ease, box-shadow 1.5s ease;
         }
         html.dark .glass-panel { background: rgba(5, 15, 10, 0.4); border-color: rgba(197, 160, 89, 0.2); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05); }
-        .glass-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.3), transparent); opacity: 0; transition: opacity 0.3s; }
+        .glass-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.4), transparent); opacity: 0; transition: opacity 0.3s; }
         .glass-panel:hover::before { opacity: 1; }
-        .glass-panel:hover { box-shadow: 0 20px 60px rgba(10, 38, 29, 0.08), 0 0 0 1px rgba(197, 160, 89, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.8); border-color: rgba(197, 160, 89, 0.3); transform: translateY(-5px); }
+        .glass-panel:hover { box-shadow: 0 20px 60px rgba(197, 160, 89, 0.15), 0 0 0 1px rgba(197, 160, 89, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.8); border-color: rgba(197, 160, 89, 0.4); transform: translateY(-5px); }
         html.dark .glass-panel:hover { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(197, 160, 89, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1); }
 
         .nav-item { position: relative; padding: 0.5rem 0; overflow: hidden; }
@@ -215,11 +230,11 @@
         .ripple { position: absolute; border-radius: 50%; border: 2px solid rgba(197, 160, 89, 0.8); transform: translate(-50%, -50%); animation: rippleAnim 0.8s ease-out forwards; pointer-events: none; z-index: 9999; }
         @keyframes rippleAnim { 0% { width: 0; height: 0; opacity: 1; } 100% { width: 150px; height: 150px; opacity: 0; } }
 
-        .status-badge { position: relative; display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1.2rem; background: rgba(253, 251, 247, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 50px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; transition: background-color 1.5s ease; }
-        html.dark .status-badge { background: rgba(5, 11, 8, 0.8); }
+        .status-badge { position: relative; display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1.2rem; background: rgba(253, 251, 247, 0.8); border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 50px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; transition: background-color 1.5s ease; }
+        html.dark .status-badge { background: rgba(5, 11, 8, 0.8); border-color: rgba(197, 160, 89, 0.3); }
         .status-dot { width: 6px; height: 6px; background: #C5A059; border-radius: 50%; box-shadow: 0 0 10px rgba(197, 160, 89, 0.8); animation: pulse 2s ease-in-out infinite; }
 
-        .corner-accent { position: absolute; width: 20px; height: 20px; border: 1.5px solid rgba(197, 160, 89, 0.4); transition: border-color 0.3s ease, width 0.3s ease, height 0.3s ease; }
+        .corner-accent { position: absolute; width: 20px; height: 20px; border: 1.5px solid rgba(197, 160, 89, 0.5); transition: border-color 0.3s ease, width 0.3s ease, height 0.3s ease; }
         .corner-tl { top: 1.5rem; left: 1.5rem; border-right: none; border-bottom: none; }
         .corner-br { bottom: 1.5rem; right: 1.5rem; border-left: none; border-top: none; }
         .corner-tr { top: 1.5rem; right: 1.5rem; border-left: none; border-bottom: none; }
@@ -229,6 +244,8 @@
         .project-card { position: relative; overflow: hidden; }
         .project-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.1), transparent); transition: left 0.6s var(--luxe-ease); }
         .project-card:hover::before { left: 100%; }
+        .project-img { transition: transform 0.6s ease; filter: grayscale(20%); }
+        .project-card:hover .project-img { transform: scale(1.05); filter: grayscale(0%); }
         .icon-container { position: relative; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; }
         .icon-container::before { content: ''; position: absolute; width: 100%; height: 100%; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 50%; animation: iconPulse 3s ease-in-out infinite; }
 
@@ -237,6 +254,10 @@
     </style>
 </head>
 <body class="antialiased min-h-screen relative selection:bg-gold selection:text-white">
+
+    <div id="curtain">
+        <span id="curtain-text"></span>
+    </div>
 
     <div id="scroll-progress"></div>
     <div class="noise-overlay"></div>
@@ -256,17 +277,17 @@
     <canvas id="neural-canvas"></canvas>
 
     <div id="theme-toggle" class="theme-toggle-btn cursor-target">
-        <i class="fas fa-moon" id="theme-icon"></i>
+        <i class="fas fa-sun" id="theme-icon"></i>
     </div>
 
     <nav class="fixed w-full z-50 top-6 px-4 md:px-8 flex justify-center pointer-events-none" id="navbar" style="opacity: 0; transform: translateY(-30px);">
         <div class="glass-panel px-6 md:px-10 py-4 flex items-center justify-between gap-8 md:gap-16 pointer-events-auto cursor-target">
-            <a href="#" class="font-serif text-2xl font-bold text-forest dark:text-ivory italic tracking-wider hover:text-gold dark:hover:text-gold transition-colors">Adam H<span class="text-gold">.</span></a>
+            <a href="#" class="font-serif text-2xl font-bold text-forest dark:text-ivory italic tracking-wider hover:text-gold dark:hover:text-gold transition-colors page-link">Adam H<span class="text-gold">.</span></a>
             <div class="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.2em] font-semibold text-forest/70 dark:text-ivory/70">
-                <a href="#about" class="nav-item hover:text-gold dark:hover:text-gold transition-colors pointer-events-auto cursor-target">Tentang</a>
-                <a href="#skills" class="nav-item hover:text-gold dark:hover:text-gold transition-colors pointer-events-auto cursor-target">Keahlian</a>
-                <a href="#projects" class="nav-item hover:text-gold dark:hover:text-gold transition-colors pointer-events-auto cursor-target">Proyek</a>
-                <a href="#contact" class="nav-item hover:text-gold dark:hover:text-gold transition-colors pointer-events-auto cursor-target">Kontak</a>
+                <a href="#about" class="nav-item page-link hover:text-gold dark:hover:text-gold transition-colors pointer-events-auto cursor-target">Tentang</a>
+                <a href="#skills" class="nav-item page-link hover:text-gold dark:hover:text-gold transition-colors pointer-events-auto cursor-target">Keahlian</a>
+                <a href="#projects" class="nav-item page-link hover:text-gold dark:hover:text-gold transition-colors pointer-events-auto cursor-target">Proyek</a>
+                <a href="#contact" class="nav-item page-link hover:text-gold dark:hover:text-gold transition-colors pointer-events-auto cursor-target">Kontak</a>
             </div>
             <a href="https://wa.me/6287751121269" target="_blank" class="magnetic-btn text-[9px] py-2 px-4 pointer-events-auto cursor-target">
                 <i class="fab fa-whatsapp mr-2 text-gold"></i> Chat
@@ -278,14 +299,29 @@
         
         <header class="text-center mb-16 flex flex-col items-center pointer-events-auto max-w-6xl mx-auto px-6 relative" id="hero">
             <div class="status-badge reveal stagger-1 cursor-target"><span class="status-dot"></span><span class="text-forest dark:text-ivory">Neural Network Active</span></div>
-            <h1 class="hero-title text-forest dark:text-ivory mt-8 reveal stagger-2 cursor-target glitch-hover" id="hero-title">Haii, aku<br>Adam Hasani<span class="text-gold">.</span></h1>
-            <div class="h-12 md:h-16 overflow-hidden mt-4 reveal stagger-3"><h2 class="text-lg md:text-2xl text-gold font-semibold tracking-[0.2em] uppercase scramble-text" id="role-text">WEB DEVELOPER</h2></div>
-            <p class="reveal stagger-4 text-sm md:text-base text-forest/70 dark:text-ivory/70 leading-relaxed max-w-2xl text-center font-medium mt-8 mb-10">Aku Adam Hasani, seorang pengembang yang berfokus membangun solusi digital. Dari menulis tag HTML hingga merangkai skrip Python dan Node.js, aku selalu <i>excited</i> waktu baris kode yang kutulis akhirnya berjalan dengan baik!</p>
-            <div class="flex flex-wrap gap-4 justify-center reveal stagger-5">
-                <a href="#skills" class="magnetic-btn pointer-events-auto cursor-target"><span>Lihat Keahlianku</span><i class="fas fa-arrow-right ml-3 text-xs text-gold"></i></a>
-                <a href="#contact" class="magnetic-btn pointer-events-auto cursor-target" style="background: rgba(197, 160, 89, 0.1);"><span>Hubungi Aku</span></a>
+            
+            <div class="absolute inset-0 z-0 pointer-events-none overflow-visible hidden md:block">
+                <div class="parallax-icon absolute top-[10%] left-[20%] text-gold/60 text-5xl" data-speed="0.08"><i class="fab fa-js"></i></div>
+                <div class="parallax-icon absolute bottom-[15%] right-[20%] text-forest/40 dark:text-ivory/30 text-6xl" data-speed="-0.05"><i class="fab fa-node-js"></i></div>
+                <div class="parallax-icon absolute top-[30%] right-[25%] text-gold/40 text-3xl" data-speed="0.1"><i class="fas fa-code"></i></div>
+                <div class="parallax-icon absolute bottom-[20%] left-[25%] text-forest/40 dark:text-ivory/30 text-4xl" data-speed="-0.08"><i class="fas fa-database"></i></div>
             </div>
-            <div class="mt-16 reveal stagger-6">
+
+            <div class="relative inline-block w-36 h-36 md:w-44 md:h-44 mt-12 mb-4 reveal stagger-2 cursor-target group z-10">
+                <div class="absolute inset-0 rounded-full border-2 border-gold/40 group-hover:border-gold/80 transition-colors duration-500 animate-[spin_8s_linear_infinite] border-dashed"></div>
+                <div class="absolute inset-2 rounded-full bg-gold/10 overflow-hidden shadow-[0_0_30px_rgba(197,160,89,0.15)] group-hover:shadow-[0_0_40px_rgba(197,160,89,0.3)] transition-shadow duration-500">
+                    <img src="IMG_20260127_140845_874.webp" alt="Adam Hasani" class="w-full h-full object-cover filter brightness-90 group-hover:brightness-110 transition-all duration-500 group-hover:scale-110">
+                </div>
+            </div>
+
+            <h1 class="hero-title text-forest dark:text-ivory mt-4 reveal stagger-3 cursor-target glitch-hover z-10" id="hero-title">Haii, aku<br>Adam Hasani<span class="text-gold">.</span></h1>
+            <div class="h-12 md:h-16 overflow-hidden mt-4 reveal stagger-4 z-10"><h2 class="text-lg md:text-2xl text-gold font-semibold tracking-[0.2em] uppercase scramble-text" id="role-text">WEB DEVELOPER</h2></div>
+            <p class="reveal stagger-5 text-sm md:text-base text-forest/70 dark:text-ivory/70 leading-relaxed max-w-2xl text-center font-medium mt-6 mb-10 z-10">Aku Adam Hasani, seorang pengembang yang berfokus membangun solusi digital. Dari menulis tag HTML hingga merangkai skrip Python dan Node.js, aku selalu <i>excited</i> waktu baris kode yang kutulis akhirnya berjalan dengan baik!</p>
+            <div class="flex flex-wrap gap-4 justify-center reveal stagger-6 z-10">
+                <a href="#skills" class="magnetic-btn pointer-events-auto cursor-target page-link"><span>Lihat Keahlianku</span><i class="fas fa-arrow-right ml-3 text-xs text-gold"></i></a>
+                <a href="#contact" class="magnetic-btn pointer-events-auto cursor-target page-link" style="background: rgba(197, 160, 89, 0.1);"><span>Hubungi Aku</span></a>
+            </div>
+            <div class="mt-16 reveal stagger-6 z-10">
                 <div class="flex flex-col items-center gap-2 text-forest/40 dark:text-ivory/40">
                     <span class="text-[9px] tracking-[0.3em] uppercase">Scroll</span>
                     <div class="w-px h-12 bg-gradient-to-b from-gold/50 to-transparent animate-pulse"></div>
@@ -355,17 +391,17 @@
                     </div>
                 </div>
                 <div class="glass-panel p-8 tilt-effect reveal stagger-2 cursor-target">
-                    <h3 class="text-xs tracking-[0.2em] uppercase text-gold font-bold mb-4">02 — Logic</h3><h4 class="font-serif text-2xl font-bold text-forest dark:text-ivory mb-3">AI Engine</h4><p class="text-xs text-forest/70 dark:text-ivory/70 leading-relaxed mb-8 h-16">Merancang otak dari asisten digital. Eksekusi integrasi API dan logika bot plugin.</p>
+                    <h3 class="text-xs tracking-[0.2em] uppercase text-gold font-bold mb-4">02 — Logic</h3><h4 class="font-serif text-2xl font-bold text-forest dark:text-ivory mb-3">AI Engine</h4><p class="text-xs text-forest/70 dark:text-ivory/70 leading-relaxed mb-8 h-16">Merancang otak dari asisten digital. Eksekusi logika backend dan interaksi plugin.</p>
                     <div class="space-y-4">
-                        <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-forest/70 dark:text-ivory/70 mb-2"><span>API Integration</span><span class="text-gold">85%</span></div><div class="progress-container w-full h-[2px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="85%"></div></div></div>
-                        <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-forest/70 dark:text-ivory/70 mb-2"><span>Bot Architecture</span><span class="text-gold">82%</span></div><div class="progress-container w-full h-[2px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="82%"></div></div></div>
+                        <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-forest/70 dark:text-ivory/70 mb-2"><span>Bot Architecture</span><span class="text-gold">85%</span></div><div class="progress-container w-full h-[2px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="85%"></div></div></div>
+                        <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-forest/70 dark:text-ivory/70 mb-2"><span>Problem Solving</span><span class="text-gold">82%</span></div><div class="progress-container w-full h-[2px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="82%"></div></div></div>
                     </div>
                 </div>
                 <div class="glass-panel p-8 tilt-effect reveal stagger-3 cursor-target">
-                    <div class="corner-accent corner-br"></div><h3 class="text-xs tracking-[0.2em] uppercase text-gold font-bold mb-4">03 — Execution</h3><h4 class="font-serif text-2xl font-bold text-forest dark:text-ivory mb-3">Deployment</h4><p class="text-xs text-forest/70 dark:text-ivory/70 leading-relaxed mb-8 h-16">Proses merilis kode ke lingkungan produksi agar siap diakses kapan saja.</p>
+                    <div class="corner-accent corner-br"></div><h3 class="text-xs tracking-[0.2em] uppercase text-gold font-bold mb-4">03 — Connectivity</h3><h4 class="font-serif text-2xl font-bold text-forest dark:text-ivory mb-3">API</h4><p class="text-xs text-forest/70 dark:text-ivory/70 leading-relaxed mb-8 h-16">Integrasi antarmuka pemrograman pihak ketiga untuk memperluas kapabilitas ekosistem digital.</p>
                     <div class="space-y-4">
-                        <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-forest/70 dark:text-ivory/70 mb-2"><span>Vercel / Cloud</span><span class="text-gold">90%</span></div><div class="progress-container w-full h-[2px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="90%"></div></div></div>
-                        <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-forest/70 dark:text-ivory/70 mb-2"><span>Problem Solving</span><span class="text-gold">85%</span></div><div class="progress-container w-full h-[2px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="85%"></div></div></div>
+                        <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-forest/70 dark:text-ivory/70 mb-2"><span>REST API</span><span class="text-gold">90%</span></div><div class="progress-container w-full h-[2px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="90%"></div></div></div>
+                        <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-forest/70 dark:text-ivory/70 mb-2"><span>Data Fetching</span><span class="text-gold">85%</span></div><div class="progress-container w-full h-[2px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="85%"></div></div></div>
                     </div>
                 </div>
             </div>
@@ -390,6 +426,11 @@
             <div class="md:col-span-7 flex flex-col gap-8">
                 <div class="glass-panel project-card p-8 md:p-10 relative group cursor-pointer reveal tilt-effect stagger-2 cursor-target">
                     <div class="corner-accent corner-tl"></div><div class="corner-accent corner-br"></div><div class="corner-accent corner-tr"></div><div class="corner-accent corner-bl"></div>
+                    
+                    <div class="overflow-hidden rounded-xl mb-6">
+                        <img src="flora-ai.gif" alt="Flora AI Tech" class="project-img object-cover h-48 w-full">
+                    </div>
+
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
                         <div><span class="inline-block text-[8px] font-bold tracking-[0.3em] uppercase bg-forest dark:bg-gold text-ivory dark:text-forest px-4 py-1.5 rounded-full mb-4">Flagship Project</span><h3 class="font-serif text-3xl md:text-4xl text-forest dark:text-ivory font-bold group-hover:text-gold transition-colors duration-500">Flora AI</h3></div>
                         <div class="icon-container floating-slow"><i class="fas fa-brain text-2xl text-gold"></i></div>
@@ -400,13 +441,27 @@
                         <a href="https://github.com/adamhasani" target="_blank" class="text-xs font-bold tracking-widest uppercase text-forest/50 dark:text-ivory/50 hover:text-gold transition-colors flex items-center gap-2"><i class="fab fa-github text-lg"></i> Source Code</a>
                     </div>
                 </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="glass-panel project-card p-6 md:p-8 group cursor-pointer reveal tilt-effect stagger-3 cursor-target flex flex-col justify-between">
-                        <div><div class="corner-accent corner-tl"></div><div class="corner-accent corner-br"></div><div class="flex justify-between items-start mb-5"><h4 class="font-serif text-xl md:text-2xl text-forest dark:text-ivory font-bold group-hover:text-gold transition-colors">WA Bot / AI WA</h4><div class="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center floating"><i class="fab fa-whatsapp text-gold"></i></div></div><p class="text-xs text-forest/60 dark:text-ivory/60 leading-relaxed font-medium mb-6">Pengembangan Chatbot AI untuk WhatsApp. Memproses pesan dan eksekusi instruksi otomatis.</p></div>
+                        <div>
+                            <div class="corner-accent corner-tl"></div><div class="corner-accent corner-br"></div>
+                            <div class="overflow-hidden rounded-xl mb-5">
+                                <img src="wa-bot.gif" alt="WA Bot" class="project-img object-cover h-32 w-full">
+                            </div>
+                            <div class="flex justify-between items-start mb-5"><h4 class="font-serif text-xl md:text-2xl text-forest dark:text-ivory font-bold group-hover:text-gold transition-colors">WA Bot / AI WA</h4><div class="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center floating"><i class="fab fa-whatsapp text-gold"></i></div></div><p class="text-xs text-forest/60 dark:text-ivory/60 leading-relaxed font-medium mb-6">Pengembangan Chatbot AI untuk WhatsApp. Memproses pesan dan eksekusi instruksi otomatis.</p>
+                        </div>
                         <div class="border-t border-gold/20 pt-4 relative z-10 flex flex-col gap-3"><a href="https://wa.me/6287751121269" target="_blank" class="text-[10px] font-bold tracking-[0.2em] uppercase text-gold hover:text-forest dark:hover:text-ivory transition-colors flex items-center justify-between group/link">Chat with Bot <i class="fas fa-external-link-alt transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 transition-transform"></i></a></div>
                     </div>
+                    
                     <div class="glass-panel project-card p-6 md:p-8 group cursor-pointer reveal tilt-effect stagger-4 cursor-target flex flex-col justify-between">
-                        <div><div class="corner-accent corner-tl"></div><div class="corner-accent corner-br"></div><div class="flex justify-between items-start mb-5"><h4 class="font-serif text-xl md:text-2xl text-forest dark:text-ivory font-bold group-hover:text-gold transition-colors">Flora Vision</h4><div class="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center floating" style="animation-delay:-2s;"><i class="fas fa-eye text-gold"></i></div></div><p class="text-xs text-forest/60 dark:text-ivory/60 leading-relaxed font-medium mb-6">Eksplorasi computer vision dan AI untuk mendeteksi data visual dengan tingkat akurasi tinggi.</p></div>
+                        <div>
+                            <div class="corner-accent corner-tl"></div><div class="corner-accent corner-br"></div>
+                            <div class="overflow-hidden rounded-xl mb-5">
+                                <img src="flora-vision.gif" alt="Flora Vision" class="project-img object-cover h-32 w-full">
+                            </div>
+                            <div class="flex justify-between items-start mb-5"><h4 class="font-serif text-xl md:text-2xl text-forest dark:text-ivory font-bold group-hover:text-gold transition-colors">Flora Vision</h4><div class="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center floating" style="animation-delay:-2s;"><i class="fas fa-eye text-gold"></i></div></div><p class="text-xs text-forest/60 dark:text-ivory/60 leading-relaxed font-medium mb-6">Eksplorasi computer vision dan AI untuk mendeteksi data visual dengan tingkat akurasi tinggi.</p>
+                        </div>
                         <div class="border-t border-gold/20 pt-4 relative z-10 flex flex-col gap-3"><a href="https://github.com/adamhasani" target="_blank" class="text-[10px] font-bold tracking-[0.2em] uppercase text-gold hover:text-forest dark:hover:text-ivory transition-colors flex items-center justify-between group/link">View Research <i class="fas fa-arrow-right transform group-hover/link:translate-x-1 transition-transform"></i></a></div>
                     </div>
                 </div>
@@ -440,7 +495,7 @@
             <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
                 <p class="text-[10px] font-bold tracking-[0.3em] uppercase text-forest/50 dark:text-ivory/50">© 2026 Adam Hasani</p>
                 <div class="flex gap-6 text-[10px] uppercase tracking-widest font-bold text-forest/60 dark:text-ivory/60">
-                    <a href="#about" class="hover:text-gold dark:hover:text-gold transition-colors cursor-target">Tentang</a><a href="#skills" class="hover:text-gold dark:hover:text-gold transition-colors cursor-target">Keahlian</a><a href="#contact" class="hover:text-gold dark:hover:text-gold transition-colors cursor-target">Kontak</a>
+                    <a href="#about" class="hover:text-gold dark:hover:text-gold transition-colors cursor-target page-link">Tentang</a><a href="#skills" class="hover:text-gold dark:hover:text-gold transition-colors cursor-target page-link">Keahlian</a><a href="#contact" class="hover:text-gold dark:hover:text-gold transition-colors cursor-target page-link">Kontak</a>
                 </div>
                 <p class="text-[10px] font-bold tracking-[0.3em] uppercase text-forest/50 dark:text-ivory/50">Dibuat dengan semangat</p>
             </div>
@@ -453,6 +508,38 @@
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             document.getElementById("scroll-progress").style.width = (winScroll / height) * 100 + "%";
+        });
+
+        /* ===== CURTAIN PAGE TRANSITION ===== */
+        document.querySelectorAll('.page-link').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if(!targetId || targetId === '#' || targetId.startsWith('http')) return;
+                
+                e.preventDefault();
+                const targetEl = document.querySelector(targetId);
+                if(targetEl) {
+                    const curtain = document.getElementById('curtain');
+                    const curtainText = document.getElementById('curtain-text');
+                    
+                    curtainText.textContent = this.textContent === 'Adam H.' ? 'SYSTEM' : this.textContent;
+                    curtain.classList.add('active');
+                    curtain.style.transform = 'translateY(0)';
+                    
+                    setTimeout(() => {
+                        targetEl.scrollIntoView({ behavior: 'instant' });
+                        setTimeout(() => {
+                            curtain.style.transform = 'translateY(-100%)';
+                            setTimeout(() => {
+                                curtain.classList.remove('active');
+                                curtain.style.transition = 'none';
+                                curtain.style.transform = 'translateY(100%)';
+                                setTimeout(() => curtain.style.transition = 'transform 0.8s var(--luxe-ease)', 50);
+                            }, 800);
+                        }, 100);
+                    }, 800);
+                }
+            });
         });
 
         /* ===== AUDIO ENGINE & EASTER EGG ===== */
@@ -495,8 +582,10 @@
             document.body.appendChild(ripple); playClickSound(); setTimeout(() => ripple.remove(), 800);
         });
 
-        /* ===== THEME ENGINE ===== */
-        let isDarkMode = false, themeInterval; const htmlEl = document.documentElement, themeIcon = document.getElementById('theme-icon');
+        /* ===== THEME ENGINE (NOW DEFAULT DARK) ===== */
+        let isDarkMode = true, themeInterval; const htmlEl = document.documentElement, themeIcon = document.getElementById('theme-icon');
+        if (isDarkMode && themeIcon) { themeIcon.classList.replace('fa-moon', 'fa-sun'); }
+
         function toggleTheme(manual = false) {
             isDarkMode = !isDarkMode;
             if (isDarkMode) { htmlEl.classList.add('dark'); if(themeIcon) themeIcon.classList.replace('fa-moon', 'fa-sun'); } 
@@ -519,7 +608,7 @@
             }
         }
 
-        /* ===== CANVAS ===== */
+        /* ===== CANVAS & PRELOADER ===== */
         let width = window.innerWidth, height = window.innerHeight, particles = [], mouse = { x: null, y: null, radius: 300 }, isLoaded = false;
         const canvas = document.getElementById('neural-canvas'), ctx = canvas.getContext('2d'); canvas.width = width; canvas.height = height;
 
@@ -542,6 +631,12 @@
             if(!isLoaded) return;
             const x = (e.clientX - window.innerWidth / 2) / 50; const y = (e.clientY - window.innerHeight / 2) / 50;
             if(heroTitle) heroTitle.style.transform = `translate(${-x}px, ${-y}px)`;
+            
+            /* PARALLAX ICONS EFFECT */
+            document.querySelectorAll('.parallax-icon').forEach(icon => {
+                const speed = parseFloat(icon.getAttribute('data-speed'));
+                icon.style.transform = `translate(${x * speed * 30}px, ${y * speed * 30}px)`;
+            });
         });
 
         /* ===== API INTEGRATION ===== */
