@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Adam Hasani | Portofolio Space OS</title>
 
-<link rel="preload" as="image" href="https://files.catbox.moe/j88wl8.jpg">
+<link rel="preload" as="image" href="https://files.catbox.moe/8whl73.jpg">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -49,14 +49,9 @@
   ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 3px; }
 
   /* =========================================
-     PRELOADER ADAM_OS + MEGA ROCKET LAUNCH
+     PRELOADER ADAM_OS + MEGA ROCKET
      ========================================= */
-  #preloader {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-      background: #000000; z-index: 100000; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; transition: opacity 0.8s var(--luxe-ease);
-      overflow: hidden;
-  }
+  #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #000000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s var(--luxe-ease); overflow: hidden; }
   #preloader.loaded { opacity: 0; pointer-events: none; }
   .loader-content { position: relative; z-index: 100; text-align: center; display: flex; flex-direction: column; align-items: center; transition: opacity 0.3s ease;}
   .loader-counter { font-family: 'Cormorant Garamond', serif; font-size: 8rem; font-weight: 700; color: #C5A059; line-height: 0.8; letter-spacing: -0.05em; text-shadow: 0 0 20px rgba(197,160,89,0.5); }
@@ -79,7 +74,7 @@
   @keyframes smokeRise { 0% { transform: translate(0, 0) scale(1); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(var(--dx), -100px) scale(3); opacity: 0; } }
 
   /* =========================================
-     CUSTOM CURSOR, GLOW, RIPPLE
+     CUSTOM CURSOR & BACKGROUND
      ========================================= */
   .mouse-glow { position: fixed; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(197, 160, 89, 0.15) 0%, transparent 70%); pointer-events: none; z-index: 1; transform: translate(-50%, -50%); mix-blend-mode: screen; will-change: left, top; }
   #cursor-dot { width: 8px; height: 8px; background: linear-gradient(135deg, #C5A059, #E8D4A8); border-radius: 50%; position: fixed; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); box-shadow: 0 0 20px rgba(197, 160, 89, 0.6); transition: width 0.2s var(--bounce), height 0.2s var(--bounce); will-change: left, top; }
@@ -89,9 +84,6 @@
   .ripple { position: absolute; border-radius: 50%; border: 2px solid rgba(197, 160, 89, 0.8); transform: translate(-50%, -50%); animation: rippleAnim 0.8s ease-out forwards; pointer-events: none; z-index: 9999; }
   @keyframes rippleAnim { 0% { width: 0; height: 0; opacity: 1; } 100% { width: 150px; height: 150px; opacity: 0; } }
 
-  /* =========================================
-     BACKGROUNDS & CANVAS
-     ========================================= */
   .bg-shapes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; pointer-events: none; opacity: 0.3; }
   .shape { position: absolute; border-radius: 50%; filter: blur(80px); animation: morphMove 20s ease-in-out infinite; will-change: transform; }
   .shape-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(197, 160, 89, 0.08) 0%, transparent 70%); top: -200px; right: -200px; animation-delay: 0s; }
@@ -110,7 +102,7 @@
     @keyframes jatuh { 0% { transform: translate(120vw, -20vh) rotate(225deg); opacity: 1; } 20% { transform: translate(-20vw, 120vh) rotate(225deg); opacity: 0; } 100% { opacity: 0; } }
   }
   @media (min-width: 800px) {
-    body { background-color: #050B08; background-image: url('https://files.catbox.moe/j88wl8.jpg'); background-size: cover; background-position: center; background-attachment: fixed; }
+    body { background-color: #050B08; background-image: url('https://files.catbox.moe/8whl73.jpg'); background-size: cover; background-position: center; background-attachment: fixed; }
     #stars-container, .shooting-star { display: none !important; }
   }
 
@@ -134,125 +126,172 @@
   .text-title { font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; }
 
   /* =========================================
-     HALAMAN DETAIL & KOSMETIK GLASS
+     HALAMAN DETAIL UMUM
      ========================================= */
-  #halaman-detail { max-width: 1000px; margin: 0 auto; }
-  .navbar { display: flex; align-items: center; margin-bottom: 30px; }
+  #halaman-detail { max-width: 1100px; margin: 0 auto; }
+  .navbar { display: flex; align-items: center; margin-bottom: 20px; position: relative; z-index: 50; }
   .btn-back { background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.4); color: #C5A059; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 2px;}
   .btn-back:hover { background: #C5A059; color: #000; transform: translateX(-5px); }
 
   .konten-item { display: none; animation: fadeIn 0.6s ease; padding-bottom: 50px;}
   @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-  .glass-panel { background: rgba(5, 15, 10, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05); position: relative; z-index: 10; transform-style: preserve-3d; transition: all 0.4s ease; }
-  .glass-panel:hover { box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(197, 160, 89, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1); border-color: rgba(197, 160, 89, 0.4); }
-  .corner-accent { position: absolute; width: 20px; height: 20px; border: 1.5px solid rgba(197, 160, 89, 0.5); transition: all 0.3s ease; }
-  .corner-tl { top: 1.5rem; left: 1.5rem; border-right: none; border-bottom: none; }
-  .corner-br { bottom: 1.5rem; right: 1.5rem; border-left: none; border-top: none; }
-  .glass-panel:hover .corner-accent { border-color: #C5A059; width: 30px; height: 30px; }
+  /* =========================================
+     LAY OUT MUSEUM EDITORIAL & ANIMASI 3D MODEL
+     ========================================= */
+  .editorial-layout { 
+      position: relative; width: 100%; 
+      min-height: 500px; height: 75vh;
+      display: flex; align-items: center; 
+  }
 
+  /* GRUP 3D MODEL & HALO */
+  #model-scene-container {
+      position: absolute; top: 0; width: 60%; height: 100%;
+      transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; z-index: 1;
+  }
+
+  /* POSISI ANIMASI 3D DESKTOP (Murni pakai Class CSS) */
+  @media (min-width: 769px) {
+      #model-scene-container.pos-0 { left: 45%; transform: scale(1); }    
+      #model-scene-container.pos-1 { left: 5%; transform: scale(1.1); }   
+      #model-scene-container.pos-2 { left: 20%; transform: scale(1.35); } 
+      #model-scene-container.pos-3 { left: 50%; transform: scale(0.9); }  
+  }
+
+  /* OPTIMALISASI MOBILE (FIXED LAYOUT, GA TUMPHANG TINDIH) */
+  @media (max-width: 768px) {
+      .editorial-layout { 
+          height: auto; min-height: auto; 
+          align-items: flex-start; padding-top: 10px;
+      }
+      #model-scene-container {
+          width: 100% !important; left: 0 !important; top: 10% !important;
+          transform: scale(1.3) !important; opacity: 0.15; filter: blur(2px);
+      }
+      .halo-ring { width: 250px !important; height: 250px !important; top: 40% !important; }
+  }
+
+  .halo-ring {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 350px; height: 350px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.6), inset 0 0 40px rgba(255, 255, 255, 0.6); z-index: 1;
+  }
+  
+  model-viewer { 
+      position: absolute; left: 0; top: 0; width: 100%; height: 100%; 
+      outline: none; background: transparent; --poster-color: transparent; z-index: 2;
+  }
+
+  /* Navigasi Garis */
+  .editorial-nav { position: relative; z-index: 10; display: flex; flex-direction: column; gap: 15px; margin-left: 20px; }
+  @media (max-width: 768px) { .editorial-nav { display: none; } }
+  .nav-line { width: 30px; height: 2px; background: rgba(255, 255, 255, 0.3); border: none; transition: all 0.4s var(--luxe-ease); }
+  .nav-line:hover { background: rgba(255, 255, 255, 0.7); }
+  .nav-line.active { width: 60px; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.8); }
+
+  /* KONTEN TEKS EDITORIAL (Posisinya dinamis) */
+  .editorial-content { position: relative; z-index: 10; width: 100%; transition: padding 1s var(--luxe-ease); }
+  
+  /* Class Posisi Teks (diatur di JS) buat Desktop */
+  @media (min-width: 769px) {
+      .text-on-left { padding-left: 40px; padding-right: 0; }
+      .text-on-right { padding-left: 55%; padding-right: 20px; }
+      .text-on-center-split { padding-left: 0; text-align: center; } 
+  }
+
+  /* FIX MOBILE: TEKS SELALU RATA TENGAH & GA TUMPHANG TINDIH */
+  @media (max-width: 768px) {
+      .editorial-content { 
+          padding: 0 !important; margin: 0 !important; text-align: center !important; 
+          display: flex; flex-direction: column; align-items: center;
+      }
+      .text-on-left, .text-on-right, .text-on-center-split { padding: 0 !important; }
+      .editorial-desc { margin: 0 auto !important; }
+      .stat-block { text-align: center !important; }
+      .stat-row { justify-content: center !important; }
+      .skills-list { margin: 0 auto !important; }
+      .split-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr) !important; gap: 20px !important; padding: 0 !important; margin-top: 20px; }
+  }
+
+  /* Struktur Slide biar nggak numpuk tingginya di HP */
+  .data-slide { 
+      position: absolute; opacity: 0; pointer-events: none; 
+      transition: all 0.6s var(--luxe-ease); transform: translateY(20px); width: 100%;
+  }
+  .data-slide.active-slide { 
+      position: relative; opacity: 1; pointer-events: auto; transform: translateY(0); 
+  }
+  @media (min-width: 769px) {
+      .data-slide { top: 50%; transform: translateY(-40px); }
+      .data-slide.active-slide { transform: translateY(-50%); }
+  }
+
+  /* Judul GEDE editorial */
+  .editorial-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 10vw, 5.5rem); font-weight: 400; color: #fff; line-height: 1.1; margin-bottom: 1.5rem; text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+  .editorial-desc { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.6; letter-spacing: 0.5px; max-width: 500px; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+
+  /* STATISTIK KEBELAH DUA */
+  .split-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; padding: 0 10%; }
+  .stat-block { text-align: center; }
+  .stat-block .counter { font-size: clamp(3rem, 8vw, 4rem); color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 300; line-height: 1; }
+  .stat-block p { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: rgba(255,255,255,0.5); margin-top: 10px; }
+
+  /* Telemetry Row */
+  .editorial-stats { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+  .stat-row { display: flex; align-items: baseline; gap: 15px; }
+  .stat-row .counter { font-size: clamp(1.8rem, 5vw, 2.5rem); color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 300; }
+  .stat-row p { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); }
+
+  /* Skills UI Clean */
+  .skills-list { max-width: 400px; margin-top: 20px; width: 100%; }
+  .clean-progress { margin-top: 15px; }
+  .clean-progress .label { display: flex; justify-content: space-between; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #fff; margin-bottom: 5px; }
+  .clean-progress .bar-bg { width: 100%; height: 1px; background: rgba(255,255,255,0.2); position: relative; }
+  .clean-progress .bar-fill { position: absolute; left: 0; top: -1px; height: 3px; background: #fff; width: 0%; transition: width 1.5s var(--luxe-ease); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+  /* Next Btn Position */
+  .next-btn-container { display: flex; justify-content: flex-start; margin-left: 40px; margin-top: 2rem; position: relative; z-index: 20; }
+  @media (max-width: 768px) { .next-btn-container { justify-content: center; margin-left: 0; margin-top: 3rem; } }
+
+  /* =========================================
+     KOSMETIK LAINNYA (Proyek dkk)
+     ========================================= */
+  .glass-panel { background: rgba(5, 15, 10, 0.4); backdrop-filter: blur(20px); border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); position: relative; z-index: 10; transition: all 0.4s ease; }
+  .project-card { position: relative; overflow: hidden; }
+  .project-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.1), transparent); transition: left 0.6s ease; }
+  .project-card:hover::before { left: 100%; }
   .magnetic-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; background: transparent; border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 50px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; overflow: hidden; color: #FDFBF7; transition: all 0.4s ease; text-decoration: none; }
   .magnetic-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; background: #C5A059; border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.5s ease, height 0.5s ease; z-index: -1; }
   .magnetic-btn:hover { color: #0A261D !important; border-color: #C5A059; }
   .magnetic-btn:hover::before { width: 300px; height: 300px; }
-
-  /* =========================================
-     SLIDER MUSEUM INTERFACE 
-     ========================================= */
-  .museum-layout { display: flex; flex-direction: column; position: relative; min-height: 450px; }
-  
-  .slide-nav { display: flex; flex-direction: column; justify-content: center; gap: 1.5rem; border-right: 1px solid rgba(197, 160, 89, 0.2); padding-right: 2rem; z-index: 10; }
-  @media (max-width: 768px) { .slide-nav { flex-direction: row; border-right: none; border-bottom: 1px solid rgba(197, 160, 89, 0.2); padding-right: 0; padding-bottom: 1rem; } }
-  
-  .slide-btn { width: 30px; height: 30px; display: flex; align-items: center; justify-content: flex-end; background: transparent; border: none; opacity: 0.4; transition: all 0.3s ease; }
-  @media (max-width: 768px) { .slide-btn { justify-content: center; } }
-  
-  .nav-dot { display: block; width: 6px; height: 6px; background: #C5A059; border-radius: 50%; transition: all 0.4s var(--luxe-ease); }
-  .slide-btn.active { opacity: 1; }
-  .slide-btn.active .nav-dot { width: 30px; border-radius: 4px; background: #C5A059; box-shadow: 0 0 10px rgba(197,160,89,0.8); }
-  @media (max-width: 768px) { .slide-btn.active .nav-dot { width: 6px; height: 30px; } }
-  .slide-btn:hover { opacity: 0.8; }
-
-  .slide-wrapper { flex: 1; position: relative; display: flex; align-items: center; min-height: 350px; z-index: 10; }
-  .data-slide { position: absolute; top: 0; left: 0; width: 100%; opacity: 0; transform: translateY(20px) scale(0.98); pointer-events: none; visibility: hidden; transition: all 0.6s var(--luxe-ease); }
-  .data-slide.active-slide { position: relative; opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; visibility: visible; }
-
-  .progress-container { position: relative; overflow: hidden; }
-  .progress-fill { position: relative; width: 0%; height: 100%; background: linear-gradient(90deg, #C5A059, #E8D4A8); border-radius: 2px; transition: width 1.5s var(--luxe-ease); }
-  .progress-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 2s infinite; }
-  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-  .counter { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 700; color: #C5A059; line-height: 1; }
-
-  .project-card { position: relative; overflow: hidden; }
-  .project-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.1), transparent); transition: left 0.6s ease; }
-  .project-card:hover::before { left: 100%; }
-  .icon-container { position: relative; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
-  .icon-container::before { content: ''; position: absolute; width: 100%; height: 100%; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 50%; animation: iconPulse 3s ease-in-out infinite; }
-  @keyframes iconPulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.3); opacity: 0; } }
-  .floating { animation: float 6s ease-in-out infinite; }
-  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
   .glitch-hover:hover { color: #C5A059 !important; animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite; }
-  @keyframes glitch-skew { 0% { transform: skew(0deg); } 20% { transform: skew(-10deg); } 40% { transform: skew(10deg); } 60% { transform: skew(-5deg); } 80% { transform: skew(5deg); } 100% { transform: skew(0deg); } }
-
-  /* 3D Model Viewer Customization */
-  model-viewer {
-      width: 100%; height: 100%; outline: none;
-      --poster-color: transparent;
-  }
 </style>
 </head>
-<body class="antialiased selection:bg-gold selection:text-white">
+<body class="antialiased selection:bg-white selection:text-black">
 
   <div id="preloader" role="alert" aria-live="polite">
-      <div class="loader-content">
-          <div class="loader-counter" id="loader-counter">0</div>
-          <p class="loader-text" id="loader-status">System Initializing</p>
-      </div>
-      <div class="rocket-container" id="mega-rocket">
-          <i class="fas fa-rocket rocket-icon"></i>
-          <div class="thruster-fire"></div>
-      </div>
-      <div class="rocket-trail"></div>
-      <div class="smoke-container" id="smoke-container"></div>
+      <div class="loader-content"><div class="loader-counter" id="loader-counter">0</div><p class="loader-text" id="loader-status">System Initializing</p></div>
+      <div class="rocket-container" id="mega-rocket"><i class="fas fa-rocket rocket-icon"></i><div class="thruster-fire"></div></div>
+      <div class="rocket-trail"></div><div class="smoke-container" id="smoke-container"></div>
   </div>
 
   <div class="mouse-glow" id="mouse-glow"></div>
-  <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
-
-  <div class="bg-shapes">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-  </div>
+  <div id="cursor-dot"></div><div id="cursor-ring"></div>
+  <div class="bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div></div>
   <canvas id="neural-canvas"></canvas>
-
-  <div id="stars-container"></div>
-  <div class="shooting-star"></div>
-  <div class="shooting-star delay"></div>
+  <div id="stars-container"></div><div class="shooting-star"></div><div class="shooting-star delay"></div>
 
   <div id="halaman-beranda" class="halaman halaman-active">
     <div style="margin-top: 50px; margin-bottom: 40px; position: relative; z-index: 20;">
         <h1 class="judul-utama glitch-hover cursor-target" id="hero-title">Adam Hasani<span class="text-gold">.</span></h1>
         <p class="sub-judul cursor-target" id="role-text">WEB DEVELOPER</p>
     </div>
-    
     <div class="grid-container relative z-20">
-      <div class="card-menu tilt-effect cursor-target" onclick="bukaDetail('datadiri')">
-        <div class="card-icon"><i class="fas fa-user-astronaut"></i></div>
-        <div class="text-title" style="color: #ffb366;">Data Diri & Sistem</div>
-      </div>
-      <div class="card-menu tilt-effect cursor-target" onclick="bukaDetail('proyek')">
-        <div class="card-icon"><i class="fas fa-brain"></i></div>
-        <div class="text-title" style="color: #00ffff;">Karya & Project</div>
-      </div>
-      <div class="card-menu tilt-effect cursor-target" onclick="bukaDetail('pengalaman')">
-        <div class="card-icon"><i class="fas fa-route"></i></div>
-        <div class="text-title" style="color: #00ffaa;">Eksplorasi Perjalanan</div>
-      </div>
-      <div class="card-menu tilt-effect cursor-target" onclick="bukaDetail('kontak')">
-        <div class="card-icon"><i class="fas fa-satellite-dish"></i></div>
-        <div class="text-title" style="color: #b266ff;">Hubungi Aku</div>
-      </div>
+      <div class="card-menu cursor-target" onclick="bukaDetail('datadiri')"><div class="card-icon"><i class="fas fa-user-astronaut"></i></div><div class="text-title" style="color: #ffffff;">Data Diri & Sistem</div></div>
+      <div class="card-menu cursor-target" onclick="bukaDetail('proyek')"><div class="card-icon"><i class="fas fa-brain"></i></div><div class="text-title" style="color: #ffffff;">Karya & Project</div></div>
+      <div class="card-menu cursor-target" onclick="bukaDetail('pengalaman')"><div class="card-icon"><i class="fas fa-route"></i></div><div class="text-title" style="color: #ffffff;">Eksplorasi Perjalanan</div></div>
+      <div class="card-menu cursor-target" onclick="bukaDetail('kontak')"><div class="card-icon"><i class="fas fa-satellite-dish"></i></div><div class="text-title" style="color: #ffffff;">Hubungi Aku</div></div>
     </div>
   </div>
 
@@ -262,207 +301,86 @@
     </div>
 
     <div id="konten-datadiri" class="konten-item relative z-20">
-        <div class="text-center mb-8 relative z-20">
-            <h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold glitch-hover cursor-target">Data <span class="text-gold italic">Sistem</span></h2>
+        <div class="editorial-layout">
+            
+            <div id="model-scene-container" class="pos-0">
+                <div class="halo-ring"></div>
+                <model-viewer src="snake_statue.glb" auto-rotate rotation-per-second="1.5deg" interaction-prompt="none" exposure="1.2" shadow-intensity="2" disable-zoom></model-viewer>
+            </div>
+
+            <div class="editorial-nav">
+                <button class="nav-line cursor-target active" data-target="slide-bio"></button>
+                <button class="nav-line cursor-target" data-target="slide-telemetry"></button>
+                <button class="nav-line cursor-target" data-target="slide-stats"></button>
+                <button class="nav-line cursor-target" data-target="slide-skills"></button>
+            </div>
+
+            <div id="editorial-text-content" class="editorial-content text-on-left">
+                
+                <div id="slide-bio" class="data-slide active-slide">
+                    <img src="IMG_20260127_140845_874.webp" alt="Adam Hasani" class="w-32 h-32 md:w-48 md:h-48 rounded-full object-cover border-2 border-white/80 p-1 mb-6 shadow-[0_0_40px_rgba(255,255,255,0.2)] mx-auto md:mx-0">
+                    <p class="text-xs tracking-[0.3em] uppercase text-white/50 mb-2">11 Feb 2006 — Tegal, ID</p>
+                    <h2 class="editorial-title">Adam<br>Hasani</h2>
+                    <p class="editorial-desc">
+                        Sistem aktif yang merancang arsitektur web rapi dan mengintegrasikan AI. Dibangun dengan pondasi kuat JavaScript dan Node.js.
+                    </p>
+                </div>
+
+                <div id="slide-telemetry" class="data-slide">
+                    <p class="text-xs tracking-[0.3em] uppercase text-green-400 mb-2">Status: Online</p>
+                    <h2 class="editorial-title">System<br>Telemetry</h2>
+                    <p class="editorial-desc mb-6">Live monitor telemetry sistem vital Adam Hasani. Memastikan integritas dan uptime data inti.</p>
+                    <div class="editorial-stats">
+                        <div class="stat-row"><span class="counter text-2xl" id="uptime-counter-editorial">...</span><p>Uptime</p></div>
+                        <div class="stat-row"><span class="counter text-3xl" id="live-time-editorial">...</span><p>WIB Time</p></div>
+                    </div>
+                </div>
+
+                <div id="slide-stats" class="data-slide">
+                    <p class="text-xs tracking-[0.3em] uppercase text-white/50 mb-2 text-center">Data Eksplorasi</p>
+                    <h2 class="editorial-title text-center">Core<br>Metrics</h2>
+                    <div class="split-stats-grid">
+                        <div class="stat-block"><span class="counter" data-target="4">0</span><p>Proyek Utama</p></div>
+                        <div class="stat-block"><span class="counter" data-target="99">0</span><p>% Komitmen</p></div>
+                        <div class="stat-block"><span class="counter" data-target="3">0</span><p>Tahun Fokus</p></div>
+                        <div class="stat-block"><span class="counter text-4xl" data-target="18">0</span><p>Usia</p></div>
+                    </div>
+                </div>
+
+                <div id="slide-skills" class="data-slide">
+                    <p class="text-xs tracking-[0.3em] uppercase text-white/50 mb-2">Tech Stack</p>
+                    <h2 class="editorial-title">Core<br>Systems</h2>
+                    <div class="skills-list">
+                        <div class="clean-progress"><div class="label"><span>JavaScript (ES6+)</span><span>88%</span></div><div class="bar-bg"><div class="bar-fill" data-width="88%"></div></div></div>
+                        <div class="clean-progress"><div class="label"><span>Node.js</span><span>85%</span></div><div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div></div>
+                        <div class="clean-progress"><div class="label"><span>Bot Architect</span><span>85%</span></div><div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div></div>
+                        <div class="clean-progress"><div class="label"><span>REST API</span><span>90%</span></div><div class="bar-bg"><div class="bar-fill" data-width="90%"></div></div></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="museum-layout">
-            
-            <div class="absolute inset-0 md:left-auto md:right-0 w-full md:w-2/3 h-full z-0 opacity-40 md:opacity-60 flex items-center justify-center pointer-events-auto" style="mix-blend-mode: screen;">
-                <model-viewer 
-                    src="snake_statue.glb" 
-                    auto-rotate 
-                    camera-controls
-                    rotation-per-second="2deg"
-                    exposure="1"
-                    shadow-intensity="2"
-                    disable-zoom>
-                </model-viewer>
-            </div>
-
-            <div class="flex flex-col md:flex-row gap-8 w-full relative z-10">
-                <div class="slide-nav">
-                    <button class="slide-btn cursor-target active" data-target="slide-bio" aria-label="Identitas"><span class="nav-dot"></span></button>
-                    <button class="slide-btn cursor-target" data-target="slide-telemetry" aria-label="Telemetry"><span class="nav-dot"></span></button>
-                    <button class="slide-btn cursor-target" data-target="slide-stats" aria-label="Statistik"><span class="nav-dot"></span></button>
-                    <button class="slide-btn cursor-target" data-target="slide-skills" aria-label="Keahlian"><span class="nav-dot"></span></button>
-                </div>
-
-                <div class="slide-wrapper w-full md:w-3/4">
-                    
-                    <div id="slide-bio" class="data-slide active-slide">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                            <div class="glass-panel p-6 tilt-effect cursor-target text-center">
-                                <div class="corner-accent corner-tl"></div> <div class="corner-accent corner-br"></div>
-                                <img src="IMG_20260127_140845_874.webp" alt="Adam" class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-2 border-gold/30 p-1">
-                                <h3 class="font-serif text-2xl font-bold text-ivory mb-1">Adam Hasani</h3>
-                                <p class="text-xs text-gold uppercase tracking-widest mb-6">11 Feb 2006 • Tegal, ID</p>
-                            </div>
-                            <div class="space-y-4 text-sm text-ivory/80 leading-relaxed font-medium">
-                                <p>Sistem aktif yang selalu <em>excited</em> saat baris kode yang kutulis berjalan dengan baik.</p>
-                                <p>Aku merancang arsitektur web yang rapi, memberikan interaktivitas, dan mengintegrasikan berbagai API untuk asisten digital menggunakan <span class="text-gold font-bold">JavaScript & Node.js</span>.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="slide-telemetry" class="data-slide">
-                        <div class="glass-panel p-8 tilt-effect cursor-target w-full">
-                            <div class="flex items-center justify-between mb-6 border-b border-dashed border-gold/30 pb-4">
-                                <p class="text-sm uppercase tracking-widest text-gold font-bold"><i class="fas fa-satellite-dish mr-2 animate-pulse"></i> Live Telemetry</p>
-                                <span class="text-[10px] text-ivory/50 uppercase tracking-widest font-bold text-green-400">Online</span>
-                            </div>
-                            <div class="space-y-6 font-sans text-sm">
-                                <div class="flex justify-between items-center"><span class="text-ivory/60 font-medium">System Uptime</span><span id="uptime-counter" class="text-ivory font-bold bg-gold/10 px-3 py-1.5 rounded">Menghitung...</span></div>
-                                <div class="flex justify-between items-center"><span class="text-ivory/60 font-medium">Local Time (WIB)</span><span id="live-time" class="text-ivory font-bold tracking-widest bg-gold/10 px-3 py-1.5 rounded">Loading...</span></div>
-                                <div class="flex justify-between items-center"><span class="text-ivory/60 font-medium">GitHub Status</span><span id="github-commit" class="text-ivory font-bold bg-gold/10 px-3 py-1.5 rounded truncate max-w-[150px]">Fetching...</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="slide-stats" class="data-slide">
-                        <div class="grid grid-cols-2 gap-6 text-center glass-panel p-8 tilt-effect cursor-target w-full">
-                            <div class="py-4"><div class="counter" data-target="4">0</div><p class="text-[10px] uppercase tracking-[0.2em] text-ivory/50 mt-2 font-semibold">Proyek Utama</p></div>
-                            <div class="py-4"><div class="counter" data-target="3">0</div><p class="text-[10px] uppercase tracking-[0.2em] text-ivory/50 mt-2 font-semibold">Fokus Tech</p></div>
-                            <div class="py-4"><div class="counter" data-target="99">0</div><p class="text-[10px] uppercase tracking-[0.2em] text-ivory/50 mt-2 font-semibold">Komitmen %</p></div>
-                            <div class="py-4"><div class="counter" data-target="3">0</div><p class="text-[10px] uppercase tracking-[0.2em] text-ivory/50 mt-2 font-semibold">Tahun</p></div>
-                        </div>
-                    </div>
-
-                    <div id="slide-skills" class="data-slide">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                            <div class="glass-panel p-6 tilt-effect cursor-target">
-                                <h3 class="text-[10px] tracking-[0.2em] uppercase text-gold font-bold mb-4">01 — Core Web</h3>
-                                <div class="space-y-4">
-                                    <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-ivory/70 mb-2"><span>JavaScript</span><span class="text-gold">88%</span></div><div class="progress-container w-full h-[3px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="88%"></div></div></div>
-                                    <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-ivory/70 mb-2"><span>Node.js</span><span class="text-gold">85%</span></div><div class="progress-container w-full h-[3px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="85%"></div></div></div>
-                                </div>
-                            </div>
-                            <div class="glass-panel p-6 tilt-effect cursor-target">
-                                <h3 class="text-[10px] tracking-[0.2em] uppercase text-gold font-bold mb-4">02 — Logic & API</h3>
-                                <div class="space-y-4">
-                                    <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-ivory/70 mb-2"><span>Bot Architect</span><span class="text-gold">85%</span></div><div class="progress-container w-full h-[3px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="85%"></div></div></div>
-                                    <div><div class="flex justify-between text-[10px] font-bold tracking-[0.2em] uppercase text-ivory/70 mb-2"><span>REST API</span><span class="text-gold">90%</span></div><div class="progress-container w-full h-[3px] bg-gold/15 rounded-full"><div class="progress-fill" data-width="90%"></div></div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex justify-end gap-4 mt-6 pt-4 relative z-20">
-                <button id="prev-slide" class="magnetic-btn !py-2 !px-6 cursor-target"><i class="fas fa-arrow-left text-gold mr-2"></i> Prev</button>
-                <button id="next-slide" class="magnetic-btn !py-2 !px-6 cursor-target">Next <i class="fas fa-arrow-right text-gold ml-2"></i></button>
-            </div>
+        <div class="next-btn-container">
+            <button id="next-editorial-slide" class="text-white/60 hover:text-white uppercase tracking-widest text-xs flex items-center gap-2 transition-colors cursor-target">
+                Next Slide <i class="fas fa-long-arrow-alt-right"></i>
+            </button>
         </div>
     </div>
 
     <div id="konten-proyek" class="konten-item relative z-20">
-        <div class="text-center mb-12">
-            <p class="text-[10px] font-bold tracking-[0.4em] uppercase text-gold mb-4">✦ Karya ✦</p>
-            <h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold glitch-hover cursor-target">Logika <span class="text-gold italic">Tereksekusi</span></h2>
-        </div>
-        <div class="flex flex-col gap-8">
-            <article class="glass-panel project-card p-8 relative group tilt-effect cursor-target">
-                <div class="corner-accent corner-tl"></div> <div class="corner-accent corner-br"></div>
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-4">
-                    <div>
-                        <span class="inline-block text-[8px] font-bold tracking-[0.3em] uppercase bg-gold text-forest px-4 py-1.5 rounded-full mb-3">Flagship Project</span>
-                        <h3 class="font-serif text-3xl text-ivory font-bold group-hover:text-gold transition-colors">Flora AI</h3>
-                    </div>
-                    <div class="icon-container floating"><i class="fas fa-brain text-xl text-gold"></i></div>
-                </div>
-                <p class="text-sm text-ivory/70 leading-relaxed max-w-2xl mb-6 font-medium">Asisten Kecerdasan Buatan pribadi yang aku kembangkan dari nol. Merancang arsitektur logika bot/plugin tingkat lanjut dan integrasi API untuk asisten digital fungsional.</p>
-                <div class="flex items-center gap-6 border-t border-gold/20 pt-6 relative z-10">
-                    <a href="https://flora-ai.vercel.app/" target="_blank" class="text-xs font-bold tracking-widest uppercase text-gold hover:text-ivory transition-colors cursor-target"><i class="fas fa-satellite-dish animate-pulse"></i> Live Demo</a>
-                    <a href="https://github.com/adamhasani" target="_blank" class="text-xs font-bold tracking-widest uppercase text-ivory/50 hover:text-gold transition-colors cursor-target"><i class="fab fa-github text-lg"></i> Source Code</a>
-                </div>
-            </article>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <article class="glass-panel project-card p-6 group tilt-effect flex flex-col justify-between cursor-target">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <h4 class="font-serif text-2xl text-ivory font-bold group-hover:text-gold transition-colors">WA Bot / AI WA</h4>
-                            <div class="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center floating"><i class="fab fa-whatsapp text-gold"></i></div>
-                        </div>
-                        <p class="text-xs text-ivory/60 leading-relaxed font-medium mb-6">Pengembangan Chatbot AI untuk WhatsApp. Memproses pesan dan eksekusi instruksi otomatis.</p>
-                    </div>
-                    <div class="border-t border-gold/20 pt-4 relative z-10">
-                        <a href="https://wa.me/6287751121269" target="_blank" class="text-[10px] font-bold tracking-[0.2em] uppercase text-gold hover:text-ivory transition-colors cursor-target">Chat with Bot <i class="fas fa-external-link-alt ml-1"></i></a>
-                    </div>
-                </article>
-                <article class="glass-panel project-card p-6 group tilt-effect flex flex-col justify-between cursor-target">
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <h4 class="font-serif text-2xl text-ivory font-bold group-hover:text-gold transition-colors">Flora Vision</h4>
-                            <div class="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center floating" style="animation-delay:-2s;"><i class="fas fa-eye text-gold"></i></div>
-                        </div>
-                        <p class="text-xs text-ivory/60 leading-relaxed font-medium mb-6">Eksplorasi computer vision dan AI untuk mendeteksi data visual dengan tingkat akurasi tinggi.</p>
-                    </div>
-                    <div class="border-t border-gold/20 pt-4 relative z-10">
-                        <a href="https://github.com/adamhasani" target="_blank" class="text-[10px] font-bold tracking-[0.2em] uppercase text-gold hover:text-ivory transition-colors cursor-target">View Research <i class="fas fa-arrow-right ml-1"></i></a>
-                    </div>
-                </article>
-            </div>
-        </div>
+        <div class="text-center mb-12"><p class="text-[10px] font-bold tracking-[0.4em] uppercase text-gold mb-4">✦ Karya ✦</p><h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold glitch-hover cursor-target">Logika <span class="text-gold italic">Tereksekusi</span></h2></div>
+        <div class="flex flex-col gap-8"><article class="glass-panel project-card p-8 relative group cursor-target"><div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-4"><div><span class="inline-block text-[8px] font-bold tracking-[0.3em] uppercase bg-white text-black px-4 py-1.5 rounded-full mb-3">Flagship Project</span><h3 class="font-serif text-3xl text-ivory font-bold transition-colors">Flora AI</h3></div></div><p class="text-sm text-ivory/70 leading-relaxed max-w-2xl mb-6 font-medium">Asisten Kecerdasan Buatan pribadi yang aku kembangkan dari nol. Merancang arsitektur logika bot/plugin tingkat lanjut dan integrasi API untuk asisten digital fungsional.</p><div class="flex items-center gap-6 border-t border-white/20 pt-6 relative z-10"><a href="https://flora-ai.vercel.app/" target="_blank" class="text-xs font-bold tracking-widest uppercase text-white hover:text-gold transition-colors cursor-target"><i class="fas fa-satellite-dish animate-pulse"></i> Live Demo</a><a href="https://github.com/adamhasani" target="_blank" class="text-xs font-bold tracking-widest uppercase text-ivory/50 hover:text-white transition-colors cursor-target"><i class="fab fa-github text-lg"></i> Source Code</a></div></article>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><article class="glass-panel project-card p-6 group flex flex-col justify-between cursor-target"><div><h4 class="font-serif text-2xl text-ivory font-bold mb-4">WA Bot / AI WA</h4><p class="text-xs text-ivory/60 leading-relaxed font-medium mb-6">Pengembangan Chatbot AI untuk WhatsApp. Memproses pesan dan eksekusi instruksi otomatis.</p></div><div class="border-t border-white/20 pt-4 relative z-10"><a href="https://wa.me/6287751121269" target="_blank" class="text-[10px] font-bold tracking-[0.2em] uppercase text-white transition-colors cursor-target">Chat with Bot <i class="fas fa-external-link-alt ml-1"></i></a></div></article><article class="glass-panel project-card p-6 group flex flex-col justify-between cursor-target"><div><h4 class="font-serif text-2xl text-ivory font-bold mb-4">Flora Vision</h4><p class="text-xs text-ivory/60 leading-relaxed font-medium mb-6">Eksplorasi computer vision dan AI untuk mendeteksi data visual dengan tingkat akurasi tinggi.</p></div><div class="border-t border-white/20 pt-4 relative z-10"><a href="https://github.com/adamhasani" target="_blank" class="text-[10px] font-bold tracking-[0.2em] uppercase text-white transition-colors cursor-target">View Research <i class="fas fa-arrow-right ml-1"></i></a></div></article></div></div>
     </div>
 
     <div id="konten-pengalaman" class="konten-item relative z-20">
-        <div class="text-center mb-12">
-            <p class="text-[10px] font-bold tracking-[0.4em] uppercase text-gold mb-4">✦ Pengalaman ✦</p>
-            <h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold glitch-hover cursor-target">Perjalanan <span class="text-gold italic">Historis</span></h2>
-        </div>
-        <div class="space-y-6">
-            <article class="glass-panel p-8 tilt-effect cursor-target">
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="md:w-1/4 border-b md:border-b-0 md:border-r border-gold/20 pb-4 md:pb-0 md:pr-6">
-                        <p class="text-xl font-serif font-bold text-gold">2025 — Sekarang</p>
-                        <p class="text-[10px] uppercase tracking-widest text-ivory/60 mt-2">Arsitektur AI</p>
-                    </div>
-                    <div class="md:w-3/4">
-                        <h4 class="text-2xl font-bold text-ivory mb-3">Pengembangan Flora AI</h4>
-                        <p class="text-sm text-ivory/70 leading-relaxed font-medium">Membangun proyek ambisius: Flora AI. Merancang arsitektur bot dari nol, memfokuskan pada logika plugin modular, serta integrasi API tingkat lanjut.</p>
-                    </div>
-                </div>
-            </article>
-            <article class="glass-panel p-8 tilt-effect cursor-target">
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="md:w-1/4 border-b md:border-b-0 md:border-r border-gold/20 pb-4 md:pb-0 md:pr-6">
-                        <p class="text-xl font-serif font-bold text-gold">2021</p>
-                        <p class="text-[10px] uppercase tracking-widest text-ivory/60 mt-2">Otomatisasi</p>
-                    </div>
-                    <div class="md:w-3/4">
-                        <h4 class="text-2xl font-bold text-ivory mb-3">Chatbot WA / AI WhatsApp</h4>
-                        <p class="text-sm text-ivory/70 leading-relaxed font-medium">Membangun pondasi otomatisasi dengan mengembangkan WhatsApp Bot / AI WhatsApp untuk memproses pesan dan mengelola instruksi spesifik secara otomatis.</p>
-                    </div>
-                </div>
-            </article>
-            <article class="glass-panel p-8 tilt-effect cursor-target">
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="md:w-1/4 border-b md:border-b-0 md:border-r border-gold/20 pb-4 md:pb-0 md:pr-6">
-                        <p class="text-xl font-serif font-bold text-gold">Awal Mula</p>
-                        <p class="text-[10px] uppercase tracking-widest text-ivory/60 mt-2">Eksplorasi</p>
-                    </div>
-                    <div class="md:w-3/4">
-                        <h4 class="text-2xl font-bold text-ivory mb-3">Eksplorasi Self-taught</h4>
-                        <p class="text-sm text-ivory/70 leading-relaxed font-medium">Di sinilah semuanya dimulai! Mempelajari fundamental bahasa pemrograman dan algoritma untuk membiasakan diri dengan alur kerja teknologi modern.</p>
-                    </div>
-                </div>
-            </article>
-        </div>
+        <div class="text-center mb-12"><p class="text-[10px] font-bold tracking-[0.4em] uppercase text-gold mb-4">✦ Pengalaman ✦</p><h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold glitch-hover cursor-target">Perjalanan <span class="text-gold italic">Historis</span></h2></div>
+        <div class="space-y-6"><article class="glass-panel p-8 cursor-target"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/4 border-b md:border-b-0 md:border-r border-white/20 pb-4 md:pb-0 md:pr-6"><p class="text-xl font-serif font-bold text-white">2025 — Sekarang</p><p class="text-[10px] uppercase tracking-widest text-ivory/60 mt-2">Arsitektur AI</p></div><div class="md:w-3/4"><h4 class="text-2xl font-bold text-ivory mb-3">Pengembangan Flora AI</h4><p class="text-sm text-ivory/70 leading-relaxed font-medium">Membangun proyek ambisius: Flora AI. Merancang arsitektur bot dari nol, memfokuskan pada logika plugin modular, serta integrasi API tingkat lanjut.</p></div></div></article><article class="glass-panel p-8 cursor-target"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/4 border-b md:border-b-0 md:border-r border-white/20 pb-4 md:pb-0 md:pr-6"><p class="text-xl font-serif font-bold text-white">2021</p><p class="text-[10px] uppercase tracking-widest text-ivory/60 mt-2">Otomatisasi</p></div><div class="md:w-3/4"><h4 class="text-2xl font-bold text-ivory mb-3">Chatbot WA / AI WhatsApp</h4><p class="text-sm text-ivory/70 leading-relaxed font-medium">Membangun pondasi otomatisasi dengan mengembangkan WhatsApp Bot / AI WhatsApp untuk memproses pesan dan mengelola instruksi spesifik secara otomatis.</p></div></div></article><article class="glass-panel p-8 cursor-target"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/4 border-b md:border-b-0 md:border-r border-white/20 pb-4 md:pb-0 md:pr-6"><p class="text-xl font-serif font-bold text-white">Awal Mula</p><p class="text-[10px] uppercase tracking-widest text-ivory/60 mt-2">Eksplorasi</p></div><div class="md:w-3/4"><h4 class="text-2xl font-bold text-ivory mb-3">Eksplorasi Self-taught</h4><p class="text-sm text-ivory/70 leading-relaxed font-medium">Di sinilah semuanya dimulai! Mempelajari fundamental bahasa pemrograman dan algoritma untuk membiasakan diri dengan alur kerja teknologi modern.</p></div></div></article></div>
     </div>
 
     <div id="konten-kontak" class="konten-item relative z-20">
-        <div class="text-center mb-12">
-            <p class="text-[10px] font-bold tracking-[0.4em] uppercase text-gold mb-4">Yuk Ngobrol Bareng Adam Hasani!</p>
-            <h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold mb-6 glitch-hover cursor-target">Mau kolaborasi atau <span class="italic text-gold">say hi?</span></h2>
-            <p class="text-sm text-ivory/70">Pilih aja mau lewat jalur mana nih.</p>
-        </div>
-        <div class="flex flex-wrap justify-center gap-6 mt-8">
-            <a href="https://wa.me/6287751121269" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-whatsapp text-2xl mr-3 text-gold"></i><span>WhatsApp</span></a>
-            <a href="https://t.me/+6287810342030" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-telegram-plane text-2xl mr-3 text-gold"></i><span>Telegram</span></a>
-            <a href="https://instagram.com/adamhsni_" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-instagram text-2xl mr-3 text-gold"></i><span>Instagram</span></a>
-            <a href="https://github.com/adamhasani" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-github text-2xl mr-3 text-gold"></i><span>GitHub</span></a>
-        </div>
+        <div class="text-center mb-12"><p class="text-[10px] font-bold tracking-[0.4em] uppercase text-gold mb-4">Yuk Ngobrol Bareng Adam Hasani!</p><h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold mb-6 glitch-hover cursor-target">Mau kolaborasi atau <span class="italic text-gold">say hi?</span></h2></div>
+        <div class="flex flex-wrap justify-center gap-6 mt-8"><a href="https://wa.me/6287751121269" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-whatsapp text-2xl mr-3 text-gold"></i><span>WhatsApp</span></a><a href="https://t.me/+6287810342030" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-telegram-plane text-2xl mr-3 text-gold"></i><span>Telegram</span></a><a href="https://instagram.com/adamhsni_" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-instagram text-2xl mr-3 text-gold"></i><span>Instagram</span></a><a href="https://github.com/adamhasani" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-github text-2xl mr-3 text-gold"></i><span>GitHub</span></a></div>
     </div>
 
   </div>
@@ -524,7 +442,7 @@
     }
 
     // ===== PRELOADER MEGA ROCKET LOGIC =====
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
     const preloader = document.getElementById('preloader');
     const loaderCounter = document.getElementById('loader-counter');
     const loaderStatus = document.getElementById('loader-status');
@@ -564,7 +482,7 @@
         }
     }, 30);
 
-    // ===== BINTANG JS (KHUSUS HP) =====
+    // ===== BINTANG JS & MOUSE GLOW =====
     const starsContainer = document.getElementById('stars-container');
     if(starsContainer) {
       for(let i=0; i<150; i++) {
@@ -575,8 +493,6 @@
         starsContainer.appendChild(star);
       }
     }
-
-    // ===== CURSOR, GLOW, RIPPLE =====
     const cursorDot = document.getElementById('cursor-dot'); const cursorRing = document.getElementById('cursor-ring'); const mouseGlow = document.getElementById('mouse-glow');
     let cursorX = 0, cursorY = 0, dotX = 0, dotY = 0, ringX = 0, ringY = 0; const mouse = { x: null, y: null, radius: 200 };
     document.addEventListener('mousemove', (e) => { cursorX = e.clientX; cursorY = e.clientY; mouse.x = e.clientX; mouse.y = e.clientY; if (mouseGlow) { mouseGlow.style.left = e.clientX + 'px'; mouseGlow.style.top = e.clientY + 'px'; } });
@@ -606,12 +522,10 @@
     function animateCanvas() { ctx.clearRect(0, 0, width, height); const now = Date.now(); connectParticles(); particles.forEach(p => p.update(now)); requestAnimationFrame(animateCanvas); }
     initParticles(); animateCanvas(); window.addEventListener('resize', () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initParticles(); });
 
-    // ===== SCRAMBLE TEXT =====
+    // ===== SCRAMBLE TEXT & PARALLAX =====
     const roles = ["AI ARCHITECT", "WEB DEVELOPER", "SYSTEM BUILDER", "DATA ENTHUSIAST"]; let roleIndex = 0; const roleElement = document.getElementById('role-text'); const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     function scrambleText(targetText, element, duration = 800) { if (!element) return; const length = Math.max(element.textContent.length, targetText.length); let iterations = 0; const maxIterations = Math.floor(duration / 30); const interval = setInterval(() => { element.textContent = targetText.split('').map((char, i) => { if (iterations > maxIterations * (i / length)) return char; if (char === " ") return " "; return chars[Math.floor(Math.random() * chars.length)]; }).join(''); if (iterations % 2 === 0) playScrambleTick(); iterations++; if (iterations >= maxIterations) { element.textContent = targetText; clearInterval(interval); } }, 30); }
     function startScramble() { scrambleText(roles[roleIndex], roleElement); setInterval(() => { roleIndex = (roleIndex + 1) % roles.length; scrambleText(roles[roleIndex], roleElement); }, 4000); }
-
-    // ===== PARALLAX =====
     window.addEventListener('scroll', () => { const scrollY = window.scrollY; document.querySelectorAll('.shape').forEach((shape, i) => { const speed = (i + 1) * 0.05; shape.style.transform = `translateY(${scrollY * speed}px)`; }); }, { passive: true });
     const heroTitle = document.getElementById('hero-title'); document.addEventListener('mousemove', (e) => { if (!isLoaded) return; const x = (e.clientX - window.innerWidth / 2) / 50, y = (e.clientY - window.innerHeight / 2) / 50; if (heroTitle) heroTitle.style.transform = `translate(${-x}px, ${-y}px)`; });
 
@@ -629,11 +543,19 @@
       targetKonten.style.display = 'block';
 
       if(idKonten === 'datadiri') {
-          document.querySelectorAll('.slide-btn').forEach(b => b.classList.remove('active'));
-          document.querySelector('.slide-btn[data-target="slide-bio"]').classList.add('active');
+          document.querySelectorAll('.nav-line').forEach(b => b.classList.remove('active'));
+          document.querySelector('.nav-line[data-target="slide-bio"]').classList.add('active');
           document.querySelectorAll('.data-slide').forEach(s => s.classList.remove('active-slide'));
           document.getElementById('slide-bio').classList.add('active-slide');
-          currentSlideIndex = 0;
+          currentEditorialIndex = 0;
+          
+          const modelContainer = document.getElementById('model-scene-container');
+          modelContainer.classList.remove('pos-1', 'pos-2', 'pos-3');
+          modelContainer.classList.add('pos-0');
+
+          const textContainer = document.getElementById('editorial-text-content');
+          textContainer.classList.remove('text-on-right', 'text-on-center-split');
+          textContainer.classList.add('text-on-left');
       }
 
       beranda.classList.remove('halaman-active'); beranda.classList.add('halaman-hidden');
@@ -642,48 +564,77 @@
 
     function kembaliKeBeranda() {
       detail.classList.remove('halaman-active'); detail.classList.add('halaman-hidden');
-      document.querySelectorAll('.progress-fill').forEach(bar => { bar.style.width = '0%'; });
+      document.querySelectorAll('.bar-fill').forEach(bar => { bar.style.width = '0%'; });
       setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); beranda.classList.remove('halaman-hidden'); beranda.classList.add('halaman-active'); }, 400);
     }
 
-    // ===== LOGIKA SLIDER MUSEUM (DATA DIRI) =====
-    const slideBtns = document.querySelectorAll('.slide-btn');
-    const dataSlides = document.querySelectorAll('.data-slide');
-    let currentSlideIndex = 0;
+    // ===== LOGIKA SLIDER MUSEUM & 3D MODEL MOVEMENT =====
+    const editorialNavs = document.querySelectorAll('.nav-line');
+    const editorialSlides = document.querySelectorAll('.data-slide');
+    const modelScene = document.getElementById('model-scene-container');
+    const textContainer = document.getElementById('editorial-text-content');
+    let currentEditorialIndex = 0;
 
-    function ubahSlide(index) {
-        if (index < 0) index = slideBtns.length - 1;
-        if (index >= slideBtns.length) index = 0;
-        currentSlideIndex = index;
+    function ubahEditorialSlide(index) {
+        if (index < 0) index = editorialNavs.length - 1;
+        if (index >= editorialNavs.length) index = 0;
+        currentEditorialIndex = index;
 
         playClickSound();
-        slideBtns.forEach(b => b.classList.remove('active'));
-        dataSlides.forEach(s => s.classList.remove('active-slide'));
+        
+        // Pindah Posisi 3D Model Pakai CSS Class Toggle (Khusus Desktop)
+        if(!isMobile) {
+            modelScene.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-3');
+            modelScene.classList.add(`pos-${currentEditorialIndex}`);
 
-        slideBtns[currentSlideIndex].classList.add('active');
-        const targetId = slideBtns[currentSlideIndex].getAttribute('data-target');
+            // Pindah Posisi Teks (Kiri, Kanan, atau Split Tengah)
+            textContainer.classList.remove('text-on-left', 'text-on-right', 'text-on-center-split');
+            if(currentEditorialIndex === 1) textContainer.classList.add('text-on-right');
+            else if(currentEditorialIndex === 2) textContainer.classList.add('text-on-center-split');
+            else textContainer.classList.add('text-on-left');
+        }
+
+        editorialNavs.forEach(b => b.classList.remove('active'));
+        editorialSlides.forEach(s => s.classList.remove('active-slide'));
+
+        editorialNavs[currentEditorialIndex].classList.add('active');
+        const targetId = editorialNavs[currentEditorialIndex].getAttribute('data-target');
         const targetSlide = document.getElementById(targetId);
         targetSlide.classList.add('active-slide');
 
-        if(targetId === 'slide-stats') { targetSlide.querySelectorAll('.counter').forEach(counter => { if (!counterAnimated.has(counter)) { counterAnimated.add(counter); animateCounter(counter); } }); }
-        if(targetId === 'slide-skills') { targetSlide.querySelectorAll('.progress-fill').forEach(bar => { bar.style.width = '0%'; setTimeout(() => { bar.style.width = bar.getAttribute('data-width'); }, 50); }); }
+        // Trigger animasi dalem slide
+        if(targetId === 'slide-stats') { 
+            targetSlide.querySelectorAll('.counter').forEach(counter => { if (!counterAnimated.has(counter)) { counterAnimated.add(counter); animateCounter(counter); } }); 
+        }
+        if(targetId === 'slide-skills') { 
+            targetSlide.querySelectorAll('.bar-fill').forEach(bar => { bar.style.width = '0%'; setTimeout(() => { bar.style.width = bar.getAttribute('data-width'); }, 50); }); 
+        }
     }
 
-    slideBtns.forEach((btn, index) => { btn.addEventListener('click', () => { ubahSlide(index); }); });
-    document.getElementById('next-slide').addEventListener('click', () => ubahSlide(currentSlideIndex + 1));
-    document.getElementById('prev-slide').addEventListener('click', () => ubahSlide(currentSlideIndex - 1));
+    editorialNavs.forEach((btn, index) => { btn.addEventListener('click', () => { ubahEditorialSlide(index); }); });
+    document.getElementById('next-editorial-slide').addEventListener('click', () => ubahEditorialSlide(currentEditorialIndex + 1));
 
     // ===== EFEK TILT 3D & MAGNETIC =====
     document.querySelectorAll('.tilt-effect').forEach(card => { card.addEventListener('mousemove', (e) => { const rect = card.getBoundingClientRect(), x = e.clientX - rect.left, y = e.clientY - rect.top; const centerX = rect.width / 2, centerY = rect.height / 2, rotateX = ((y - centerY) / centerY) * -6, rotateY = ((x - centerX) / centerX) * 6; card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`; }); card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)'; }); });
     document.querySelectorAll('.magnetic-btn').forEach(btn => { btn.addEventListener('mousemove', (e) => { const rect = btn.getBoundingClientRect(), x = e.clientX - rect.left - rect.width / 2, y = e.clientY - rect.top - rect.height / 2; btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`; }); btn.addEventListener('mouseleave', () => { btn.style.transform = 'translate(0, 0)'; }); });
 
     // ===== LIVE TELEMETRY & EASTER EGG =====
-    function updateUptime() { const startDate = new Date('2006-02-11T00:00:00'), diff = new Date() - startDate; const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25)), days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24)), hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)), minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)), seconds = Math.floor((diff % (1000 * 60)) / 1000); const format = (num) => num.toString().padStart(2, '0'); const uptimeElement = document.getElementById('uptime-counter'); if(uptimeElement) uptimeElement.innerHTML = `${format(years)}Y ${format(days)}D ${format(hours)}H ${format(minutes)}M <span class="text-gold">${format(seconds)}S</span>`; }
+    function updateUptime() { 
+        const startDate = new Date('2006-02-11T00:00:00'), diff = new Date() - startDate; 
+        const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25)), days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24)), hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)), minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)), seconds = Math.floor((diff % (1000 * 60)) / 1000); 
+        const format = (num) => num.toString().padStart(2, '0'); 
+        const val = `${format(years)}Y ${format(days)}D ${format(hours)}H ${format(minutes)}M`;
+        const uptimeElement = document.getElementById('uptime-counter-editorial'); 
+        if(uptimeElement) uptimeElement.textContent = val; 
+    }
     setInterval(updateUptime, 1000); updateUptime();
-    function updateLiveTime() { const timeEl = document.getElementById('live-time'); if(!timeEl) return; timeEl.textContent = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' }); }
+
+    function updateLiveTime() { 
+        const timeEl = document.getElementById('live-time-editorial'); 
+        if(!timeEl) return; 
+        timeEl.textContent = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' }); 
+    }
     setInterval(updateLiveTime, 1000); updateLiveTime();
-    async function fetchLatestCommit() { const commitEl = document.getElementById('github-commit'); if(!commitEl) return; try { const response = await fetch('https://api.github.com/users/adamhasani/events/public'); const data = await response.json(); const pushEvents = data.filter(event => event.type === 'PushEvent'); if(pushEvents.length > 0) { commitEl.textContent = pushEvents[0].repo.name.split('/')[1]; } else { commitEl.textContent = 'No recent updates'; } } catch (error) { commitEl.textContent = 'Data Protected'; } }
-    fetchLatestCommit();
 
     let pressedKeys = ''; const secretCode = 'adam';
     document.addEventListener('keydown', (e) => { pressedKeys += e.key.toLowerCase(); if (pressedKeys.length > secretCode.length) pressedKeys = pressedKeys.slice(-secretCode.length); if (pressedKeys === secretCode) { playClickSound(); const notification = document.createElement('div'); notification.style.cssText = `position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(197, 160, 89, 0.95); color: #0A261D; padding: 2rem 3rem; border-radius: 16px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.2rem; z-index: 9999999; letter-spacing: 0.1em; box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center; animation: fadeInOut 3s ease-in-out forwards;`; notification.textContent = '🔓 Access Granted. Welcome, Creator.'; document.body.appendChild(notification); const style = document.createElement('style'); style.textContent = `@keyframes fadeInOut { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); } }`; document.head.appendChild(style); setTimeout(() => { notification.remove(); style.remove(); }, 3000); pressedKeys = ''; } });
