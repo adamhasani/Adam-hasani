@@ -404,6 +404,23 @@
   </div>
 
   <script>
+    // =========================================
+    // HASH NAVIGATION MAPPING
+    // =========================================
+    const hashToContent = {
+        'dirisendiri': 'datadiri',
+        'karya': 'proyek', 
+        'perjalanan': 'pengalaman',
+        'kontak': 'kontak'
+    };
+    
+    const contentToHash = {
+        'datadiri': 'dirisendiri',
+        'proyek': 'karya',
+        'pengalaman': 'perjalanan',
+        'kontak': 'kontak'
+    };
+
     // ===== AUDIO ENGINE =====
     let audioCtx = null;
     function initAudio() {
@@ -488,7 +505,14 @@
                 if(rumbleSoundObj) rumbleSoundObj.gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
                 rocket.classList.remove('rumble'); rocket.classList.add('launch'); clearInterval(smokeInterval);
                 document.querySelector('.loader-content').style.opacity = '0';
-                setTimeout(() => { preloader.classList.add('loaded'); isLoaded = true; setTimeout(() => startScramble(), 800); setTimeout(() => preloader.remove(), 1500); }, 600); 
+                setTimeout(() => { 
+                    preloader.classList.add('loaded'); 
+                    isLoaded = true; 
+                    setTimeout(() => startScramble(), 800); 
+                    setTimeout(() => preloader.remove(), 1500);
+                    // Check hash after preloader
+                    checkHashOnLoad();
+                }, 600); 
             }, 500); 
             return;
         }
@@ -555,7 +579,10 @@
     const semuaKonten = document.querySelectorAll('.konten-item');
     const counterAnimated = new WeakSet();
 
-    function bukaDetail(idKonten) {
+    // Flag untuk skip hash update saat navigasi via hash
+    let skipHashUpdate = false;
+
+    function bukaDetail(idKonten, updateHash = true) {
       semuaKonten.forEach(el => el.style.display = 'none');
       const targetKonten = document.getElementById('konten-' + idKonten);
       targetKonten.style.display = 'block';
@@ -576,6 +603,13 @@
           textContainer.classList.add('text-on-left');
       }
 
+      // Update hash URL
+      if (updateHash && contentToHash[idKonten]) {
+          skipHashUpdate = true;
+          history.pushState(null, '', '#' + contentToHash[idKonten]);
+          setTimeout(() => { skipHashUpdate = false; }, 100);
+      }
+
       beranda.classList.remove('halaman-active'); beranda.classList.add('halaman-hidden');
       setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); detail.classList.remove('halaman-hidden'); detail.classList.add('halaman-active'); }, 400); 
     }
@@ -583,8 +617,45 @@
     function kembaliKeBeranda() {
       detail.classList.remove('halaman-active'); detail.classList.add('halaman-hidden');
       document.querySelectorAll('.bar-fill').forEach(bar => { bar.style.width = '0%'; });
+      
+      // Clear hash when back to home
+      skipHashUpdate = true;
+      history.pushState(null, '', window.location.pathname);
+      setTimeout(() => { skipHashUpdate = false; }, 100);
+      
       setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); beranda.classList.remove('halaman-hidden'); beranda.classList.add('halaman-active'); }, 400);
     }
+
+    // ===== HASH NAVIGATION FUNCTIONS =====
+    function checkHashOnLoad() {
+        const hash = window.location.hash.slice(1); // Remove #
+        if (hash && hashToContent[hash]) {
+            bukaDetail(hashToContent[hash], false);
+        }
+    }
+
+    // Handle browser back/forward button
+    window.addEventListener('popstate', function() {
+        const hash = window.location.hash.slice(1);
+        if (hash && hashToContent[hash]) {
+            // Navigate to content without updating hash (to prevent loop)
+            if (detail.classList.contains('halaman-hidden')) {
+                bukaDetail(hashToContent[hash], false);
+            }
+        } else {
+            // Back to home
+            if (beranda.classList.contains('halaman-hidden')) {
+                detail.classList.remove('halaman-active'); 
+                detail.classList.add('halaman-hidden');
+                document.querySelectorAll('.bar-fill').forEach(bar => { bar.style.width = '0%'; });
+                setTimeout(() => { 
+                    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+                    beranda.classList.remove('halaman-hidden'); 
+                    beranda.classList.add('halaman-active'); 
+                }, 400);
+            }
+        }
+    });
 
     // ===== LOGIKA SLIDER MUSEUM & 3D MODEL MOVEMENT =====
     const editorialNavs = document.querySelectorAll('.nav-line');
