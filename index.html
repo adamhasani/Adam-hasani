@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam Hasani | Initializing OS...</title>
+    <style>
+        /* Styling loading screen bentar banget sebelum redirect */
+        body {
+            background-color: #050B08;
+            color: #C5A059;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            font-size: 0.8rem;
+        }
+        .pulse { animation: pulseAnim 1.5s infinite; }
+        @keyframes pulseAnim {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; text-shadow: 0 0 15px rgba(197, 160, 89, 0.8); }
+            100% { opacity: 0.5; }
+        }
+    </style>
+    <script>
+        // Logika Routing Adam_OS
+        window.onload = function() {
+            // Cek kalau lebar layar <= 768px ATAU ke-detect device mobile
+            const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobileDevice) {
+                // Lempar ke versi mobile
+                window.location.replace("mobile.html");
+            } else {
+                // Lempar ke versi desktop
+                window.location.replace("desktop.html");
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="pulse">Routing Adam_OS...</div>
+</body>
+</html>
