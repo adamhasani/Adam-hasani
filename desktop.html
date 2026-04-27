@@ -2,657 +2,498 @@
 <html lang="id" class="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adam Hasani | Portofolio Space OS</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#050B08">
+<title>Adam Hasani | Portfolio</title>
 <link rel="preload" as="image" href="https://files.catbox.moe/8whl73.jpg">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-    tailwind.config = {
-        darkMode: 'class',
-        theme: {
-            extend: {
-                colors: {
-                    ivory: '#FDFBF7', forest: '#0A261D', forestLight: '#164A38',
-                    gold: '#C5A059', obsidian: '#050B08', pearl: '#F8F6F0',
-                },
-                fontFamily: {
-                    serif: ['"Cormorant Garamond"', 'serif'],
-                    sans: ['"Space Grotesk"', 'sans-serif'],
-                }
-            }
-        }
-    }
+  tailwind.config = {
+    darkMode:'class',
+    theme:{extend:{colors:{ivory:'#FDFBF7',forest:'#0A261D',gold:'#C5A059',obsidian:'#050B08'},fontFamily:{serif:['"Cormorant Garamond"','serif'],mono:['"DM Mono"','monospace']}}}
+  }
 </script>
-
 <style>
-  /* =========================================
-     RESET & FONT
-     ========================================= */
-  :root {
-      --luxe-ease: cubic-bezier(0.16, 1, 0.3, 1);
-      --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-      --power-out: cubic-bezier(0.7, 0, 0.84, 0); 
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; cursor: none; }
-  body {
-    background-color: #050B08; color: #e0e0e0; overflow-x: hidden; min-height: 100vh;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 3px; }
+:root{--gold:#C5A059;--gold-glow:rgba(197,160,89,0.5);--gold-dim:rgba(197,160,89,0.12);--bg:#050B08;--ease:cubic-bezier(0.16,1,0.3,1);--bounce:cubic-bezier(0.34,1.56,0.64,1);--pow:cubic-bezier(0.7,0,0.84,0);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background-color:var(--bg);color:#e0e0e0;overflow-x:hidden;min-height:100vh;font-family:'DM Mono',monospace;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px;}
 
-  /* =========================================
-     PRELOADER ADAM_OS
-     ========================================= */
-  #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #000000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s var(--luxe-ease); overflow: hidden; }
-  #preloader.loaded { opacity: 0; pointer-events: none; }
-  .loader-content { position: relative; z-index: 100; text-align: center; display: flex; flex-direction: column; align-items: center; transition: opacity 0.3s ease;}
-  .loader-counter { font-family: 'Cormorant Garamond', serif; font-size: 8rem; font-weight: 700; color: #C5A059; line-height: 0.8; letter-spacing: -0.05em; text-shadow: 0 0 30px rgba(197,160,89,0.8); }
-  .loader-text { font-size: 0.7rem; letter-spacing: 0.5em; text-transform: uppercase; color: rgba(253, 251, 247, 0.4); margin-top: 2rem; font-weight: bold; transition: color 0.3s; }
-  .rocket-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 300px; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; transition: transform 0.1s linear, opacity 0.3s ease; }
-  .rocket-icon { font-size: 10rem; color: #FDFBF7; transform: rotate(-45deg); filter: drop-shadow(0 0 15px rgba(253, 251, 247, 0.5)) drop-shadow(0 0 30px rgba(197, 160, 89, 0.3)); margin-bottom: -10px; position: relative; }
-  .rocket-container.rumble { animation: rumble 0.1s infinite linear; }
-  @keyframes rumble { 0% { transform: translate(-50%, -50%) translate(1px, 1px); } 50% { transform: translate(-50%, -50%) translate(-1px, -1px); } 100% { transform: translate(-50%, -50%) translate(1px, -1px); } }
-  .rocket-container.launch { animation: launchRocket 1.2s var(--power-out) forwards; opacity: 1 !important; }
-  @keyframes launchRocket { 0% { transform: translate(-50%, -50%) translateY(0); } 15% { transform: translate(-50%, -50%) translateY(20px); } 100% { transform: translate(-50%, -50%) translateY(-150vh) scale(0.8); } }
-  .rocket-trail { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 0; background: linear-gradient(to top, transparent, #fff, #C5A059); border-radius: 4px; opacity: 0; z-index: 40; }
-  .rocket-container.launch + .rocket-trail { animation: trailAnim 1.2s var(--power-out) forwards; }
-  @keyframes trailAnim { 0% { height: 0; opacity: 1; top: 50%; } 30% { height: 100vh; opacity: 1; top: 50%; } 100% { height: 0; opacity: 0; top: -100vh; } }
-  .thruster-fire { width: 30px; height: 80px; background: linear-gradient(to bottom, #fff, #ffeb3b 20%, #ff9800 40%, #ff4d4d 60%, transparent); border-radius: 50% 50% 20% 20%; filter: blur(2px); box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff9800; opacity: 0; transition: opacity 0.3s ease; animation: flameFlicker 0.1s infinite alternate; transform-origin: top center; }
-  .rocket-container.rumble .thruster-fire, .rocket-container.launch .thruster-fire { opacity: 1; }
-  @keyframes flameFlicker { 0% { transform: scaleY(0.9) scaleX(1); opacity: 0.9; } 100% { transform: scaleY(1.1) scaleX(0.95); opacity: 1; } }
-  .smoke-container { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); width: 200px; height: 100px; z-index: 30; pointer-events: none; opacity: 0; }
-  .rocket-container.rumble + .rocket-trail + .smoke-container { opacity: 1; }
-  .smoke-particle { position: absolute; background: rgba(200, 200, 200, 0.3); border-radius: 50%; filter: blur(10px); animation: smokeRise 2s ease-out infinite; }
-  @keyframes smokeRise { 0% { transform: translate(0, 0) scale(1); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(var(--dx), -100px) scale(3); opacity: 0; } }
+/* PRELOADER */
+#preloader{position:fixed;inset:0;background:#000;z-index:100000;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:opacity .8s var(--ease);}
+#preloader.loaded{opacity:0;pointer-events:none;}
+.loader-content{position:relative;z-index:100;text-align:center;display:flex;flex-direction:column;align-items:center;transition:opacity .3s;}
+.loader-counter{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,14vw,8rem);font-weight:700;color:var(--gold);line-height:.8;letter-spacing:-.05em;text-shadow:0 0 40px var(--gold-glow);}
+.loader-text{font-size:.62rem;letter-spacing:.45em;text-transform:uppercase;color:rgba(253,251,247,.4);margin-top:2rem;font-weight:500;}
+.rocket-container{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:150px;height:300px;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;transition:opacity .3s;}
+.rocket-icon{font-size:8rem;color:#FDFBF7;transform:rotate(-45deg);filter:drop-shadow(0 0 15px rgba(253,251,247,.5)) drop-shadow(0 0 30px var(--gold-glow));margin-bottom:-10px;}
+.rocket-container.rumble{animation:rumble .1s infinite linear;}
+@keyframes rumble{0%{transform:translate(-50%,-50%) translate(1px,1px);}50%{transform:translate(-50%,-50%) translate(-1px,-1px);}100%{transform:translate(-50%,-50%) translate(1px,-1px);}}
+.rocket-container.launch{animation:launchRocket 1.2s var(--pow) forwards;}
+@keyframes launchRocket{0%{transform:translate(-50%,-50%) translateY(0);}15%{transform:translate(-50%,-50%) translateY(20px);}100%{transform:translate(-50%,-50%) translateY(-150vh) scale(.8);}}
+.rocket-trail{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:4px;height:0;background:linear-gradient(to top,transparent,#fff,var(--gold));border-radius:4px;opacity:0;z-index:40;}
+.rocket-container.launch~.rocket-trail{animation:trailAnim 1.2s var(--pow) forwards;}
+@keyframes trailAnim{0%{height:0;opacity:1;top:50%;}30%{height:100vh;opacity:1;top:50%;}100%{height:0;opacity:0;top:-100vh;}}
+.thruster-fire{width:28px;height:70px;background:linear-gradient(to bottom,#fff,#ffeb3b 20%,#ff9800 40%,#ff4d4d 60%,transparent);border-radius:50% 50% 20% 20%;filter:blur(2px);box-shadow:0 0 20px #ff4d4d,0 0 40px #ff9800;opacity:0;animation:flameFlicker .1s infinite alternate;}
+.rocket-container.rumble .thruster-fire,.rocket-container.launch .thruster-fire{opacity:1;}
+@keyframes flameFlicker{0%{transform:scaleY(.9) scaleX(1);}100%{transform:scaleY(1.1) scaleX(.95);}}
+.smoke-container{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);width:200px;height:100px;z-index:30;pointer-events:none;opacity:0;}
+.smoke-particle{position:absolute;background:rgba(200,200,200,.3);border-radius:50%;filter:blur(10px);animation:smokeRise 2s ease-out infinite;}
+@keyframes smokeRise{0%{transform:translate(0,0) scale(1);opacity:0;}10%{opacity:1;}100%{transform:translate(var(--dx),-100px) scale(3);opacity:0;}}
 
-  /* =========================================
-     CUSTOM CURSOR & BACKGROUND GLOW
-     ========================================= */
-  .mouse-glow { position: fixed; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(197, 160, 89, 0.15) 0%, transparent 60%); pointer-events: none; z-index: 10; transform: translate(-50%, -50%); mix-blend-mode: screen; will-change: left, top; transition: background 0.5s ease; }
-  #cursor-dot { width: 8px; height: 8px; background: linear-gradient(135deg, #C5A059, #E8D4A8); border-radius: 50%; position: fixed; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); box-shadow: 0 0 20px rgba(197, 160, 89, 0.6); transition: width 0.2s var(--bounce), height 0.2s var(--bounce); will-change: left, top; }
-  #cursor-ring { width: 50px; height: 50px; border: 1.5px solid rgba(197, 160, 89, 0.5); border-radius: 50%; position: fixed; pointer-events: none; z-index: 99998; transform: translate(-50%, -50%); transition: width 0.15s var(--luxe-ease), height 0.15s var(--luxe-ease), background-color 0.15s; will-change: left, top; box-shadow: 0 0 15px rgba(197, 160, 89, 0.2); }
-  #cursor-ring.hover { width: 80px; height: 80px; border-color: #C5A059; background: rgba(197, 160, 89, 0.1); box-shadow: 0 0 30px rgba(197, 160, 89, 0.4); }
-  @media (hover: none) and (pointer: coarse) { #cursor-dot, #cursor-ring, .mouse-glow { display: none !important; } * { cursor: auto !important; } }
-  .ripple { position: absolute; border-radius: 50%; border: 2px solid rgba(197, 160, 89, 0.8); transform: translate(-50%, -50%); animation: rippleAnim 0.8s ease-out forwards; pointer-events: none; z-index: 9999; box-shadow: 0 0 20px rgba(197, 160, 89, 0.5); }
-  @keyframes rippleAnim { 0% { width: 0; height: 0; opacity: 1; } 100% { width: 150px; height: 150px; opacity: 0; } }
+/* BACKGROUND */
+.mouse-glow{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(197,160,89,.1) 0%,transparent 60%);pointer-events:none;z-index:10;transform:translate(-50%,-50%);mix-blend-mode:screen;will-change:left,top;}
+.bg-shapes{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.shape{position:absolute;border-radius:50%;filter:blur(100px);animation:morphMove 20s ease-in-out infinite;will-change:transform;}
+.shape-1{width:500px;height:500px;background:radial-gradient(circle,rgba(197,160,89,.05) 0%,transparent 70%);top:-200px;right:-200px;}
+.shape-2{width:400px;height:400px;background:radial-gradient(circle,rgba(10,38,29,.04) 0%,transparent 70%);bottom:-150px;left:-150px;animation-delay:-7s;}
+@keyframes morphMove{0%,100%{transform:translate(0,0) scale(1);}25%{transform:translate(40px,-25px) scale(1.08);}50%{transform:translate(-25px,40px) scale(.96);}75%{transform:translate(-40px,-15px) scale(1.04);}}
+#neural-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:2;pointer-events:none;opacity:.55;}
+@media(max-width:799px){body{background-color:#000;}#stars-container{display:block;position:fixed;inset:0;z-index:1;overflow:hidden;pointer-events:none;}.star{position:absolute;background-color:var(--gold);border-radius:50%;box-shadow:0 0 4px var(--gold);animation:twinkle infinite alternate;}@keyframes twinkle{0%{opacity:.1;transform:scale(.8);}100%{opacity:.8;transform:scale(1.2);}}.shooting-star{position:absolute;top:0;left:0;width:100px;height:2px;background:linear-gradient(90deg,transparent,rgba(197,160,89,.8));opacity:0;animation:jatuh 6s linear infinite;z-index:1;}.shooting-star::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:3px;height:3px;background:var(--gold);border-radius:50%;}.shooting-star.delay{animation-delay:3.5s;animation-duration:9s;}@keyframes jatuh{0%{transform:translate(120vw,-20vh) rotate(225deg);opacity:1;}20%{transform:translate(-20vw,120vh) rotate(225deg);opacity:0;}100%{opacity:0;}}}
+@media(min-width:800px){body{background-image:url('https://files.catbox.moe/8whl73.jpg');background-size:cover;background-position:center;background-attachment:fixed;}#stars-container,.shooting-star{display:none!important;}}
 
-  /* =========================================
-     KACA BURAM TEBAL (PREMIUM GLASS OVERLAY)
-     ========================================= */
-  #glass-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(5, 11, 8, 0.6); 
-      backdrop-filter: blur(40px);
-      -webkit-backdrop-filter: blur(40px);
-      z-index: 15; opacity: 0; visibility: hidden; pointer-events: none; 
-      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  #glass-overlay.active { opacity: 1; visibility: visible; }
+/* PAGES */
+.halaman{position:absolute;top:0;left:0;width:100%;min-height:100vh;padding:clamp(50px,8vw,80px) clamp(16px,4vw,40px);transition:all .5s var(--ease);z-index:20;}
+.halaman-hidden{opacity:0;transform:translateY(40px) scale(.97);pointer-events:none;visibility:hidden;}
+.halaman-active{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;visibility:visible;position:relative;}
 
-  .bg-shapes { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; pointer-events: none; opacity: 0.3; }
-  .shape { position: absolute; border-radius: 50%; filter: blur(80px); animation: morphMove 20s ease-in-out infinite; will-change: transform; }
-  .shape-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(197, 160, 89, 0.08) 0%, transparent 70%); top: -200px; right: -200px; animation-delay: 0s; }
-  .shape-2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(10, 38, 29, 0.06) 0%, transparent 70%); bottom: -150px; left: -150px; animation-delay: -7s; }
-  @keyframes morphMove { 0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); } 25% { transform: translate(50px, -30px) scale(1.1) rotate(5deg); } 50% { transform: translate(-30px, 50px) scale(0.95) rotate(-5deg); } 75% { transform: translate(-50px, -20px) scale(1.05) rotate(3deg); } }
-  #neural-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none; opacity: 0.7; }
+/* BERANDA */
+#halaman-beranda{text-align:center;max-width:880px;margin:0 auto;z-index:20;}
+.judul-utama{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,10vw,7rem);font-weight:700;line-height:1;margin-bottom:8px;letter-spacing:-.02em;background:linear-gradient(135deg,#fff 40%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 35px rgba(197,160,89,.28));}
+.sub-judul{color:var(--gold);font-size:.72rem;letter-spacing:.4em;margin-bottom:52px;text-transform:uppercase;font-weight:500;height:20px;font-family:'DM Mono',monospace;}
+.grid-container{display:grid;gap:14px;padding:6px;grid-template-columns:1fr;max-width:680px;margin:0 auto;}
+@media(min-width:520px){.grid-container{grid-template-columns:repeat(2,1fr);}}
+.card-menu{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.01));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.07);border-top-color:rgba(255,255,255,.17);border-left-color:rgba(255,255,255,.13);border-radius:20px;height:155px;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:all .3s ease;box-shadow:0 8px 30px rgba(0,0,0,.5);position:relative;overflow:hidden;}
+.card-menu::before{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(to right,transparent,rgba(197,160,89,.12),transparent);transform:skewX(-20deg);transition:left .5s ease;}
+.card-menu:hover::before{left:150%;}
+.card-menu:hover{transform:translateY(-7px);border-color:rgba(197,160,89,.55);box-shadow:0 16px 40px rgba(0,0,0,.7),0 0 22px rgba(197,160,89,.18);}
+.card-icon{font-size:1.9rem;margin-bottom:11px;color:var(--gold);filter:drop-shadow(0 0 10px var(--gold-glow));}
+.text-title{font-size:.82rem;font-weight:500;letter-spacing:.04em;color:#fff;font-family:'DM Mono',monospace;}
 
-  @media (max-width: 799px) {
-    body { background-color: #000000; }
-    #stars-container { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; }
-    .star { position: absolute; background-color: #C5A059; border-radius: 50%; box-shadow: 0 0 5px #C5A059, 0 0 10px #C5A059; animation: twinkle infinite alternate; }
-    @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.8); } 100% { opacity: 0.8; transform: scale(1.2); } }
-    .shooting-star { position: absolute; top: 0; left: 0; width: 120px; height: 2px; background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.8)); opacity: 0; animation: jatuh 6s linear infinite; z-index: 1; }
-    .shooting-star::after { content: ''; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 4px; background: #C5A059; border-radius: 50%; box-shadow: 0 0 10px #C5A059, 0 0 20px #C5A059; }
-    .shooting-star.delay { animation-delay: 3.5s; animation-duration: 9s; }
-    @keyframes jatuh { 0% { transform: translate(120vw, -20vh) rotate(225deg); opacity: 1; } 20% { transform: translate(-20vw, 120vh) rotate(225deg); opacity: 0; } 100% { opacity: 0; } }
-  }
-  @media (min-width: 800px) {
-    body { background-color: #050B08; background-image: url('https://files.catbox.moe/8whl73.jpg'); background-size: cover; background-position: center; background-attachment: fixed; }
-    #stars-container, .shooting-star { display: none !important; }
-  }
+/* NAVBAR */
+#halaman-detail{max-width:1100px;margin:0 auto;z-index:25;}
+.navbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;z-index:50;}
+.btn-back{background:rgba(197,160,89,.08);border:1px solid rgba(197,160,89,.32);color:var(--gold);padding:10px 22px;font-size:.68rem;font-weight:500;border-radius:30px;transition:all .3s ease;text-transform:uppercase;letter-spacing:.14em;font-family:'DM Mono',monospace;}
+.btn-back:hover{background:var(--gold);color:#000;transform:translateY(-2px);box-shadow:0 0 18px var(--gold-glow);}
+.konten-item{display:none;animation:fadeIn .5s ease;padding-bottom:60px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 
-  /* =========================================
-     TRANSISI HALAMAN & GRID BERANDA
-     ========================================= */
-  .halaman { position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; padding: 60px 20px; transition: all 0.5s var(--luxe-ease); z-index: 20; }
-  .halaman-hidden { opacity: 0; transform: translateY(40px) scale(0.95); pointer-events: none; visibility: hidden; }
-  .halaman-active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; visibility: visible; position: relative; }
+/* EDITORIAL */
+.editorial-layout{position:relative;width:100%;min-height:460px;display:flex;align-items:center;overflow:hidden;}
+@media(min-width:769px){.editorial-layout{height:70vh;min-height:480px;max-height:740px;}}
+#model-scene-container{position:absolute;top:0;width:58%;height:100%;transition:all 1.5s cubic-bezier(.16,1,.3,1);pointer-events:none;z-index:1;}
+@media(min-width:769px){#model-scene-container.pos-0{left:44%;}#model-scene-container.pos-1{left:4%;transform:scale(1.1);}#model-scene-container.pos-2{left:18%;transform:scale(1.3);}#model-scene-container.pos-3{left:48%;transform:scale(.9);}}
+@media(max-width:768px){.editorial-layout{height:auto;min-height:auto;align-items:flex-start;padding-top:10px;}#model-scene-container{width:100%!important;left:0!important;top:0!important;transform:scale(1.35)!important;opacity:.1;filter:blur(3px);}}
+@keyframes pulseHalo{0%,100%{box-shadow:0 0 25px var(--gold-glow),inset 0 0 25px var(--gold-glow);border-color:rgba(197,160,89,.45);}50%{box-shadow:0 0 60px rgba(197,160,89,.7),inset 0 0 60px rgba(197,160,89,.7);border-color:var(--gold);}}
+.halo-ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:330px;height:330px;border-radius:50%;border:2px solid rgba(197,160,89,.6);z-index:1;animation:pulseHalo 4s ease-in-out infinite;}
+@media(max-width:768px){.halo-ring{width:210px;height:210px;top:38%;opacity:.65;}}
+model-viewer{position:absolute;left:0;top:0;width:100%;height:100%;outline:none;background:transparent;--poster-color:transparent;z-index:2;filter:drop-shadow(0 0 22px var(--gold-glow));}
+.editorial-nav{position:relative;z-index:20;display:flex;flex-direction:column;gap:11px;margin-left:14px;}
+@media(max-width:768px){.editorial-nav{display:none;}}
+.nav-line{width:26px;height:2px;background:rgba(197,160,89,.22);border:none;transition:all .4s var(--ease);border-radius:2px;}
+.nav-line:hover{background:rgba(197,160,89,.55);}
+.nav-line.active{width:52px;background:var(--gold);box-shadow:0 0 10px var(--gold-glow);}
+.editorial-content{position:relative;z-index:20;width:100%;transition:padding 1s var(--ease);}
+@media(min-width:769px){.text-on-left{padding-left:34px;}.text-on-right{padding-left:50%;padding-right:14px;}.text-on-center-split{padding:0;text-align:center;}}
+@media(max-width:768px){.editorial-content{padding:0!important;text-align:center!important;display:flex;flex-direction:column;align-items:center;padding-top:22px!important;}.editorial-desc,.stat-block,.stat-row,.skills-list{margin:0 auto!important;}.stat-row{justify-content:center!important;}.split-stats-grid{display:grid;grid-template-columns:repeat(2,1fr)!important;gap:14px!important;padding:0!important;margin-top:18px;}}
+.data-slide{position:absolute;left:0;top:0;width:100%;opacity:0;pointer-events:none;visibility:hidden;transition:all .65s var(--ease);transform:translateY(22px);}
+.data-slide.active-slide{position:relative;opacity:1;pointer-events:auto;visibility:visible;transform:translateY(0);}
+.editorial-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,8.5vw,5.2rem);font-weight:400;color:#fff;line-height:1.05;margin-bottom:1.1rem;text-shadow:0 0 18px rgba(197,160,89,.28);}
+.editorial-desc{font-family:'DM Mono',monospace;font-size:.8rem;color:rgba(255,255,255,.82);line-height:1.72;letter-spacing:.02em;max-width:460px;}
+.split-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:24px;padding:0 7%;}
+.stat-block{text-align:center;}
+.stat-block .counter{font-size:clamp(2.2rem,6.5vw,3.6rem);font-family:'Cormorant Garamond',serif;font-weight:300;line-height:1;color:var(--gold);text-shadow:0 0 18px var(--gold-glow);}
+.stat-block p{font-size:.6rem;text-transform:uppercase;letter-spacing:.18em;color:rgba(255,255,255,.55);margin-top:7px;font-family:'DM Mono',monospace;}
+.editorial-stats{display:flex;flex-direction:column;gap:11px;margin-top:18px;}
+.stat-row{display:flex;align-items:baseline;gap:10px;}
+.stat-row .counter{font-size:clamp(1.3rem,3.2vw,1.9rem);font-family:'Cormorant Garamond',serif;font-weight:300;color:var(--gold);text-shadow:0 0 12px var(--gold-glow);}
+.stat-row p{font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,.5);font-family:'DM Mono',monospace;}
+.skills-list{max-width:370px;margin-top:18px;width:100%;}
+.clean-progress{margin-top:13px;}
+.clean-progress .label{display:flex;justify-content:space-between;font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.88);margin-bottom:6px;font-family:'DM Mono',monospace;}
+.clean-progress .bar-bg{width:100%;height:1px;background:rgba(197,160,89,.13);position:relative;}
+.clean-progress .bar-fill{position:absolute;left:0;top:-1.5px;height:4px;background:linear-gradient(90deg,var(--gold),#E8D4A8);width:0%;transition:width 1.4s var(--ease);box-shadow:0 0 8px var(--gold-glow);border-radius:2px;}
+.next-btn-container{display:flex;justify-content:flex-start;margin-left:34px;margin-top:1.4rem;position:relative;z-index:20;}
+@media(max-width:768px){.next-btn-container{justify-content:center;margin-left:0;margin-top:2.5rem;}}
+.profile-photo{width:clamp(5.5rem,11vw,7.5rem);height:clamp(5.5rem,11vw,7.5rem);border-radius:50%;object-fit:cover;image-rendering:-webkit-optimize-contrast;border:2px solid rgba(197,160,89,.65);padding:3px;box-shadow:0 0 25px rgba(197,160,89,.38);margin-bottom:18px;}
+@media(max-width:768px){.profile-photo{margin:0 auto 18px;}}
 
-  #halaman-beranda { text-align: center; max-width: 1000px; margin: 0 auto; z-index: 20; }
-  .judul-utama { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 6vw, 5rem); font-weight: bold; color: #fff; margin-bottom: 5px; letter-spacing: 1px; transition: transform 0.2s ease-out; text-shadow: 0 0 30px rgba(197, 160, 89, 0.4); }
-  .sub-judul { color: #C5A059; font-size: 1rem; letter-spacing: 0.3em; margin-bottom: 50px; text-transform: uppercase; font-weight: bold; height: 24px; text-shadow: 0 0 15px rgba(197, 160, 89, 0.5); }
-  
-  .grid-container { display: grid; gap: 20px; padding: 10px; grid-template-columns: 1fr; max-width: 800px; margin: 0 auto;}
-  @media (min-width: 600px) { .grid-container { grid-template-columns: repeat(2, 1fr); } }
-  
-  /* GRID KACA (GLASSMORPHISM PREMIUM) */
-  .card-menu { background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.15); border-radius: 24px; height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.4s ease; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); position: relative; overflow: hidden; }
-  .card-menu::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(197, 160, 89, 0.2), transparent); transform: skewX(-20deg); transition: all 0.6s ease; }
-  .card-menu:hover::before { left: 150%; }
-  .card-menu:hover { transform: translateY(-10px); border-color: #C5A059; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(197, 160, 89, 0.3); }
-  .card-icon { font-size: 2.2rem; margin-bottom: 15px; color: #C5A059; text-shadow: 0 0 20px rgba(197, 160, 89, 0.6); }
-  .text-title { font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; color: #fff; }
-
-  /* =========================================
-     HALAMAN DETAIL & NAVBAR
-     ========================================= */
-  #halaman-detail { max-width: 1100px; margin: 0 auto; z-index: 25; }
-  .navbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; position: relative; z-index: 50; }
-  
-  .btn-back { background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.4); color: #C5A059; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; border-radius: 30px; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 15px rgba(197, 160, 89, 0.1); }
-  .btn-back:hover { background: #C5A059; color: #000; transform: translateY(-2px); box-shadow: 0 0 25px rgba(197, 160, 89, 0.6); }
-
-  .konten-item { display: none; animation: fadeIn 0.6s ease; padding-bottom: 50px;}
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* =========================================
-     LAY OUT MUSEUM EDITORIAL & ANIMASI 3D
-     ========================================= */
-  .editorial-layout { position: relative; width: 100%; min-height: 500px; height: 75vh; display: flex; align-items: center; overflow: hidden; }
-
-  /* GRUP 3D MODEL & HALO */
-  #model-scene-container { position: absolute; top: 0; width: 60%; height: 100%; transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; z-index: 1; }
-
-  @media (min-width: 769px) {
-      #model-scene-container.pos-0 { left: 45%; transform: scale(1); }    
-      #model-scene-container.pos-1 { left: 5%; transform: scale(1.1); }   
-      #model-scene-container.pos-2 { left: 20%; transform: scale(1.35); } 
-      #model-scene-container.pos-3 { left: 50%; transform: scale(0.9); }  
-  }
-
-  @media (max-width: 768px) {
-      .editorial-layout { height: auto; min-height: auto; align-items: flex-start; padding-top: 10px; }
-      #model-scene-container { width: 100% !important; left: 0 !important; top: 5% !important; transform: scale(1.5) !important; opacity: 0.15; filter: blur(3px); }
-  }
-
-  /* EFEK GLOW EMAS BERNAFAS (PULSE GOLD) */
-  @keyframes pulseHalo {
-      0%, 100% { box-shadow: 0 0 40px rgba(197, 160, 89, 0.4), inset 0 0 40px rgba(197, 160, 89, 0.4); border-color: rgba(197, 160, 89, 0.6); }
-      50% { box-shadow: 0 0 80px rgba(197, 160, 89, 0.8), inset 0 0 80px rgba(197, 160, 89, 0.8); border-color: #C5A059; }
-  }
-
-  .halo-ring {
-      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-      width: 350px; height: 350px; border-radius: 50%; border: 3px solid rgba(197, 160, 89, 0.8);
-      z-index: 1; animation: pulseHalo 4s ease-in-out infinite; 
-  }
-  @media (max-width: 768px) { .halo-ring { width: 250px !important; height: 250px !important; top: 40% !important; opacity: 0.8; } }
-  
-  model-viewer { 
-      position: absolute; left: 0; top: 0; width: 100%; height: 100%; 
-      outline: none; background: transparent; --poster-color: transparent; z-index: 2;
-      filter: drop-shadow(0 0 30px rgba(197, 160, 89, 0.5)); 
-  }
-
-  /* Navigasi Garis */
-  .editorial-nav { position: relative; z-index: 20; display: flex; flex-direction: column; gap: 15px; margin-left: 20px; }
-  @media (max-width: 768px) { .editorial-nav { display: none; } }
-  .nav-line { width: 30px; height: 2px; background: rgba(197, 160, 89, 0.3); border: none; transition: all 0.4s var(--luxe-ease); }
-  .nav-line:hover { background: rgba(197, 160, 89, 0.7); box-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
-  .nav-line.active { width: 60px; background: #C5A059; box-shadow: 0 0 15px rgba(197, 160, 89, 0.8); }
-
-  /* KONTEN TEKS EDITORIAL */
-  .editorial-content { position: relative; z-index: 20; width: 100%; transition: padding 1s var(--luxe-ease); }
-  
-  @media (min-width: 769px) {
-      .text-on-left { padding-left: 40px; padding-right: 0; }
-      .text-on-right { padding-left: 55%; padding-right: 20px; }
-      .text-on-center-split { padding-left: 0; text-align: center; } 
-  }
-  @media (max-width: 768px) {
-      .editorial-content { padding: 0 !important; margin: 0 !important; text-align: center !important; display: flex; flex-direction: column; align-items: center; padding-top: 20px !important; }
-      .text-on-left, .text-on-right, .text-on-center-split { padding: 0 !important; }
-      .editorial-desc { margin: 0 auto !important; }
-      .stat-block { text-align: center !important; }
-      .stat-row { justify-content: center !important; }
-      .skills-list { margin: 0 auto !important; }
-      .split-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr) !important; gap: 20px !important; padding: 0 !important; margin-top: 20px; }
-  }
-
-  .data-slide { position: absolute; left: 0; top: 0; width: 100%; opacity: 0; pointer-events: none; visibility: hidden; transition: all 0.8s var(--luxe-ease); transform: translateY(30px); }
-  .data-slide.active-slide { position: relative; opacity: 1; pointer-events: auto; visibility: visible; transform: translateY(0); }
-
-  /* Teks GEDE & GLOW EMAS */
-  .editorial-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 10vw, 5.5rem); font-weight: 400; color: #fff; line-height: 1.1; margin-bottom: 1.5rem; text-shadow: 0 0 30px rgba(197, 160, 89, 0.4); }
-  .editorial-desc { font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; color: rgba(255,255,255,0.9); line-height: 1.6; letter-spacing: 0.5px; max-width: 500px; text-shadow: 0 0 10px rgba(197, 160, 89, 0.2); }
-
-  .split-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; padding: 0 10%; }
-  .stat-block { text-align: center; }
-  .stat-block .counter { font-size: clamp(3rem, 8vw, 4rem); font-family: 'Space Grotesk', sans-serif; font-weight: 300; line-height: 1; text-shadow: 0 0 25px rgba(197, 160, 89, 0.8); }
-  .stat-block p { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: rgba(255,255,255,0.7); margin-top: 10px; }
-
-  .editorial-stats { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-  .stat-row { display: flex; align-items: baseline; gap: 15px; }
-  .stat-row .counter { font-size: clamp(1.5rem, 4vw, 2.2rem); font-family: 'Space Grotesk', sans-serif; font-weight: 300; text-shadow: 0 0 20px rgba(197, 160, 89, 0.6); }
-  .stat-row p { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.6); }
-
-  .skills-list { max-width: 400px; margin-top: 20px; width: 100%; }
-  .clean-progress { margin-top: 15px; }
-  .clean-progress .label { display: flex; justify-content: space-between; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #fff; margin-bottom: 5px; text-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
-  .clean-progress .bar-bg { width: 100%; height: 1px; background: rgba(197, 160, 89, 0.2); position: relative; }
-  .clean-progress .bar-fill { position: absolute; left: 0; top: -1px; height: 3px; background: linear-gradient(90deg, #C5A059, #E8D4A8); width: 0%; transition: width 1.5s var(--luxe-ease); box-shadow: 0 0 15px rgba(197, 160, 89, 0.8); }
-
-  .next-btn-container { display: flex; justify-content: flex-start; margin-left: 40px; margin-top: 2rem; position: relative; z-index: 20; }
-  @media (max-width: 768px) { .next-btn-container { justify-content: center; margin-left: 0; margin-top: 3rem; } }
-
-  /* =========================================
-     KACA BURAM UNTUK KOTAK MENU / PROYEK 
-     ========================================= */
-  .glass-panel { background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.005) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.15); border-left: 1px solid rgba(255,255,255,0.15); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative; z-index: 20; transition: all 0.4s ease; }
-  .project-card { position: relative; overflow: hidden; }
-  .project-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.1), transparent); transition: left 0.6s ease; }
-  .project-card:hover::before { left: 100%; }
-  
-  .magnetic-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2rem; background: transparent; border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 50px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; overflow: hidden; color: #FDFBF7; transition: all 0.4s ease; text-decoration: none; text-shadow: 0 0 10px rgba(197, 160, 89, 0.3); box-shadow: 0 0 15px rgba(197, 160, 89, 0.1); }
-  .magnetic-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 0; height: 0; background: #C5A059; border-radius: 50%; transform: translate(-50%, -50%); transition: width 0.5s ease, height 0.5s ease; z-index: -1; }
-  .magnetic-btn:hover { color: #0A261D !important; border-color: #C5A059; text-shadow: none; box-shadow: 0 0 30px rgba(197, 160, 89, 0.4); }
-  .magnetic-btn:hover::before { width: 300px; height: 300px; }
-  .glitch-hover:hover { color: #C5A059 !important; text-shadow: 0 0 20px rgba(197, 160, 89, 0.8); animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite; }
+/* GLASS & PROJECTS */
+.glass-panel{background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.01) 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.06);border-top-color:rgba(255,255,255,.13);border-left-color:rgba(255,255,255,.11);border-radius:20px;box-shadow:0 10px 36px rgba(0,0,0,.48);position:relative;z-index:20;transition:all .38s ease;}
+.project-card{overflow:hidden;}
+.project-gif-preview{position:absolute;inset:0;z-index:0;border-radius:20px;overflow:hidden;opacity:0;transition:opacity .5s ease;}
+.project-gif-preview img{width:100%;height:100%;object-fit:cover;filter:brightness(.12) saturate(.4);}
+.project-card:hover .project-gif-preview{opacity:1;}
+.project-card:hover{border-color:rgba(197,160,89,.45);box-shadow:0 18px 48px rgba(0,0,0,.75),0 0 25px rgba(197,160,89,.13);}
+.project-card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(197,160,89,.07),transparent);transition:left .6s ease;z-index:1;border-radius:20px;}
+.project-card:hover::before{left:100%;}
+.project-card-inner{position:relative;z-index:2;}
+.magnetic-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:.85rem 1.9rem;background:transparent;border:1px solid rgba(197,160,89,.32);border-radius:50px;font-size:.66rem;font-weight:500;letter-spacing:.11em;text-transform:uppercase;overflow:hidden;color:#FDFBF7;transition:all .32s ease;text-decoration:none;font-family:'DM Mono',monospace;}
+.magnetic-btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:var(--gold);border-radius:50%;transform:translate(-50%,-50%);transition:width .5s ease,height .5s ease;z-index:-1;}
+.magnetic-btn:hover{color:#0A261D;border-color:var(--gold);box-shadow:0 0 22px var(--gold-glow);}
+.magnetic-btn:hover::before{width:300px;height:300px;}
+.glitch-hover:hover{color:var(--gold)!important;text-shadow:0 0 18px var(--gold-glow)!important;}
+.badge-flagship{display:inline-block;font-size:.58rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),#E8D4A8);color:#0A261D;padding:5px 15px;border-radius:30px;margin-bottom:11px;font-family:'DM Mono',monospace;}
+.section-label{font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:14px;font-family:'DM Mono',monospace;text-shadow:0 0 8px rgba(197,160,89,.38);}
+.timeline-item{border-left:2px solid rgba(197,160,89,.18);padding-left:22px;position:relative;}
+.timeline-item::before{content:'';position:absolute;left:-5px;top:7px;width:8px;height:8px;background:var(--gold);border-radius:50%;box-shadow:0 0 8px var(--gold-glow);}
+.timeline-item+.timeline-item{margin-top:38px;}
+.kontak-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:36px;}
+@media(max-width:480px){.glass-panel.p-8{padding:1.1rem!important;}.glass-panel.p-6{padding:.9rem!important;}}
 </style>
 </head>
-<body class="antialiased selection:bg-gold selection:text-white">
+<body class="antialiased">
 
-  <div id="preloader" role="alert" aria-live="polite">
-      <div class="loader-content"><div class="loader-counter" id="loader-counter">0</div><p class="loader-text" id="loader-status">System Initializing</p></div>
-      <div class="rocket-container" id="mega-rocket"><i class="fas fa-rocket rocket-icon"></i><div class="thruster-fire"></div></div>
-      <div class="rocket-trail"></div><div class="smoke-container" id="smoke-container"></div>
+<div id="preloader" role="alert">
+  <div class="loader-content">
+    <div class="loader-counter" id="loader-counter">0</div>
+    <p class="loader-text" id="loader-status">System Initializing</p>
+  </div>
+  <div class="rocket-container" id="mega-rocket">
+    <i class="fas fa-rocket rocket-icon"></i>
+    <div class="thruster-fire"></div>
+  </div>
+  <div class="rocket-trail"></div>
+  <div class="smoke-container" id="smoke-container"></div>
+</div>
+
+<div class="mouse-glow" id="mouse-glow"></div>
+<div class="bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div></div>
+<canvas id="neural-canvas"></canvas>
+<div id="stars-container"></div>
+<div class="shooting-star"></div>
+<div class="shooting-star delay"></div>
+
+<!-- BERANDA -->
+<div id="halaman-beranda" class="halaman halaman-active">
+  <div style="margin-top:clamp(28px,5.5vh,56px);margin-bottom:clamp(24px,4.5vh,44px);position:relative;z-index:20;">
+    <h1 class="judul-utama glitch-hover" id="hero-title">Adam Hasani<span style="-webkit-text-fill-color:var(--gold);color:var(--gold);">.</span></h1>
+    <p class="sub-judul" id="role-text">WEB DEVELOPER</p>
+  </div>
+  <div class="grid-container relative z-20">
+    <div class="card-menu" onclick="bukaDetail('datadiri')"><div class="card-icon"><i class="fas fa-user-astronaut"></i></div><div class="text-title">Data Diri & Sistem</div></div>
+    <div class="card-menu" onclick="bukaDetail('proyek')"><div class="card-icon"><i class="fas fa-brain"></i></div><div class="text-title">Karya & Project</div></div>
+    <div class="card-menu" onclick="bukaDetail('pengalaman')"><div class="card-icon"><i class="fas fa-route"></i></div><div class="text-title">Eksplorasi Perjalanan</div></div>
+    <div class="card-menu" onclick="bukaDetail('kontak')"><div class="card-icon"><i class="fas fa-satellite-dish"></i></div><div class="text-title">Hubungi Aku</div></div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div id="halaman-detail" class="halaman halaman-hidden">
+  <div class="navbar">
+    <button class="btn-back" onclick="kembaliKeBeranda()"><i class="fas fa-arrow-left mr-2"></i>Kembali</button>
   </div>
 
-  <div class="mouse-glow" id="mouse-glow"></div>
-  <div id="cursor-dot"></div><div id="cursor-ring"></div>
-  <div class="bg-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div></div>
-  <canvas id="neural-canvas"></canvas>
-  <div id="stars-container"></div><div class="shooting-star"></div><div class="shooting-star delay"></div>
-
-  <div id="glass-overlay"></div>
-
-  <div id="halaman-beranda" class="halaman halaman-active">
-    <div style="margin-top: 50px; margin-bottom: 40px; position: relative; z-index: 20;">
-        <h1 class="judul-utama glitch-hover cursor-target" id="hero-title">Adam Hasani<span class="text-gold">.</span></h1>
-        <p class="sub-judul cursor-target text-gold" id="role-text">WEB DEVELOPER</p>
-    </div>
-    <div class="grid-container relative z-20">
-      <div class="card-menu cursor-target" onclick="bukaDetail('datadiri')"><div class="card-icon"><i class="fas fa-user-astronaut text-gold"></i></div><div class="text-title">Data Diri & Sistem</div></div>
-      <div class="card-menu cursor-target" onclick="bukaDetail('proyek')"><div class="card-icon"><i class="fas fa-brain text-gold"></i></div><div class="text-title">Karya & Project</div></div>
-      <div class="card-menu cursor-target" onclick="bukaDetail('pengalaman')"><div class="card-icon"><i class="fas fa-route text-gold"></i></div><div class="text-title">Eksplorasi Perjalanan</div></div>
-      <div class="card-menu cursor-target" onclick="bukaDetail('kontak')"><div class="card-icon"><i class="fas fa-satellite-dish text-gold"></i></div><div class="text-title">Hubungi Aku</div></div>
-    </div>
-  </div>
-
-  <div id="halaman-detail" class="halaman halaman-hidden">
-    <div class="navbar relative z-30 w-full flex justify-between">
-      <button class="btn-back cursor-target" onclick="kembaliKeBeranda()"><i class="fas fa-arrow-left mr-2"></i> Kembali</button>
+  <!-- DATA DIRI -->
+  <div id="konten-datadiri" class="konten-item relative z-20">
+    <div class="editorial-layout">
+      <div id="model-scene-container" class="pos-0">
+        <div class="halo-ring"></div>
+        <model-viewer src="globe.glb" loading="eager" auto-rotate autoplay rotation-per-second="1.5deg" interaction-prompt="none" exposure="1.2" shadow-intensity="2" disable-zoom></model-viewer>
       </div>
+      <div class="editorial-nav">
+        <button class="nav-line active" data-target="slide-bio"></button>
+        <button class="nav-line" data-target="slide-telemetry"></button>
+        <button class="nav-line" data-target="slide-stats"></button>
+        <button class="nav-line" data-target="slide-skills"></button>
+      </div>
+      <div id="editorial-text-content" class="editorial-content text-on-left">
 
-    <div id="konten-datadiri" class="konten-item relative z-20">
-        <div class="editorial-layout">
-            
-            <div id="model-scene-container" class="pos-0">
-                <div class="halo-ring"></div>
-                <model-viewer src="globe.glb" loading="eager" auto-rotate autoplay rotation-per-second="1.5deg" interaction-prompt="none" exposure="1.2" shadow-intensity="2" disable-zoom></model-viewer>
-            </div>
-
-            <div class="editorial-nav">
-                <button class="nav-line cursor-target active" data-target="slide-bio"></button>
-                <button class="nav-line cursor-target" data-target="slide-telemetry"></button>
-                <button class="nav-line cursor-target" data-target="slide-stats"></button>
-                <button class="nav-line cursor-target" data-target="slide-skills"></button>
-            </div>
-
-            <div id="editorial-text-content" class="editorial-content text-on-left">
-                
-                <div id="slide-bio" class="data-slide active-slide">
-                    <img src="IMG_20260127_140845_874.webp" alt="Adam Hasani" class="w-32 h-32 md:w-48 md:h-48 rounded-full object-cover border-2 border-gold/80 p-1 mb-6 shadow-[0_0_40px_rgba(197,160,89,0.5)] mx-auto md:mx-0">
-                    <p class="text-xs tracking-[0.3em] uppercase text-white/70 mb-2 font-bold text-shadow-sm">11 Feb 2006 — Tegal, ID</p>
-                    <h2 class="editorial-title">Adam<br>Hasani</h2>
-                    <p class="editorial-desc">Namaku <span class="text-gold font-bold">Adam Hasani</span>! Aku sistem aktif yang diinisiasi pada tanggal 11 Februari 2006. Aku aktif merancang arsitektur web yang rapi, memberikan interaktivitas, dan mengintegrasikan berbagai API untuk menghidupkan proyek AI pribadiku, Flora AI, dengan pondasi <span class="text-gold font-bold">JavaScript</span> & <span class="text-gold font-bold">Node.js</span>.</p>
-                </div>
-
-                <div id="slide-telemetry" class="data-slide">
-                    <p class="text-xs tracking-[0.3em] uppercase mb-2 font-bold" style="text-shadow: 0 0 10px #4ade80; color: #4ade80;">Status: Terbuka Kolaborasi</p>
-                    <h2 class="editorial-title">System<br>Telemetry</h2>
-                    <p class="editorial-desc mb-6">Live monitor telemetry sistem vital Adam Hasani. Memastikan integritas dan uptime data inti.</p>
-                    <div class="editorial-stats">
-                        <div class="stat-row"><span class="counter text-gold" id="uptime-counter-editorial">...</span><p>Uptime</p></div>
-                        <div class="stat-row"><span class="counter text-gold" id="live-time-editorial">...</span><p>WIB Time</p></div>
-                        <div class="stat-row"><span class="counter text-gold text-lg" id="github-commit-editorial">Fetching...</span><p>GitHub Status</p></div>
-                    </div>
-                </div>
-
-                <div id="slide-stats" class="data-slide">
-                    <p class="text-xs tracking-[0.3em] uppercase text-gold mb-2 text-center md:text-left text-on-center-split font-bold">Data Eksplorasi</p>
-                    <h2 class="editorial-title text-center md:text-left text-on-center-split">Core<br>Metrics</h2>
-                    <div class="split-stats-grid">
-                        <div class="stat-block"><span class="counter text-gold" data-target="4">0</span><span class="text-gold font-serif text-2xl ml-1">+</span><p>Proyek Utama</p></div>
-                        <div class="stat-block"><span class="counter text-gold" data-target="3">0</span><p>Fokus Tech<br><span class="text-[8px] opacity-70 normal-case">JS · Node · API</span></p></div>
-                        <div class="stat-block"><span class="counter text-gold" data-target="99">0</span><span class="text-gold font-serif text-2xl ml-1">%</span><p>Komitmen Belajar</p></div>
-                        <div class="stat-block"><span class="counter text-gold" data-target="3">0</span><span class="text-gold font-serif text-2xl ml-1">+</span><p>Tahun Eksplorasi</p></div>
-                    </div>
-                </div>
-
-                <div id="slide-skills" class="data-slide">
-                    <p class="text-xs tracking-[0.3em] uppercase text-gold mb-2 font-bold">Tech Stack</p>
-                    <h2 class="editorial-title">Core<br>Systems</h2>
-                    <div class="skills-list">
-                        <div class="clean-progress"><div class="label"><span>JavaScript (ES6+)</span><span class="text-gold">88%</span></div><div class="bar-bg"><div class="bar-fill" data-width="88%"></div></div></div>
-                        <div class="clean-progress"><div class="label"><span>Node.js</span><span class="text-gold">85%</span></div><div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div></div>
-                        <div class="clean-progress"><div class="label"><span>Bot Architecture</span><span class="text-gold">85%</span></div><div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div></div>
-                        <div class="clean-progress"><div class="label"><span>Problem Solving</span><span class="text-gold">82%</span></div><div class="bar-bg"><div class="bar-fill" data-width="82%"></div></div></div>
-                        <div class="clean-progress"><div class="label"><span>REST API</span><span class="text-gold">90%</span></div><div class="bar-bg"><div class="bar-fill" data-width="90%"></div></div></div>
-                        <div class="clean-progress"><div class="label"><span>Data Fetching</span><span class="text-gold">85%</span></div><div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div></div>
-                    </div>
-                </div>
-            </div>
+        <div id="slide-bio" class="data-slide active-slide">
+          <img src="IMG_20260127_140845_874.webp" alt="Adam Hasani" class="profile-photo">
+          <p style="font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:8px;font-family:'DM Mono',monospace;">11 Feb 2006 — Tegal, ID</p>
+          <h2 class="editorial-title">Adam<br>Hasani</h2>
+          <p class="editorial-desc">Namaku <span style="color:var(--gold);font-weight:500;">Adam Hasani</span>! Sistem aktif diinisiasi 11 Februari 2006. Aktif merancang arsitektur web yang rapi, memberikan interaktivitas, dan mengintegrasikan API untuk menghidupkan proyek AI pribadiku — <span style="color:var(--gold);">Flora AI</span> — dengan pondasi <span style="color:var(--gold);">JavaScript</span> & <span style="color:var(--gold);">Node.js</span>.</p>
         </div>
 
-        <div class="next-btn-container">
-            <button id="next-editorial-slide" class="text-gold hover:text-white uppercase tracking-widest text-xs flex items-center gap-2 transition-all cursor-target" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);">
-                Next Slide <i class="fas fa-long-arrow-alt-right"></i>
-            </button>
+        <div id="slide-telemetry" class="data-slide">
+          <p style="font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:#4ade80;margin-bottom:8px;font-family:'DM Mono',monospace;">● Status: Terbuka Kolaborasi</p>
+          <h2 class="editorial-title">System<br>Telemetry</h2>
+          <p class="editorial-desc" style="margin-bottom:20px;">Live monitor telemetri sistem vital Adam Hasani. Memastikan integritas & uptime data inti.</p>
+          <div class="editorial-stats">
+            <div class="stat-row"><span class="counter" id="uptime-counter-editorial" style="color:var(--gold);">...</span><p>Uptime</p></div>
+            <div class="stat-row"><span class="counter" id="live-time-editorial" style="color:var(--gold);">...</span><p>WIB Time</p></div>
+            <div class="stat-row"><span class="counter" id="github-commit-editorial" style="color:var(--gold);font-size:.9rem;">Fetching...</span><p>GitHub Status</p></div>
+          </div>
         </div>
-    </div>
 
-    <div id="konten-proyek" class="konten-item relative z-20">
-        <div class="text-center mb-12"><p class="text-[10px] font-bold tracking-[0.4em] uppercase text-gold mb-4" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);">✦ Karya ✦</p><h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold glitch-hover cursor-target editorial-title">Logika <span class="italic text-gold">Tereksekusi</span></h2></div>
-        <div class="flex flex-col gap-8"><article class="glass-panel project-card p-8 relative group cursor-target"><div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-4"><div><span class="inline-block text-[8px] font-bold tracking-[0.3em] uppercase bg-gold text-forest px-4 py-1.5 rounded-full mb-3 box-shadow-[0_0_15px_rgba(197,160,89,0.5)]">Flagship Project</span><h3 class="font-serif text-3xl text-ivory font-bold transition-colors group-hover:text-gold" style="text-shadow: 0 0 15px rgba(197,160,89,0.2);">Flora AI</h3></div></div><p class="text-sm text-ivory/80 leading-relaxed max-w-2xl mb-6 font-medium">Asisten Kecerdasan Buatan pribadi yang aku kembangkan dari nol. Merancang arsitektur logika bot/plugin tingkat lanjut dan integrasi API untuk asisten digital fungsional.</p><div class="flex items-center gap-6 border-t border-gold/20 pt-6 relative z-10"><a href="https://flora-ai.vercel.app/" target="_blank" class="text-xs font-bold tracking-widest uppercase text-gold hover:text-white transition-colors cursor-target" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);"><i class="fas fa-satellite-dish animate-pulse"></i> Live Demo</a><a href="https://github.com/adamhasani" target="_blank" class="text-xs font-bold tracking-widest uppercase text-white/50 hover:text-gold transition-colors cursor-target"><i class="fab fa-github text-lg"></i> Source Code</a></div></article>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><article class="glass-panel project-card p-6 group flex flex-col justify-between cursor-target"><div><h4 class="font-serif text-2xl text-ivory font-bold mb-4 group-hover:text-gold" style="text-shadow: 0 0 10px rgba(197,160,89,0.2);">WA Bot / AI WA</h4><p class="text-xs text-ivory/80 leading-relaxed font-medium mb-6">Pengembangan Chatbot AI untuk WhatsApp. Memproses pesan dan eksekusi instruksi otomatis.</p></div><div class="border-t border-gold/20 pt-4 relative z-10"><a href="https://wa.me/6287751121269" target="_blank" class="text-[10px] font-bold tracking-[0.2em] uppercase text-gold transition-colors cursor-target" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);">Chat with Bot <i class="fas fa-external-link-alt ml-1"></i></a></div></article><article class="glass-panel project-card p-6 group flex flex-col justify-between cursor-target"><div><h4 class="font-serif text-2xl text-ivory font-bold mb-4 group-hover:text-gold" style="text-shadow: 0 0 10px rgba(197,160,89,0.2);">Flora Vision</h4><p class="text-xs text-ivory/80 leading-relaxed font-medium mb-6">Eksplorasi computer vision dan AI untuk mendeteksi data visual dengan tingkat akurasi tinggi.</p></div><div class="border-t border-gold/20 pt-4 relative z-10"><a href="https://github.com/adamhasani" target="_blank" class="text-[10px] font-bold tracking-[0.2em] uppercase text-gold transition-colors cursor-target" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);">View Research <i class="fas fa-arrow-right ml-1"></i></a></div></article></div></div>
-    </div>
+        <div id="slide-stats" class="data-slide">
+          <p class="section-label">Data Eksplorasi</p>
+          <h2 class="editorial-title">Core<br>Metrics</h2>
+          <div class="split-stats-grid">
+            <div class="stat-block"><span class="counter" data-target="4" style="color:var(--gold);">0</span><span style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-left:2px;">+</span><p>Proyek Utama</p></div>
+            <div class="stat-block"><span class="counter" data-target="3" style="color:var(--gold);">0</span><p>Fokus Tech<br><span style="font-size:.52rem;opacity:.6;">JS · Node · API</span></p></div>
+            <div class="stat-block"><span class="counter" data-target="99" style="color:var(--gold);">0</span><span style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-left:2px;">%</span><p>Komitmen Belajar</p></div>
+            <div class="stat-block"><span class="counter" data-target="3" style="color:var(--gold);">0</span><span style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-left:2px;">+</span><p>Tahun Eksplorasi</p></div>
+          </div>
+        </div>
 
-    <div id="konten-pengalaman" class="konten-item relative z-20">
-        <div class="text-center mb-12"><p class="text-[10px] font-bold tracking-[0.4em] uppercase text-gold mb-4" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);">✦ Pengalaman ✦</p><h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold glitch-hover cursor-target editorial-title">Perjalanan <span class="italic text-gold">Historis</span></h2></div>
-        <div class="space-y-6"><article class="glass-panel p-8 cursor-target"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/4 border-b md:border-b-0 md:border-r border-gold/20 pb-4 md:pb-0 md:pr-6"><p class="text-xl font-serif font-bold text-gold" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);">2025 — Sekarang</p><p class="text-[10px] uppercase tracking-widest text-ivory/60 mt-2 font-bold">Arsitektur AI</p></div><div class="md:w-3/4"><h4 class="text-2xl font-bold text-ivory mb-3">Pengembangan Flora AI</h4><p class="text-sm text-ivory/80 leading-relaxed font-medium">Membangun proyek ambisius: Flora AI. Merancang arsitektur bot dari nol, memfokuskan pada logika plugin modular, serta integrasi API tingkat lanjut.</p></div></div></article><article class="glass-panel p-8 cursor-target"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/4 border-b md:border-b-0 md:border-r border-gold/20 pb-4 md:pb-0 md:pr-6"><p class="text-xl font-serif font-bold text-gold" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);">2021</p><p class="text-[10px] uppercase tracking-widest text-ivory/60 mt-2 font-bold">Otomatisasi</p></div><div class="md:w-3/4"><h4 class="text-2xl font-bold text-ivory mb-3">Chatbot WA / AI WhatsApp</h4><p class="text-sm text-ivory/80 leading-relaxed font-medium">Membangun pondasi otomatisasi dengan mengembangkan WhatsApp Bot / AI WhatsApp untuk memproses pesan dan mengelola instruksi spesifik secara otomatis.</p></div></div></article><article class="glass-panel p-8 cursor-target"><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/4 border-b md:border-b-0 md:border-r border-gold/20 pb-4 md:pb-0 md:pr-6"><p class="text-xl font-serif font-bold text-gold" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);">Awal Mula</p><p class="text-[10px] uppercase tracking-widest text-ivory/60 mt-2 font-bold">Eksplorasi</p></div><div class="md:w-3/4"><h4 class="text-2xl font-bold text-ivory mb-3">Eksplorasi Self-taught</h4><p class="text-sm text-ivory/80 leading-relaxed font-medium">Di sinilah semuanya dimulai! Mempelajari fundamental bahasa pemrograman dan algoritma untuk membiasakan diri dengan alur kerja teknologi modern.</p></div></div></article></div>
-    </div>
+        <div id="slide-skills" class="data-slide">
+          <p class="section-label">Tech Stack</p>
+          <h2 class="editorial-title">Core<br>Systems</h2>
+          <div class="skills-list">
+            <div class="clean-progress"><div class="label"><span>JavaScript (ES6+)</span><span style="color:var(--gold);">88%</span></div><div class="bar-bg"><div class="bar-fill" data-width="88%"></div></div></div>
+            <div class="clean-progress"><div class="label"><span>Node.js</span><span style="color:var(--gold);">85%</span></div><div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div></div>
+            <div class="clean-progress"><div class="label"><span>Bot Architecture</span><span style="color:var(--gold);">85%</span></div><div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div></div>
+            <div class="clean-progress"><div class="label"><span>Problem Solving</span><span style="color:var(--gold);">82%</span></div><div class="bar-bg"><div class="bar-fill" data-width="82%"></div></div></div>
+            <div class="clean-progress"><div class="label"><span>REST API</span><span style="color:var(--gold);">90%</span></div><div class="bar-bg"><div class="bar-fill" data-width="90%"></div></div></div>
+            <div class="clean-progress"><div class="label"><span>Data Fetching</span><span style="color:var(--gold);">85%</span></div><div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div></div>
+          </div>
+        </div>
 
-    <div id="konten-kontak" class="konten-item relative z-20">
-        <div class="text-center mb-12"><p class="text-[10px] font-bold tracking-[0.4em] uppercase text-gold mb-4" style="text-shadow: 0 0 10px rgba(197,160,89,0.5);">Yuk Ngobrol Bareng Adam Hasani!</p><h2 class="font-serif text-3xl md:text-5xl text-ivory font-bold mb-6 glitch-hover cursor-target editorial-title">Mau kolaborasi atau <span class="italic text-gold">say hi?</span></h2></div>
-        <div class="flex flex-wrap justify-center gap-6 mt-8"><a href="https://wa.me/6287751121269" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-whatsapp text-2xl mr-3 text-gold"></i><span>WhatsApp</span></a><a href="https://t.me/+6287810342030" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-telegram-plane text-2xl mr-3 text-gold"></i><span>Telegram</span></a><a href="https://instagram.com/adamhsni_" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-instagram text-2xl mr-3 text-gold"></i><span>Instagram</span></a><a href="https://github.com/adamhasani" target="_blank" class="magnetic-btn cursor-target"><i class="fab fa-github text-2xl mr-3 text-gold"></i><span>GitHub</span></a></div>
+      </div>
     </div>
-
+    <div class="next-btn-container">
+      <button id="next-editorial-slide" style="color:var(--gold);font-family:'DM Mono',monospace;font-size:.66rem;text-transform:uppercase;letter-spacing:.14em;display:flex;align-items:center;gap:8px;background:none;border:none;transition:color .3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--gold)'">
+        Next Slide <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
   </div>
 
-  <script>
-    // ===== AUDIO ENGINE =====
-    let audioCtx = null;
-    function initAudio() {
-        if (!audioCtx) { try { window.AudioContext = window.AudioContext || window.webkitAudioContext; audioCtx = new AudioContext(); } catch (e) { return; } }
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-    }
-    document.addEventListener('click', initAudio, {once: true}); 
-    document.addEventListener('mousemove', initAudio, {once: true});
+  <!-- PROYEK -->
+  <div id="konten-proyek" class="konten-item relative z-20">
+    <div class="text-center mb-12">
+      <p class="section-label">✦ Karya ✦</p>
+      <h2 class="editorial-title glitch-hover" style="display:inline-block;">Logika <em style="color:var(--gold);font-style:italic;">Tereksekusi</em></h2>
+    </div>
+    <div class="flex flex-col gap-6">
+      <!-- Flora AI -->
+      <article class="glass-panel project-card p-8">
+        <div class="project-gif-preview"><img src="flora-ai.gif" alt="" loading="lazy"></div>
+        <div class="project-card-inner">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <div>
+              <span class="badge-flagship">Flagship Project</span>
+              <h3 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2.2rem);color:#FDFBF7;font-weight:700;text-shadow:0 0 10px rgba(197,160,89,.18);">Flora AI</h3>
+            </div>
+          </div>
+          <p style="font-size:.78rem;color:rgba(255,255,255,.78);line-height:1.72;max-width:620px;margin-bottom:22px;font-family:'DM Mono',monospace;">Asisten Kecerdasan Buatan pribadi yang dikembangkan dari nol. Merancang arsitektur logika bot/plugin tingkat lanjut dan integrasi API untuk asisten digital fungsional.</p>
+          <div class="flex items-center gap-6 border-t pt-5" style="border-color:rgba(197,160,89,.13);">
+            <a href="https://flora-ai.vercel.app/" target="_blank" style="font-size:.65rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-family:'DM Mono',monospace;text-decoration:none;transition:color .3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--gold)'"><i class="fas fa-satellite-dish" style="animation:pulse 2s infinite;"></i> Live Demo</a>
+            <a href="https://github.com/adamhasani" target="_blank" style="font-size:.65rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);font-family:'DM Mono',monospace;text-decoration:none;transition:color .3s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(255,255,255,.4)'"><i class="fab fa-github"></i> Source Code</a>
+          </div>
+        </div>
+      </article>
+      <!-- Sub projects -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <article class="glass-panel project-card p-6 flex flex-col justify-between">
+          <div class="project-gif-preview"><img src="wa-bot.gif" alt="" loading="lazy"></div>
+          <div class="project-card-inner flex flex-col" style="height:100%;">
+            <div style="flex:1;">
+              <h4 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,3.5vw,1.8rem);color:#FDFBF7;font-weight:700;margin-bottom:10px;text-shadow:0 0 8px rgba(197,160,89,.14);">WA Bot / AI WA</h4>
+              <p style="font-size:.74rem;color:rgba(255,255,255,.72);line-height:1.7;font-family:'DM Mono',monospace;margin-bottom:18px;">Chatbot AI untuk WhatsApp. Memproses pesan dan eksekusi instruksi otomatis secara real-time.</p>
+            </div>
+            <div class="border-t pt-4" style="border-color:rgba(197,160,89,.11);">
+              <a href="https://wa.me/6287751121269" target="_blank" style="font-size:.62rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-family:'DM Mono',monospace;text-decoration:none;transition:color .3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--gold)'">Chat with Bot <i class="fas fa-external-link-alt ml-1"></i></a>
+            </div>
+          </div>
+        </article>
+        <article class="glass-panel project-card p-6 flex flex-col justify-between">
+          <div class="project-gif-preview"><img src="flora-vision.gif" alt="" loading="lazy"></div>
+          <div class="project-card-inner flex flex-col" style="height:100%;">
+            <div style="flex:1;">
+              <h4 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,3.5vw,1.8rem);color:#FDFBF7;font-weight:700;margin-bottom:10px;text-shadow:0 0 8px rgba(197,160,89,.14);">Flora Vision</h4>
+              <p style="font-size:.74rem;color:rgba(255,255,255,.72);line-height:1.7;font-family:'DM Mono',monospace;margin-bottom:18px;">Eksplorasi computer vision & AI untuk mendeteksi data visual dengan tingkat akurasi tinggi.</p>
+            </div>
+            <div class="border-t pt-4" style="border-color:rgba(197,160,89,.11);">
+              <a href="https://github.com/adamhasani" target="_blank" style="font-size:.62rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-family:'DM Mono',monospace;text-decoration:none;transition:color .3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--gold)'">View Research <i class="fas fa-arrow-right ml-1"></i></a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
 
-    function playRumbleSound() {
-        if (!audioCtx || audioCtx.state === 'suspended') return null;
-        try {
-            const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(50, audioCtx.currentTime); osc.frequency.rampToValueAtTime(30, audioCtx.currentTime + 1.5);
-            gain.gain.setValueAtTime(0, audioCtx.currentTime); gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.5); 
-            osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); return {osc, gain};
-        } catch(e) { return null; }
-    }
-    function playWhooshSound() {
-        if (!audioCtx || audioCtx.state === 'suspended') return;
-        try {
-            const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-            osc.type = 'triangle'; osc.frequency.setValueAtTime(100, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 1); 
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
-            osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 1.2);
-        } catch(e) {}
-    }
-    function playHoverSound() {
-        if (!audioCtx || audioCtx.state === 'suspended') return;
-        try {
-            const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-            osc.type = 'sine'; osc.frequency.setValueAtTime(1000, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(2000, audioCtx.currentTime + 0.05);
-            gain.gain.setValueAtTime(0.015, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-            osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.05);
-        } catch(e) {}
-    }
-    function playClickSound() {
-        if (!audioCtx || audioCtx.state === 'suspended') return;
-        try {
-            const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-            osc.type = 'triangle'; osc.frequency.setValueAtTime(300, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.04, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-            osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-        } catch(e) {}
-    }
-    function playScrambleTick() {
-        if (!audioCtx || audioCtx.state === 'suspended') return;
-        try {
-            const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-            osc.type = 'square'; osc.frequency.setValueAtTime(400 + Math.random() * 400, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.005, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.02);
-            osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.02);
-        } catch(e) {}
-    }
+  <!-- PENGALAMAN -->
+  <div id="konten-pengalaman" class="konten-item relative z-20">
+    <div class="text-center mb-12">
+      <p class="section-label">✦ Pengalaman ✦</p>
+      <h2 class="editorial-title glitch-hover" style="display:inline-block;">Perjalanan <em style="color:var(--gold);font-style:italic;">Historis</em></h2>
+    </div>
+    <div class="max-w-xl mx-auto px-4">
+      <div class="timeline-item">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:700;color:var(--gold);text-shadow:0 0 8px var(--gold-glow);">2025 — Sekarang</p>
+        <p style="font-size:.58rem;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.38);margin:4px 0 11px;font-family:'DM Mono',monospace;">Arsitektur AI</p>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#FDFBF7;font-weight:700;margin-bottom:10px;">Pengembangan Flora AI</h4>
+        <p style="font-size:.76rem;color:rgba(255,255,255,.72);line-height:1.72;font-family:'DM Mono',monospace;">Membangun proyek ambisius: Flora AI. Merancang arsitektur bot dari nol, memfokuskan pada logika plugin modular, serta integrasi API tingkat lanjut.</p>
+      </div>
+      <div class="timeline-item">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:700;color:var(--gold);text-shadow:0 0 8px var(--gold-glow);">2021</p>
+        <p style="font-size:.58rem;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.38);margin:4px 0 11px;font-family:'DM Mono',monospace;">Otomatisasi</p>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#FDFBF7;font-weight:700;margin-bottom:10px;">Chatbot WA / AI WhatsApp</h4>
+        <p style="font-size:.76rem;color:rgba(255,255,255,.72);line-height:1.72;font-family:'DM Mono',monospace;">Membangun pondasi otomatisasi dengan mengembangkan WhatsApp Bot untuk memproses pesan dan mengelola instruksi spesifik secara otomatis.</p>
+      </div>
+      <div class="timeline-item">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:700;color:var(--gold);text-shadow:0 0 8px var(--gold-glow);">Awal Mula</p>
+        <p style="font-size:.58rem;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.38);margin:4px 0 11px;font-family:'DM Mono',monospace;">Eksplorasi</p>
+        <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#FDFBF7;font-weight:700;margin-bottom:10px;">Self-taught Developer</h4>
+        <p style="font-size:.76rem;color:rgba(255,255,255,.72);line-height:1.72;font-family:'DM Mono',monospace;">Di sinilah semuanya dimulai. Mempelajari fundamental bahasa pemrograman dan algoritma untuk membiasakan diri dengan alur kerja teknologi modern.</p>
+      </div>
+    </div>
+  </div>
 
-    // ===== PRELOADER LOGIC =====
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    const preloader = document.getElementById('preloader');
-    const loaderCounter = document.getElementById('loader-counter');
-    const loaderStatus = document.getElementById('loader-status');
-    const rocket = document.getElementById('mega-rocket');
-    const smokeContainer = document.getElementById('smoke-container');
-    let isLoaded = false; let counter = 0; let rumbleSoundObj = null; let smokeInterval = null;
+  <!-- KONTAK -->
+  <div id="konten-kontak" class="konten-item relative z-20">
+    <div class="text-center mb-12">
+      <p class="section-label">Yuk Ngobrol Bareng!</p>
+      <h2 class="editorial-title glitch-hover" style="display:inline-block;">Mau kolaborasi atau <em style="color:var(--gold);font-style:italic;">say hi?</em></h2>
+    </div>
+    <div class="kontak-grid">
+      <a href="https://wa.me/6287751121269" target="_blank" class="magnetic-btn"><i class="fab fa-whatsapp text-lg mr-2" style="color:var(--gold);"></i>WhatsApp</a>
+      <a href="https://t.me/+6287810342030" target="_blank" class="magnetic-btn"><i class="fab fa-telegram-plane text-lg mr-2" style="color:var(--gold);"></i>Telegram</a>
+      <a href="https://instagram.com/adamhsni_" target="_blank" class="magnetic-btn"><i class="fab fa-instagram text-lg mr-2" style="color:var(--gold);"></i>Instagram</a>
+      <a href="https://github.com/adamhasani" target="_blank" class="magnetic-btn"><i class="fab fa-github text-lg mr-2" style="color:var(--gold);"></i>GitHub</a>
+    </div>
+  </div>
 
-    function createSmoke() {
-        if(isMobile) return; 
-        for(let i=0; i<2; i++) {
-            const p = document.createElement('div'); p.className = 'smoke-particle';
-            const size = Math.random() * 30 + 20 + 'px';
-            p.style.width = size; p.style.height = size; p.style.left = Math.random() * 100 + '%';
-            p.style.setProperty('--dx', (Math.random() - 0.5) * 100 + 'px'); p.style.animationDuration = Math.random() * 1 + 1 + 's';
-            smokeContainer.appendChild(p); setTimeout(() => p.remove(), 2000);
-        }
-    }
+</div>
 
-    const counterInterval = setInterval(() => {
-        if(counter < 80) counter += Math.floor(Math.random() * 2) + 1; else if (counter < 90) counter += 0.5; else counter += 0.2;
-        if (counter >= 100) {
-            counter = 100; clearInterval(counterInterval); loaderCounter.textContent = '100';
-            setTimeout(() => {
-                loaderStatus.textContent = "IGNITION!"; loaderStatus.style.color = "#ff4d4d"; playWhooshSound();
-                if(rumbleSoundObj) rumbleSoundObj.gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-                rocket.classList.remove('rumble'); rocket.classList.add('launch'); clearInterval(smokeInterval);
-                document.querySelector('.loader-content').style.opacity = '0';
-                setTimeout(() => { preloader.classList.add('loaded'); isLoaded = true; setTimeout(() => startScramble(), 800); setTimeout(() => preloader.remove(), 1500); }, 600); 
-            }, 500); 
-            return;
-        }
-        const roundCounter = Math.floor(counter); loaderCounter.textContent = roundCounter;
-        if(roundCounter === 20) loaderStatus.textContent = "Loading Core Modules"; if(roundCounter === 50) loaderStatus.textContent = "Establishing Neural Link"; if(roundCounter === 80) loaderStatus.textContent = "Finalizing Systems";
-        if(roundCounter >= 90 && !rocket.classList.contains('rumble')) {
-            loaderStatus.textContent = "READY FOR LAUNCH"; loaderStatus.style.color = "#ffeb3b"; rocket.classList.add('rumble');
-            initAudio(); rumbleSoundObj = playRumbleSound(); smokeInterval = setInterval(createSmoke, 100); 
-        }
-    }, 30);
+<script>
+// AUDIO
+let audioCtx=null;
+function initAudio(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return;}}if(audioCtx.state==='suspended')audioCtx.resume();}
+document.addEventListener('click',initAudio,{once:true});
+function playTone(type,freqStart,freqEnd,gainVal,dur){if(!audioCtx||audioCtx.state==='suspended')return;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freqStart,audioCtx.currentTime);if(freqEnd)o.frequency.exponentialRampToValueAtTime(freqEnd,audioCtx.currentTime+dur);g.gain.setValueAtTime(gainVal,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur);}catch(e){}}
+function playWhoosh(){playTone('triangle',100,1000,.08,1.2);}
+function playClick(){playTone('triangle',300,100,.04,.1);}
+function playScrambleTick(){if(!audioCtx||audioCtx.state==='suspended')return;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.setValueAtTime(400+Math.random()*400,audioCtx.currentTime);g.gain.setValueAtTime(.004,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.02);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.02);}catch(e){}}
+function playRumble(){if(!audioCtx||audioCtx.state==='suspended')return null;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sawtooth';o.frequency.setValueAtTime(50,audioCtx.currentTime);o.frequency.rampToValueAtTime(30,audioCtx.currentTime+1.5);g.gain.setValueAtTime(0,audioCtx.currentTime);g.gain.linearRampToValueAtTime(.04,audioCtx.currentTime+.5);o.connect(g);g.connect(audioCtx.destination);o.start();return{o,g};}catch(e){return null;}}
 
-    // ===== BINTANG JS & MOUSE GLOW =====
-    const starsContainer = document.getElementById('stars-container');
-    if(starsContainer) {
-      for(let i=0; i<150; i++) {
-        let star = document.createElement('div'); star.className = 'star';
-        star.style.left = Math.random() * 100 + '%'; star.style.top = Math.random() * 100 + '%';
-        star.style.width = (Math.random() * 2 + 1) + 'px'; star.style.height = star.style.width;
-        star.style.animationDuration = (Math.random() * 3 + 1) + 's'; star.style.animationDelay = (Math.random() * 2) + 's';
-        starsContainer.appendChild(star);
-      }
-    }
-    const cursorDot = document.getElementById('cursor-dot'); const cursorRing = document.getElementById('cursor-ring'); const mouseGlow = document.getElementById('mouse-glow');
-    let cursorX = 0, cursorY = 0, dotX = 0, dotY = 0, ringX = 0, ringY = 0; const mouse = { x: null, y: null, radius: 200 };
-    document.addEventListener('mousemove', (e) => { cursorX = e.clientX; cursorY = e.clientY; mouse.x = e.clientX; mouse.y = e.clientY; if (mouseGlow) { mouseGlow.style.left = e.clientX + 'px'; mouseGlow.style.top = e.clientY + 'px'; } });
-    function animateCursor() { dotX += (cursorX - dotX) * 0.2; dotY += (cursorY - dotY) * 0.2; ringX += (cursorX - ringX) * 0.1; ringY += (cursorY - ringY) * 0.1; if (cursorDot) { cursorDot.style.left = dotX + 'px'; cursorDot.style.top = dotY + 'px'; } if (cursorRing) { cursorRing.style.left = ringX + 'px'; cursorRing.style.top = ringY + 'px'; } requestAnimationFrame(animateCursor); }
-    animateCursor();
-    document.addEventListener('mouseenter', (e) => { if (e.target.closest('.cursor-target') || e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-menu') || e.target.closest('model-viewer')) { if (cursorRing) cursorRing.classList.add('hover'); playHoverSound(); } }, true);
-    document.addEventListener('mouseleave', (e) => { if (e.target.closest('.cursor-target') || e.target.closest('button') || e.target.closest('a') || e.target.closest('.card-menu') || e.target.closest('model-viewer')) { if (cursorRing) cursorRing.classList.remove('hover'); } }, true);
-    document.addEventListener('click', function (e) { const ripple = document.createElement('div'); ripple.className = 'ripple'; ripple.style.left = `${e.clientX}px`; ripple.style.top = `${e.clientY}px`; document.body.appendChild(ripple); playClickSound(); setTimeout(() => ripple.remove(), 800); });
+// PRELOADER
+const isMobile=/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)||window.innerWidth<=768;
+const preloader=document.getElementById('preloader');
+const loaderCounter=document.getElementById('loader-counter');
+const loaderStatus=document.getElementById('loader-status');
+const rocket=document.getElementById('mega-rocket');
+const smokeContainer=document.getElementById('smoke-container');
+let isLoaded=false,counter=0,rumbleSnd=null,smokeIv=null;
+function createSmoke(){if(isMobile)return;for(let i=0;i<2;i++){const p=document.createElement('div');p.className='smoke-particle';const s=Math.random()*28+18+'px';p.style.width=s;p.style.height=s;p.style.left=Math.random()*100+'%';p.style.setProperty('--dx',(Math.random()-.5)*75+'px');p.style.animationDuration=Math.random()*1+1+'s';smokeContainer.appendChild(p);setTimeout(()=>p.remove(),2000);}}
+const civ=setInterval(()=>{
+  if(counter<80)counter+=Math.floor(Math.random()*2)+1;
+  else if(counter<90)counter+=.5;
+  else counter+=.2;
+  if(counter>=100){counter=100;clearInterval(civ);loaderCounter.textContent='100';
+    setTimeout(()=>{loaderStatus.textContent='IGNITION!';loaderStatus.style.color='#ff4d4d';initAudio();playWhoosh();if(rumbleSnd)rumbleSnd.g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.5);rocket.classList.remove('rumble');rocket.classList.add('launch');clearInterval(smokeIv);document.querySelector('.loader-content').style.opacity='0';
+      setTimeout(()=>{preloader.classList.add('loaded');isLoaded=true;setTimeout(startScramble,800);setTimeout(()=>preloader.remove(),1500);},600);
+    },500);return;}
+  const r=Math.floor(counter);loaderCounter.textContent=r;
+  if(r===20)loaderStatus.textContent='Loading Core Modules';
+  if(r===50)loaderStatus.textContent='Establishing Neural Link';
+  if(r===80)loaderStatus.textContent='Finalizing Systems';
+  if(r>=90&&!rocket.classList.contains('rumble')){loaderStatus.textContent='READY FOR LAUNCH';loaderStatus.style.color='#ffeb3b';rocket.classList.add('rumble');initAudio();rumbleSnd=playRumble();smokeIv=setInterval(createSmoke,120);}
+},28);
 
-    // ===== NEURAL NETWORK CANVAS =====
-    const canvas = document.getElementById('neural-canvas'); const ctx = canvas.getContext('2d');
-    let width = window.innerWidth, height = window.innerHeight; canvas.width = width; canvas.height = height; let particles = [];
-    class Particle {
-        constructor() { this.reset(); }
-        reset() { this.x = Math.random() * width; this.y = Math.random() * height; this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5; this.baseRadius = Math.random() * 2 + 1; this.radius = this.baseRadius; this.isGold = Math.random() > 0.5; this.pulseOffset = Math.random() * Math.PI * 2; }
-        draw(now) { const pulse = Math.sin(now * 0.002 + this.pulseOffset) * 0.3 + 1; this.radius = Math.max(0.5, this.baseRadius * pulse); ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = this.isGold ? 'rgba(197, 160, 89, 0.8)' : 'rgba(253, 251, 247, 0.4)'; ctx.fill(); }
-        update(now) {
-            if (this.x < 0 || this.x > width) this.vx *= -1; if (this.y < 0 || this.y > height) this.vy *= -1;
-            if (mouse.x !== null && mouse.y !== null) { const dx = mouse.x - this.x, dy = mouse.y - this.y, dist = Math.sqrt(dx * dx + dy * dy); if (dist < mouse.radius) { const force = (mouse.radius - dist) / mouse.radius; this.vx -= (dx / dist) * force * 0.03; this.vy -= (dy / dist) * force * 0.03; ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(mouse.x, mouse.y); ctx.strokeStyle = `rgba(197, 160, 89, ${force * 0.4})`; ctx.lineWidth = 1; ctx.stroke(); } }
-            this.vx *= 0.99; this.vy *= 0.99; this.vx += (Math.random() - 0.5) * 0.02; this.vy += (Math.random() - 0.5) * 0.02;
-            const maxVel = 2; this.vx = Math.max(-maxVel, Math.min(maxVel, this.vx)); this.vy = Math.max(-maxVel, Math.min(maxVel, this.vy));
-            this.x += this.vx; this.y += this.vy; this.draw(now);
-        }
-    }
-    function initParticles() { particles = []; const count = Math.min(Math.floor((width * height) / 12000), 100); for (let i = 0; i < count; i++) particles.push(new Particle()); }
-    function connectParticles() { const connectionDist = 150; for (let i = 0; i < particles.length; i++) { for (let j = i + 1; j < particles.length; j++) { const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y, distSq = dx * dx + dy * dy; if (distSq < connectionDist * connectionDist) { const dist = Math.sqrt(distSq), opacity = (1 - dist / connectionDist) * 0.15; ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(253, 251, 247, ${opacity})`; ctx.lineWidth = 0.5; ctx.stroke(); } } } }
-    function animateCanvas() { ctx.clearRect(0, 0, width, height); const now = Date.now(); connectParticles(); particles.forEach(p => p.update(now)); requestAnimationFrame(animateCanvas); }
-    initParticles(); animateCanvas(); window.addEventListener('resize', () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initParticles(); });
+// STARS
+const sc=document.getElementById('stars-container');
+if(sc&&isMobile){for(let i=0;i<110;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.width=(Math.random()*1.4+.4)+'px';s.style.height=s.style.width;s.style.animationDuration=(Math.random()*3+1)+'s';s.style.animationDelay=(Math.random()*2)+'s';sc.appendChild(s);}}
 
-    // ===== SCRAMBLE TEXT & PARALLAX =====
-    const roles = ["AI ARCHITECT", "WEB DEVELOPER", "SYSTEM BUILDER", "DATA ENTHUSIAST"]; let roleIndex = 0; const roleElement = document.getElementById('role-text'); const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    function scrambleText(targetText, element, duration = 800) { if (!element) return; const length = Math.max(element.textContent.length, targetText.length); let iterations = 0; const maxIterations = Math.floor(duration / 30); const interval = setInterval(() => { element.textContent = targetText.split('').map((char, i) => { if (iterations > maxIterations * (i / length)) return char; if (char === " ") return " "; return chars[Math.floor(Math.random() * chars.length)]; }).join(''); if (iterations % 2 === 0) playScrambleTick(); iterations++; if (iterations >= maxIterations) { element.textContent = targetText; clearInterval(interval); } }, 30); }
-    function startScramble() { scrambleText(roles[roleIndex], roleElement); setInterval(() => { roleIndex = (roleIndex + 1) % roles.length; scrambleText(roles[roleIndex], roleElement); }, 4000); }
-    window.addEventListener('scroll', () => { const scrollY = window.scrollY; document.querySelectorAll('.shape').forEach((shape, i) => { const speed = (i + 1) * 0.05; shape.style.transform = `translateY(${scrollY * speed}px)`; }); }, { passive: true });
-    const heroTitle = document.getElementById('hero-title'); document.addEventListener('mousemove', (e) => { if (!isLoaded) return; const x = (e.clientX - window.innerWidth / 2) / 50, y = (e.clientY - window.innerHeight / 2) / 50; if (heroTitle) heroTitle.style.transform = `translate(${-x}px, ${-y}px)`; });
+// MOUSE GLOW
+const mouseGlow=document.getElementById('mouse-glow');
+const mouse={x:null,y:null,radius:175};
+document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;if(mouseGlow){mouseGlow.style.left=e.clientX+'px';mouseGlow.style.top=e.clientY+'px';}});
 
-    // ===== ANIMATED COUNTERS & HALAMAN LOGIC =====
-    function animateCounter(element) { const target = parseInt(element.getAttribute('data-target')); if (isNaN(target)) return; const duration = 2000, startTime = performance.now(); function update(currentTime) { const elapsed = currentTime - startTime, progress = Math.min(elapsed / duration, 1), easeOut = 1 - Math.pow(1 - progress, 3); element.textContent = Math.floor(easeOut * target); if (progress < 1) { requestAnimationFrame(update); } else { element.textContent = target; } } requestAnimationFrame(update); }
+// NEURAL CANVAS
+const canvas=document.getElementById('neural-canvas');
+const ctx=canvas.getContext('2d');
+let W=window.innerWidth,H=window.innerHeight;
+canvas.width=W;canvas.height=H;
+let particles=[];
+class Particle{
+  constructor(){this.reset();}
+  reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.38;this.vy=(Math.random()-.5)*.38;this.r=Math.random()*1.4+.4;this.gold=Math.random()>.5;this.phase=Math.random()*Math.PI*2;}
+  update(t){
+    if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;
+    if(mouse.x!==null){const dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.sqrt(dx*dx+dy*dy);if(d<mouse.radius){const f=(mouse.radius-d)/mouse.radius;this.vx-=(dx/d)*f*.022;this.vy-=(dy/d)*f*.022;ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(mouse.x,mouse.y);ctx.strokeStyle=`rgba(197,160,89,${f*.3})`;ctx.lineWidth=.5;ctx.stroke();}}
+    this.vx*=.99;this.vy*=.99;this.vx+=(Math.random()-.5)*.013;this.vy+=(Math.random()-.5)*.013;
+    const mv=1.4;this.vx=Math.max(-mv,Math.min(mv,this.vx));this.vy=Math.max(-mv,Math.min(mv,this.vy));
+    this.x+=this.vx;this.y+=this.vy;
+    const pulse=Math.sin(t*.002+this.phase)*.28+1;
+    ctx.beginPath();ctx.arc(this.x,this.y,Math.max(.25,this.r*pulse),0,Math.PI*2);
+    ctx.fillStyle=this.gold?'rgba(197,160,89,.7)':'rgba(253,251,247,.3)';ctx.fill();
+  }
+}
+function initParticles(){particles=[];const n=Math.min(Math.floor((W*H)/14000),85);for(let i=0;i<n;i++)particles.push(new Particle());}
+function connectParticles(){const cd=135;for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d2=dx*dx+dy*dy;if(d2<cd*cd){const op=(1-Math.sqrt(d2)/cd)*.1;ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(253,251,247,${op})`;ctx.lineWidth=.4;ctx.stroke();}}}
+function animateCanvas(){ctx.clearRect(0,0,W,H);const t=Date.now();connectParticles();particles.forEach(p=>p.update(t));requestAnimationFrame(animateCanvas);}
+initParticles();animateCanvas();
+window.addEventListener('resize',()=>{W=window.innerWidth;H=window.innerHeight;canvas.width=W;canvas.height=H;initParticles();});
 
-    const beranda = document.getElementById('halaman-beranda');
-    const detail = document.getElementById('halaman-detail');
-    const semuaKonten = document.querySelectorAll('.konten-item');
-    const glassOverlay = document.getElementById('glass-overlay'); 
-    const counterAnimated = new WeakSet();
+// SCRAMBLE
+const roles=['AI ARCHITECT','WEB DEVELOPER','SYSTEM BUILDER','DATA ENTHUSIAST'];
+let roleIdx=0;const roleEl=document.getElementById('role-text');const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+function scramble(target,el,dur=680){if(!el)return;const len=Math.max(el.textContent.length,target.length);let it=0;const maxIt=Math.floor(dur/30);const iv=setInterval(()=>{el.textContent=target.split('').map((c,i)=>{if(it>maxIt*(i/len))return c;if(c===' ')return ' ';return chars[Math.floor(Math.random()*chars.length)];}).join('');if(it%3===0)playScrambleTick();it++;if(it>=maxIt){el.textContent=target;clearInterval(iv);}},30);}
+function startScramble(){scramble(roles[roleIdx],roleEl);setInterval(()=>{roleIdx=(roleIdx+1)%roles.length;scramble(roles[roleIdx],roleEl);},4000);}
 
-    function bukaDetail(idKonten) {
-      semuaKonten.forEach(el => el.style.display = 'none');
-      const targetKonten = document.getElementById('konten-' + idKonten);
-      targetKonten.style.display = 'block';
+// PARALLAX
+const heroTitle=document.getElementById('hero-title');
+document.addEventListener('mousemove',e=>{if(!isLoaded)return;const x=(e.clientX-window.innerWidth/2)/65,y=(e.clientY-window.innerHeight/2)/65;if(heroTitle)heroTitle.style.transform=`translate(${-x}px,${-y}px)`;});
 
-      if(idKonten === 'datadiri') {
-          document.querySelectorAll('.nav-line').forEach(b => b.classList.remove('active'));
-          document.querySelector('.nav-line[data-target="slide-bio"]').classList.add('active');
-          document.querySelectorAll('.data-slide').forEach(s => s.classList.remove('active-slide'));
-          document.getElementById('slide-bio').classList.add('active-slide');
-          currentEditorialIndex = 0;
-          
-          const modelContainer = document.getElementById('model-scene-container');
-          modelContainer.classList.remove('pos-1', 'pos-2', 'pos-3');
-          modelContainer.classList.add('pos-0');
+// PAGE LOGIC
+const beranda=document.getElementById('halaman-beranda');
+const detail=document.getElementById('halaman-detail');
+const allKonten=document.querySelectorAll('.konten-item');
+const counterAnimated=new WeakSet();
+function bukaDetail(id){
+  allKonten.forEach(el=>el.style.display='none');
+  document.getElementById('konten-'+id).style.display='block';
+  if(id==='datadiri'){
+    document.querySelectorAll('.nav-line').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.nav-line[data-target="slide-bio"]').classList.add('active');
+    document.querySelectorAll('.data-slide').forEach(s=>s.classList.remove('active-slide'));
+    document.getElementById('slide-bio').classList.add('active-slide');
+    currentIdx=0;
+    const mc=document.getElementById('model-scene-container');mc.className='';mc.classList.add('pos-0');
+    const tc=document.getElementById('editorial-text-content');tc.classList.remove('text-on-right','text-on-center-split');tc.classList.add('text-on-left');
+  }
+  beranda.classList.remove('halaman-active');beranda.classList.add('halaman-hidden');
+  setTimeout(()=>{window.scrollTo({top:0,behavior:'smooth'});detail.classList.remove('halaman-hidden');detail.classList.add('halaman-active');},380);
+}
+function kembaliKeBeranda(){
+  detail.classList.remove('halaman-active');detail.classList.add('halaman-hidden');
+  document.querySelectorAll('.bar-fill').forEach(b=>b.style.width='0%');
+  setTimeout(()=>{window.scrollTo({top:0,behavior:'smooth'});beranda.classList.remove('halaman-hidden');beranda.classList.add('halaman-active');},380);
+}
 
-          const textContainer = document.getElementById('editorial-text-content');
-          textContainer.classList.remove('text-on-right', 'text-on-center-split');
-          textContainer.classList.add('text-on-left');
-      }
+// SLIDER
+const navLines=document.querySelectorAll('.nav-line');
+const slides=document.querySelectorAll('.data-slide');
+const modelScene=document.getElementById('model-scene-container');
+const textCon=document.getElementById('editorial-text-content');
+let currentIdx=0;
+function changeSlide(idx){
+  if(idx<0)idx=navLines.length-1;if(idx>=navLines.length)idx=0;
+  currentIdx=idx;playClick();
+  if(!isMobile){modelScene.className='';modelScene.classList.add(`pos-${idx}`);textCon.classList.remove('text-on-left','text-on-right','text-on-center-split');if(idx===1)textCon.classList.add('text-on-right');else if(idx===2)textCon.classList.add('text-on-center-split');else textCon.classList.add('text-on-left');}
+  navLines.forEach(b=>b.classList.remove('active'));slides.forEach(s=>s.classList.remove('active-slide'));
+  navLines[idx].classList.add('active');
+  const tgtId=navLines[idx].getAttribute('data-target');
+  const tgtSlide=document.getElementById(tgtId);tgtSlide.classList.add('active-slide');
+  if(tgtId==='slide-stats')tgtSlide.querySelectorAll('.counter').forEach(c=>{if(!counterAnimated.has(c)){counterAnimated.add(c);animCounter(c);}});
+  if(tgtId==='slide-skills')tgtSlide.querySelectorAll('.bar-fill').forEach(b=>{b.style.width='0%';setTimeout(()=>b.style.width=b.getAttribute('data-width'),55);});
+}
+navLines.forEach((b,i)=>b.addEventListener('click',()=>changeSlide(i)));
+document.getElementById('next-editorial-slide').addEventListener('click',()=>changeSlide(currentIdx+1));
 
-      glassOverlay.classList.add('active');
+// COUNTER
+function animCounter(el){const target=parseInt(el.getAttribute('data-target'));if(isNaN(target))return;const dur=1700,start=performance.now();function tick(now){const p=Math.min((now-start)/dur,1),ease=1-Math.pow(1-p,3);el.textContent=Math.floor(ease*target);if(p<1)requestAnimationFrame(tick);else el.textContent=target;}requestAnimationFrame(tick);}
 
-      beranda.classList.remove('halaman-active'); beranda.classList.add('halaman-hidden');
-      setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); detail.classList.remove('halaman-hidden'); detail.classList.add('halaman-active'); }, 400); 
-    }
+// MAGNETIC
+document.querySelectorAll('.magnetic-btn').forEach(btn=>{btn.addEventListener('mousemove',e=>{const r=btn.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;btn.style.transform=`translate(${x*.17}px,${y*.17}px)`;});btn.addEventListener('mouseleave',()=>btn.style.transform='translate(0,0)');});
 
-    function kembaliKeBeranda() {
-      glassOverlay.classList.remove('active');
+// TELEMETRY
+function updateUptime(){const s=new Date('2006-02-11'),d=new Date()-s;const y=Math.floor(d/(1000*60*60*24*365.25)),dy=Math.floor((d%(1000*60*60*24*365.25))/(1000*60*60*24)),h=Math.floor((d%(1000*60*60*24))/(1000*60*60)),m=Math.floor((d%(1000*60*60))/(1000*60));const f=n=>n.toString().padStart(2,'0');const el=document.getElementById('uptime-counter-editorial');if(el)el.textContent=`${f(y)}Y ${f(dy)}D ${f(h)}H ${f(m)}M`;}
+setInterval(updateUptime,1000);updateUptime();
+function updateTime(){const el=document.getElementById('live-time-editorial');if(!el)return;el.textContent=new Date().toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta',hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+setInterval(updateTime,1000);updateTime();
+async function fetchGH(){const el=document.getElementById('github-commit-editorial');if(!el)return;try{const r=await fetch('https://api.github.com/users/adamhasani/events/public');const d=await r.json();const p=d.filter(e=>e.type==='PushEvent');el.textContent=p.length>0?p[0].repo.name.split('/')[1]:'No recent updates';}catch(e){el.textContent='Data Protected';}}
+fetchGH();
 
-      detail.classList.remove('halaman-active'); detail.classList.add('halaman-hidden');
-      document.querySelectorAll('.bar-fill').forEach(bar => { bar.style.width = '0%'; });
-      setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); beranda.classList.remove('halaman-hidden'); beranda.classList.add('halaman-active'); }, 400);
-    }
-
-    // ===== LOGIKA SLIDER MUSEUM & 3D MODEL MOVEMENT =====
-    const editorialNavs = document.querySelectorAll('.nav-line');
-    const editorialSlides = document.querySelectorAll('.data-slide');
-    const modelScene = document.getElementById('model-scene-container');
-    const textContainer = document.getElementById('editorial-text-content');
-    let currentEditorialIndex = 0;
-
-    function ubahEditorialSlide(index) {
-        if (index < 0) index = editorialNavs.length - 1;
-        if (index >= editorialNavs.length) index = 0;
-        currentEditorialIndex = index;
-
-        playClickSound();
-        
-        if(!isMobile) {
-            modelScene.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-3');
-            modelScene.classList.add(`pos-${currentEditorialIndex}`);
-
-            textContainer.classList.remove('text-on-left', 'text-on-right', 'text-on-center-split');
-            if(currentEditorialIndex === 1) textContainer.classList.add('text-on-right');
-            else if(currentEditorialIndex === 2) textContainer.classList.add('text-on-center-split');
-            else textContainer.classList.add('text-on-left');
-        }
-
-        editorialNavs.forEach(b => b.classList.remove('active'));
-        editorialSlides.forEach(s => s.classList.remove('active-slide'));
-
-        editorialNavs[currentEditorialIndex].classList.add('active');
-        const targetId = editorialNavs[currentEditorialIndex].getAttribute('data-target');
-        const targetSlide = document.getElementById(targetId);
-        targetSlide.classList.add('active-slide');
-
-        if(targetId === 'slide-stats') { 
-            targetSlide.querySelectorAll('.counter').forEach(counter => { if (!counterAnimated.has(counter)) { counterAnimated.add(counter); animateCounter(counter); } }); 
-        }
-        if(targetId === 'slide-skills') { 
-            targetSlide.querySelectorAll('.bar-fill').forEach(bar => { bar.style.width = '0%'; setTimeout(() => { bar.style.width = bar.getAttribute('data-width'); }, 50); }); 
-        }
-    }
-
-    editorialNavs.forEach((btn, index) => { btn.addEventListener('click', () => { ubahEditorialSlide(index); }); });
-    document.getElementById('next-editorial-slide').addEventListener('click', () => ubahEditorialSlide(currentEditorialIndex + 1));
-
-    // ===== EFEK TILT 3D & MAGNETIC =====
-    document.querySelectorAll('.tilt-effect').forEach(card => { card.addEventListener('mousemove', (e) => { const rect = card.getBoundingClientRect(), x = e.clientX - rect.left, y = e.clientY - rect.top; const centerX = rect.width / 2, centerY = rect.height / 2, rotateX = ((y - centerY) / centerY) * -6, rotateY = ((x - centerX) / centerX) * 6; card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`; }); card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)'; }); });
-    document.querySelectorAll('.magnetic-btn').forEach(btn => { btn.addEventListener('mousemove', (e) => { const rect = btn.getBoundingClientRect(), x = e.clientX - rect.left - rect.width / 2, y = e.clientY - rect.top - rect.height / 2; btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`; }); btn.addEventListener('mouseleave', () => { btn.style.transform = 'translate(0, 0)'; }); });
-
-    // ===== LIVE TELEMETRY & GITHUB API =====
-    function updateUptime() { 
-        const startDate = new Date('2006-02-11T00:00:00'), diff = new Date() - startDate; 
-        const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25)), days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24)), hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)), minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)), seconds = Math.floor((diff % (1000 * 60)) / 1000); 
-        const format = (num) => num.toString().padStart(2, '0'); 
-        const val = `${format(years)}Y ${format(days)}D ${format(hours)}H ${format(minutes)}M`;
-        const uptimeElement = document.getElementById('uptime-counter-editorial'); 
-        if(uptimeElement) uptimeElement.textContent = val; 
-    }
-    setInterval(updateUptime, 1000); updateUptime();
-
-    function updateLiveTime() { 
-        const timeEl = document.getElementById('live-time-editorial'); 
-        if(!timeEl) return; 
-        timeEl.textContent = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' }); 
-    }
-    setInterval(updateLiveTime, 1000); updateLiveTime();
-
-    // Fetch GitHub Data kayak di versi Mobile
-    async function fetchLatestCommit() {
-        const commitEl = document.getElementById('github-commit-editorial'); 
-        if(!commitEl) return;
-        try {
-            const response = await fetch('https://api.github.com/users/adamhasani/events/public'); 
-            const data = await response.json();
-            const pushEvents = data.filter(event => event.type === 'PushEvent');
-            if(pushEvents.length > 0) { 
-                commitEl.textContent = pushEvents[0].repo.name.split('/')[1]; 
-                commitEl.title = "Latest Update on: " + pushEvents[0].repo.name; 
-            } else { 
-                commitEl.textContent = 'No recent updates'; 
-            }
-        } catch (error) { commitEl.textContent = 'Data Protected'; }
-    }
-    fetchLatestCommit();
-
-    // ===== EASTER EGG =====
-    let pressedKeys = ''; const secretCode = 'adam';
-    document.addEventListener('keydown', (e) => { pressedKeys += e.key.toLowerCase(); if (pressedKeys.length > secretCode.length) pressedKeys = pressedKeys.slice(-secretCode.length); if (pressedKeys === secretCode) { playClickSound(); const notification = document.createElement('div'); notification.style.cssText = `position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(197, 160, 89, 0.95); color: #0A261D; padding: 2rem 3rem; border-radius: 16px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.2rem; z-index: 9999999; letter-spacing: 0.1em; box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center; animation: fadeInOut 3s ease-in-out forwards;`; notification.textContent = '🔓 Access Granted. Welcome, Creator.'; document.body.appendChild(notification); const style = document.createElement('style'); style.textContent = `@keyframes fadeInOut { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); } }`; document.head.appendChild(style); setTimeout(() => { notification.remove(); style.remove(); }, 3000); pressedKeys = ''; } });
-  </script>
-
+// EASTER EGG
+let pk='';document.addEventListener('keydown',e=>{pk+=e.key.toLowerCase();if(pk.length>4)pk=pk.slice(-4);if(pk==='adam'){playClick();const n=document.createElement('div');n.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);background:rgba(197,160,89,.96);color:#0A261D;padding:1.4rem 2.4rem;border-radius:14px;font-family:"DM Mono",monospace;font-weight:500;font-size:.95rem;z-index:9999999;letter-spacing:.07em;box-shadow:0 20px 60px rgba(0,0,0,.6);text-align:center;animation:eggIn 3s ease-in-out forwards;';n.textContent='🔓 Access Granted. Welcome, Creator.';const s=document.createElement('style');s.textContent='@keyframes eggIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.85);}15%{opacity:1;transform:translate(-50%,-50%) scale(1);}80%{opacity:1;}100%{opacity:0;transform:translate(-50%,-50%) scale(.96);}}';document.head.appendChild(s);document.body.appendChild(n);setTimeout(()=>{n.remove();s.remove();},3000);pk='';}});
+</script>
 </body>
 </html>
