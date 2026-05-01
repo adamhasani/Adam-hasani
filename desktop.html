@@ -79,6 +79,8 @@
         }
         .bg-shape {
             position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: -2;
+            will-change: transform; /* Hardware Acceleration */
+            transform: translateZ(0); 
         }
         .bg-shape-1 {
             width: 50vw; height: 50vw; max-width: 600px; max-height: 600px;
@@ -108,6 +110,7 @@
             pointer-events: none; z-index: 10;
             transform: translate(-50%, -50%); mix-blend-mode: screen;
             transition: opacity 0.3s;
+            will-change: transform;
         }
 
         /* Preloader */
@@ -143,6 +146,7 @@
             width: 24px; height: 60px; border-radius: 50% 50% 20% 20%;
             background: linear-gradient(to bottom, #fff, #ffeb3b 20%, #ff9800 40%, #ff4d4d 70%, transparent);
             filter: blur(3px); opacity: 0; animation: flameFlicker 0.1s infinite alternate; margin-top: -5px;
+            will-change: transform;
         }
         .rocket-wrap.rumble .thruster-fire, .rocket-wrap.launch .thruster-fire { opacity: 1; }
         @keyframes flameFlicker { 0% { transform: scaleY(0.9); } 100% { transform: scaleY(1.1); } }
@@ -216,6 +220,7 @@
             width: clamp(250px, 40vw, 400px); aspect-ratio: 1; border-radius: 50%;
             border: 1px solid rgba(197,160,89,0.3); z-index: -1;
             animation: pulseHalo 4s ease-in-out infinite alternate;
+            will-change: box-shadow;
         }
         @keyframes pulseHalo {
             0% { box-shadow: 0 0 20px rgba(197,160,89,0.2), inset 0 0 20px rgba(197,160,89,0.2); }
@@ -292,7 +297,7 @@
         /* Story UI Specific Styles */
         .story-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 440px; /* Constrain width on mobile */
             aspect-ratio: 9/16;
             margin: 0 auto;
             position: relative;
@@ -302,21 +307,34 @@
             border: 1px solid rgba(255,255,255,0.1);
             background: #000;
         }
+        
+        /* Optimasi Desktop untuk Story Container */
         @media (min-width: 768px) {
-            .story-container { aspect-ratio: 3/4; max-width: 500px; }
+            .story-container { 
+                height: 75vh; /* Menyesuaikan tinggi viewport desktop */
+                max-height: 800px;
+                width: auto; /* Width dihitung otomatis berdasar aspect-ratio & height */
+                max-width: none;
+                aspect-ratio: 9/16; 
+            }
         }
+
         .story-progress-bg {
             flex: 1;
             height: 3px;
             background: rgba(255, 255, 255, 0.3);
             border-radius: 2px;
             overflow: hidden;
+            transform: translateZ(0);
         }
         .story-progress-fill {
             height: 100%;
             background: #fff;
-            width: 0%;
+            width: 100%;
+            transform: scaleX(0); /* Optimized GPU Animation */
+            transform-origin: left;
             border-radius: 2px;
+            will-change: transform;
         }
         .story-img-overlay {
             background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 20%, transparent 50%, rgba(0,0,0,0.9) 100%);
@@ -395,7 +413,7 @@
         <!-- ================= DETAIL CONTAINER ================= -->
         <section id="view-detail" class="view-section w-full hidden">
             <!-- Global Back Button -->
-            <nav class="mb-8 md:mb-12 sticky top-4 z-50">
+            <nav class="mb-8 md:mb-12 sticky top-4 z-50 flex justify-center md:justify-start">
                 <button onclick="navigateHome()" class="glass-panel px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase text-gold hover:text-obsidian hover:bg-gold transition-all duration-300 flex items-center gap-3">
                     <i class="fas fa-arrow-left"></i> Kembali ke Pusat
                 </button>
@@ -407,7 +425,8 @@
                     <!-- 3D Model BG -->
                     <div id="model-container" class="pos-0">
                         <div class="halo-ring"></div>
-                        <model-viewer src="globe.glb" alt="3D Globe Model" loading="eager" auto-rotate autoplay rotation-per-second="1.5deg" interaction-prompt="none" exposure="1.2" shadow-intensity="2" disable-zoom></model-viewer>
+                        <!-- Paused when not visible to save CPU -->
+                        <model-viewer id="main-model-viewer" src="globe.glb" alt="3D Globe Model" loading="eager" auto-rotate autoplay rotation-per-second="1.5deg" interaction-prompt="none" exposure="1.2" shadow-intensity="2" disable-zoom></model-viewer>
                     </div>
 
                     <!-- Left Navigation (Desktop) -->
@@ -531,58 +550,56 @@
 
             <!-- 2. PROYEK (STORY UI) -->
             <div id="content-proyek" class="detail-content hidden">
-                <div class="text-center mb-8">
+                <div class="text-center mb-6">
                     <p class="text-[0.65rem] tracking-[0.3em] uppercase text-gold mb-2 font-medium">✦ Karya ✦</p>
                     <h2 class="font-serif-c text-3xl md:text-5xl font-bold inline-block glitch-hover">Project <em class="text-gold font-normal italic">Stories</em></h2>
                 </div>
 
                 <!-- Story Container (Instagram/Snapchat style) -->
-                <div class="story-container group" id="story-container">
-                    
-                    <!-- Background Images (2 images for crossfade) -->
-                    <img id="story-img-bg" src="" class="absolute inset-0 w-full h-full object-cover fade-transition scale-105 filter blur-sm opacity-50" alt="">
-                    <img id="story-img" src="" class="absolute inset-0 w-full h-full object-contain md:object-cover fade-transition z-0" alt="">
-                    
-                    <!-- Gradient Overlays -->
-                    <div class="absolute inset-0 story-img-overlay z-10 pointer-events-none"></div>
-
-                    <!-- Top Progress Bars -->
-                    <div class="absolute top-4 left-3 right-3 flex gap-1.5 z-30" id="story-progress-container">
-                        <!-- Bars injected via JS -->
-                    </div>
-
-                    <!-- Controls -->
-                    <button id="story-pause-btn" class="absolute top-8 right-4 z-40 text-white hover:text-gold transition-colors w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-pause text-sm"></i>
-                    </button>
-                    
-                    <button id="story-info-btn" class="absolute top-8 left-4 z-40 text-white/80 hover:text-gold transition-colors w-8 h-8 flex items-center justify-center bg-black/20 rounded-full backdrop-blur-sm border border-white/10 text-xs tracking-widest font-bold">
-                        <i class="fas fa-info"></i>
-                    </button>
-
-                    <!-- Click Zones for Navigation -->
-                    <div class="absolute inset-y-0 left-0 w-[40%] z-20 cursor-pointer" id="story-prev-zone"></div>
-                    <div class="absolute inset-y-0 right-0 w-[40%] z-20 cursor-pointer" id="story-next-zone"></div>
-
-                    <!-- Hover Navigation Buttons (Visible on desktop hover) -->
-                    <button class="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md border border-white/10 pointer-events-none md:pointer-events-auto" id="story-btn-prev">
-                        <i class="fas fa-chevron-left text-sm"></i>
-                    </button>
-                    <button class="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md border border-white/10 pointer-events-none md:pointer-events-auto" id="story-btn-next">
-                        <i class="fas fa-chevron-right text-sm"></i>
-                    </button>
-
-                    <!-- Text Content (Bottom) -->
-                    <div class="absolute bottom-0 left-0 right-0 p-6 z-30 flex flex-col justify-end pb-8 fade-transition" id="story-text-content">
-                        <p class="text-[0.6rem] text-gold uppercase tracking-[0.2em] mb-2 flex items-center gap-2 font-bold drop-shadow-md">
-                            <i class="fas fa-calendar-alt"></i> <span id="story-date">2026</span>
-                            <span class="px-2 py-0.5 rounded-sm bg-gold text-obsidian text-[0.5rem] tracking-wider ml-auto" id="story-badge">Badge</span>
-                        </p>
-                        <h3 class="font-serif-c text-4xl md:text-5xl font-bold text-white mb-3 leading-none drop-shadow-lg" id="story-title">Title</h3>
-                        <p class="text-sm text-white/90 mb-5 line-clamp-3 leading-relaxed drop-shadow-md font-medium" id="story-desc">Description</p>
+                <div class="w-full flex justify-center px-4">
+                    <div class="story-container group" id="story-container">
                         
-                        <div class="flex gap-4 items-center" id="story-links">
-                            <!-- Links injected via JS -->
+                        <!-- Background Images (2 images for crossfade) -->
+                        <img id="story-img-bg" src="" class="absolute inset-0 w-full h-full object-cover fade-transition scale-105 filter blur-md opacity-50" alt="">
+                        <img id="story-img" src="" class="absolute inset-0 w-full h-full object-contain md:object-cover fade-transition z-0" alt="">
+                        
+                        <!-- Gradient Overlays -->
+                        <div class="absolute inset-0 story-img-overlay z-10 pointer-events-none"></div>
+
+                        <!-- Top Progress Bars -->
+                        <div class="absolute top-4 left-3 right-3 flex gap-1.5 z-30" id="story-progress-container">
+                            <!-- Bars injected via JS -->
+                        </div>
+
+                        <!-- Controls -->
+                        <button id="story-pause-btn" class="absolute top-8 right-4 z-40 text-white hover:text-gold transition-colors w-8 h-8 flex items-center justify-center cursor-pointer">
+                            <i class="fas fa-pause text-sm"></i>
+                        </button>
+
+                        <!-- Click Zones for Navigation -->
+                        <div class="absolute inset-y-0 left-0 w-[40%] z-20 cursor-pointer" id="story-prev-zone"></div>
+                        <div class="absolute inset-y-0 right-0 w-[40%] z-20 cursor-pointer" id="story-next-zone"></div>
+
+                        <!-- Hover Navigation Buttons (Visible on desktop hover) -->
+                        <button class="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md border border-white/10 pointer-events-none md:pointer-events-auto" id="story-btn-prev">
+                            <i class="fas fa-chevron-left text-sm"></i>
+                        </button>
+                        <button class="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md border border-white/10 pointer-events-none md:pointer-events-auto" id="story-btn-next">
+                            <i class="fas fa-chevron-right text-sm"></i>
+                        </button>
+
+                        <!-- Text Content (Bottom) -->
+                        <div class="absolute bottom-0 left-0 right-0 p-6 z-30 flex flex-col justify-end pb-8 fade-transition pointer-events-none" id="story-text-content">
+                            <p class="text-[0.6rem] text-gold uppercase tracking-[0.2em] mb-2 flex items-center gap-2 font-bold drop-shadow-md">
+                                <i class="fas fa-calendar-alt"></i> <span id="story-date">2026</span>
+                                <span class="px-2 py-0.5 rounded-sm bg-gold text-obsidian text-[0.5rem] tracking-wider ml-auto pointer-events-auto" id="story-badge">Badge</span>
+                            </p>
+                            <h3 class="font-serif-c text-4xl md:text-5xl font-bold text-white mb-3 leading-none drop-shadow-lg" id="story-title">Title</h3>
+                            <p class="text-sm text-white/90 mb-5 line-clamp-3 leading-relaxed drop-shadow-md font-medium" id="story-desc">Description</p>
+                            
+                            <div class="flex gap-4 items-center pointer-events-auto" id="story-links">
+                                <!-- Links injected via JS -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -797,6 +814,7 @@
         const viewHome = document.getElementById('view-home');
         const viewDetail = document.getElementById('view-detail');
         const allContents = document.querySelectorAll('.detail-content');
+        const mainModelViewer = document.getElementById('main-model-viewer'); // Optimize Model CPU
 
         window.navigateTo = (targetId) => {
             playClick();
@@ -808,6 +826,15 @@
                 allContents.forEach(el => el.classList.add('hidden'));
                 const targetEl = document.getElementById('content-' + targetId);
                 targetEl.classList.remove('hidden');
+                
+                // Pause model viewer if not in datadiri to save CPU
+                if (mainModelViewer) {
+                    if (targetId === 'datadiri') {
+                        mainModelViewer.play();
+                    } else {
+                        mainModelViewer.pause();
+                    }
+                }
                 
                 setTimeout(() => {
                     viewDetail.classList.add('active');
@@ -824,7 +851,8 @@
             viewDetail.classList.remove('active');
             
             document.querySelectorAll('.bar-fill').forEach(b => b.style.width = '0%');
-            if (storyRafId) cancelAnimationFrame(storyRafId); // Pause story loop
+            if (storyRafId) cancelAnimationFrame(storyRafId); // Pause story loop completely
+            if (mainModelViewer) mainModelViewer.pause(); // Pause 3D model
             
             setTimeout(() => {
                 viewDetail.classList.add('hidden');
@@ -985,14 +1013,15 @@
             }, 200);
         }
 
+        // Optimized UI Update using scaleX instead of width
         function updateProgressUI() {
             storyProgressBars.forEach((bar, idx) => {
                 if (idx < currentStoryIndex) {
-                    bar.style.width = '100%';
+                    bar.style.transform = 'scaleX(1)';
                 } else if (idx === currentStoryIndex) {
-                    bar.style.width = `${storyProgress * 100}%`;
+                    bar.style.transform = `scaleX(${storyProgress})`;
                 } else {
-                    bar.style.width = '0%';
+                    bar.style.transform = 'scaleX(0)';
                 }
             });
         }
@@ -1002,7 +1031,7 @@
             const deltaTime = time - storyLastTime;
             storyLastTime = time;
 
-            // Only run if the project section is active
+            // Only run logic if the project section is active to save CPU
             if (viewDetail.classList.contains('active') && !document.getElementById('content-proyek').classList.contains('hidden')) {
                 if (!storyIsPaused) {
                     storyProgress += (deltaTime / storyDuration);
@@ -1012,8 +1041,10 @@
                         updateProgressUI();
                     }
                 }
+                storyRafId = requestAnimationFrame(storyLoop);
+            } else {
+                storyRafId = null; // stop loop
             }
-            storyRafId = requestAnimationFrame(storyLoop);
         }
 
         function nextStorySlide() {
@@ -1162,7 +1193,7 @@
             }
         });
 
-        /* --- Neural Canvas (Desktop Only) --- */
+        /* --- Neural Canvas (Desktop Only) - Throttled for Performance --- */
         if (!isMobile) {
             const cvs = document.getElementById('neural-canvas');
             const ctx = cvs.getContext('2d');
@@ -1181,7 +1212,13 @@
                 });
             }
 
-            const drawCanvas = () => {
+            let lastCanvasTime = 0;
+            const drawCanvas = (ts) => {
+                requestAnimationFrame(drawCanvas);
+                // CPU Opt: Limit to ~30fps
+                if (ts - lastCanvasTime < 33) return; 
+                lastCanvasTime = ts;
+
                 ctx.clearRect(0, 0, w, h);
                 for(let i=0; i<pts.length; i++) {
                     const p = pts[i];
@@ -1205,9 +1242,8 @@
                         }
                     }
                 }
-                requestAnimationFrame(drawCanvas);
             };
-            drawCanvas();
+            requestAnimationFrame(drawCanvas);
 
             window.addEventListener('resize', () => {
                 w = window.innerWidth; h = window.innerHeight;
