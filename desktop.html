@@ -95,22 +95,24 @@
             animation: bgFloat 25s ease-in-out infinite alternate-reverse;
         }
         @keyframes bgFloat {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 30px) scale(1.1); }
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            100% { transform: translate3d(50px, 30px, 0) scale(1.1); }
         }
 
         #neural-canvas, #stars-container {
             position: fixed; inset: 0; z-index: -1; pointer-events: none;
         }
 
-        /* Mouse Glow */
+        /* Mouse Glow (Optimized for GPU) */
         .mouse-glow {
             position: fixed; width: 400px; height: 400px; border-radius: 50%;
             background: radial-gradient(circle, rgba(197,160,89,0.06) 0%, transparent 60%);
             pointer-events: none; z-index: 10;
-            transform: translate(-50%, -50%); mix-blend-mode: screen;
+            top: 0; left: 0;
+            transform: translate3d(-500px, -500px, 0); /* Start offscreen */
+            mix-blend-mode: screen;
             transition: opacity 0.3s;
-            will-change: transform;
+            will-change: transform; /* GPU Acceleration */
         }
 
         /* Preloader */
@@ -167,7 +169,8 @@
             border: 1px solid rgba(255,255,255,0.05);
             border-top-color: rgba(255,255,255,0.1); border-left-color: rgba(255,255,255,0.08);
             border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.4s var(--ease);
+            transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+            will-change: transform, box-shadow;
         }
         
         .card-menu {
@@ -177,7 +180,8 @@
         .card-menu::before {
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
             background: linear-gradient(to right, transparent, rgba(197,160,89,0.15), transparent);
-            transform: skewX(-20deg); transition: left 0.5s var(--ease);
+            transform: skewX(-20deg) translateZ(0); transition: left 0.5s var(--ease);
+            will-change: left;
         }
         .card-menu:hover::before { left: 150%; }
         .card-menu:hover {
@@ -215,21 +219,25 @@
             }
         }
         
+        /* Optimized CPU: Removing box-shadow animation, using scale and opacity instead */
         .halo-ring {
             position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
             width: clamp(250px, 40vw, 400px); aspect-ratio: 1; border-radius: 50%;
             border: 1px solid rgba(197,160,89,0.3); z-index: -1;
+            /* Static shadows instead of animating them */
+            box-shadow: 0 0 30px rgba(197,160,89,0.3), inset 0 0 30px rgba(197,160,89,0.3);
             animation: pulseHalo 4s ease-in-out infinite alternate;
-            will-change: box-shadow;
+            will-change: transform, opacity;
         }
         @keyframes pulseHalo {
-            0% { box-shadow: 0 0 20px rgba(197,160,89,0.2), inset 0 0 20px rgba(197,160,89,0.2); }
-            100% { box-shadow: 0 0 50px rgba(197,160,89,0.5), inset 0 0 50px rgba(197,160,89,0.5); border-color: rgba(197,160,89,0.6); }
+            0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.6; }
+            100% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; border-color: rgba(197,160,89,0.6); }
         }
 
         model-viewer {
             width: 100%; height: 100%; outline: none; --poster-color: transparent;
-            filter: drop-shadow(0 0 30px rgba(197,160,89,0.4));
+            /* Static drop shadow is fine if not animated */
+            filter: drop-shadow(0 0 20px rgba(197,160,89,0.3)); 
         }
 
         .data-slide {
@@ -255,6 +263,7 @@
             position: absolute; top: 0; left: 0; height: 100%; width: 0%;
             background: linear-gradient(90deg, #C5A059, #E8D4A8);
             transition: width 1.2s var(--ease); box-shadow: 0 0 10px rgba(197,160,89,0.8);
+            will-change: width;
         }
 
         /* Timeline */
@@ -306,6 +315,7 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(197, 160, 89, 0.1);
             border: 1px solid rgba(255,255,255,0.1);
             background: #000;
+            will-change: transform;
         }
         
         /* Optimasi Desktop untuk Story Container */
@@ -325,7 +335,7 @@
             background: rgba(255, 255, 255, 0.3);
             border-radius: 2px;
             overflow: hidden;
-            transform: translateZ(0);
+            transform: translateZ(0); /* Force HW acceleration */
         }
         .story-progress-fill {
             height: 100%;
@@ -426,7 +436,7 @@
                     <div id="model-container" class="pos-0">
                         <div class="halo-ring"></div>
                         <!-- Paused when not visible to save CPU -->
-                        <model-viewer id="main-model-viewer" src="globe.glb" alt="3D Globe Model" loading="eager" auto-rotate autoplay rotation-per-second="1.5deg" interaction-prompt="none" exposure="1.2" shadow-intensity="2" disable-zoom></model-viewer>
+                        <model-viewer id="main-model-viewer" src="globe.glb" alt="3D Globe Model" loading="lazy" auto-rotate autoplay rotation-per-second="1.5deg" interaction-prompt="none" exposure="1.2" shadow-intensity="2" disable-zoom></model-viewer>
                     </div>
 
                     <!-- Left Navigation (Desktop) -->
@@ -708,6 +718,9 @@
     <script>
         'use strict';
 
+        /* --- Global App State --- */
+        let isHomeActive = true; 
+
         /* --- Audio Context --- */
         let AC = null;
         function initAC() {
@@ -818,7 +831,9 @@
 
         window.navigateTo = (targetId) => {
             playClick();
+            isHomeActive = false; // Turn off Home background animations
             viewHome.classList.remove('active');
+            
             setTimeout(() => {
                 viewHome.classList.add('hidden');
                 viewDetail.classList.remove('hidden');
@@ -830,8 +845,10 @@
                 // Pause model viewer if not in datadiri to save CPU
                 if (mainModelViewer) {
                     if (targetId === 'datadiri') {
+                        mainModelViewer.setAttribute('auto-rotate', ''); // Reactivate rotation
                         mainModelViewer.play();
                     } else {
+                        mainModelViewer.removeAttribute('auto-rotate'); // Stop background rotation logic
                         mainModelViewer.pause();
                     }
                 }
@@ -848,11 +865,15 @@
 
         window.navigateHome = () => {
             playClick();
+            isHomeActive = true; // Turn Home background animations back on
             viewDetail.classList.remove('active');
             
             document.querySelectorAll('.bar-fill').forEach(b => b.style.width = '0%');
-            if (storyRafId) cancelAnimationFrame(storyRafId); // Pause story loop completely
-            if (mainModelViewer) mainModelViewer.pause(); // Pause 3D model
+            if (storyRafId) { cancelAnimationFrame(storyRafId); storyRafId = null; } // Pause story loop completely
+            if (mainModelViewer) {
+                mainModelViewer.removeAttribute('auto-rotate');
+                mainModelViewer.pause(); // Pause 3D model
+            }
             
             setTimeout(() => {
                 viewDetail.classList.add('hidden');
@@ -1154,10 +1175,10 @@
             if (!isLoaded || isMobile || rafId) return;
             rafId = requestAnimationFrame(() => {
                 if (glowEl) {
-                    glowEl.style.left = e.clientX + 'px';
-                    glowEl.style.top = e.clientY + 'px';
+                    // Optimized GPU translate
+                    glowEl.style.transform = `translate3d(${e.clientX - 200}px, ${e.clientY - 200}px, 0)`;
                 }
-                if (viewHome.classList.contains('active') && heroEl) {
+                if (isHomeActive && viewHome.classList.contains('active') && heroEl) {
                     const x = (e.clientX - window.innerWidth / 2) / 80;
                     const y = (e.clientY - window.innerHeight / 2) / 80;
                     heroEl.style.transform = `translate(${-x}px, ${-y}px)`;
@@ -1215,6 +1236,9 @@
             let lastCanvasTime = 0;
             const drawCanvas = (ts) => {
                 requestAnimationFrame(drawCanvas);
+                // CPU Opt: Completely halt rendering if home is not active
+                if (!isHomeActive) return; 
+
                 // CPU Opt: Limit to ~30fps
                 if (ts - lastCanvasTime < 33) return; 
                 lastCanvasTime = ts;
