@@ -69,7 +69,7 @@
         ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #E8D4A8; }
 
-        /* Background Systems */
+        /* Background Systems - OPTIMIZED FOR CPU */
         #bg-image {
             position: fixed; inset: 0; z-index: -3;
             background-image: url('https://files.catbox.moe/8whl73.jpg');
@@ -78,41 +78,33 @@
             pointer-events: none;
         }
         .bg-shape {
-            position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: -2;
-            will-change: transform; /* Hardware Acceleration */
-            transform: translateZ(0); 
+            position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: -2;
+            /* Dihapus animasinya agar CPU tidak meledak saat merender blur terus menerus */
         }
         .bg-shape-1 {
-            width: 50vw; height: 50vw; max-width: 600px; max-height: 600px;
-            background: radial-gradient(circle, rgba(197,160,89,0.08) 0%, transparent 70%);
-            top: -10%; right: -10%;
-            animation: bgFloat 20s ease-in-out infinite alternate;
+            width: 60vw; height: 60vw; max-width: 700px; max-height: 700px;
+            background: radial-gradient(circle, rgba(197,160,89,0.06) 0%, transparent 70%);
+            top: -20%; right: -10%;
         }
         .bg-shape-2 {
-            width: 40vw; height: 40vw; max-width: 500px; max-height: 500px;
+            width: 50vw; height: 50vw; max-width: 600px; max-height: 600px;
             background: radial-gradient(circle, rgba(10,38,29,0.15) 0%, transparent 70%);
-            bottom: -10%; left: -10%;
-            animation: bgFloat 25s ease-in-out infinite alternate-reverse;
-        }
-        @keyframes bgFloat {
-            0% { transform: translate3d(0, 0, 0) scale(1); }
-            100% { transform: translate3d(50px, 30px, 0) scale(1.1); }
+            bottom: -20%; left: -10%;
         }
 
-        #neural-canvas, #stars-container {
+        #stars-container {
             position: fixed; inset: 0; z-index: -1; pointer-events: none;
         }
 
-        /* Mouse Glow (Optimized for GPU) */
+        /* Mouse Glow - OPTIMIZED (Removed mix-blend-mode) */
         .mouse-glow {
             position: fixed; width: 400px; height: 400px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(197,160,89,0.06) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(197,160,89,0.04) 0%, transparent 60%);
             pointer-events: none; z-index: 10;
             top: 0; left: 0;
-            transform: translate3d(-500px, -500px, 0); /* Start offscreen */
-            mix-blend-mode: screen;
+            transform: translate3d(-500px, -500px, 0);
             transition: opacity 0.3s;
-            will-change: transform; /* GPU Acceleration */
+            will-change: transform;
         }
 
         /* Preloader */
@@ -224,7 +216,6 @@
             position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
             width: clamp(250px, 40vw, 400px); aspect-ratio: 1; border-radius: 50%;
             border: 1px solid rgba(197,160,89,0.3); z-index: -1;
-            /* Static shadows instead of animating them */
             box-shadow: 0 0 30px rgba(197,160,89,0.3), inset 0 0 30px rgba(197,160,89,0.3);
             animation: pulseHalo 4s ease-in-out infinite alternate;
             will-change: transform, opacity;
@@ -258,12 +249,14 @@
         .nav-line.active { width: 48px; background: #C5A059; box-shadow: 0 0 10px rgba(197,160,89,0.6); }
 
         /* Progress Bars */
-        .bar-bg { width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; position: relative; overflow: hidden; }
+        .bar-bg { width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; position: relative; overflow: hidden; transform: translateZ(0); }
         .bar-fill { 
-            position: absolute; top: 0; left: 0; height: 100%; width: 0%;
+            position: absolute; top: 0; left: 0; height: 100%; width: 100%;
             background: linear-gradient(90deg, #C5A059, #E8D4A8);
-            transition: width 1.2s var(--ease); box-shadow: 0 0 10px rgba(197,160,89,0.8);
-            will-change: width;
+            transform: scaleX(0); transform-origin: left;
+            transition: transform 1.2s var(--ease); 
+            box-shadow: 0 0 10px rgba(197,160,89,0.8);
+            will-change: transform;
         }
 
         /* Timeline */
@@ -306,7 +299,7 @@
         /* Story UI Specific Styles */
         .story-container {
             width: 100%;
-            max-width: 440px; /* Constrain width on mobile */
+            max-width: 440px;
             aspect-ratio: 9/16;
             margin: 0 auto;
             position: relative;
@@ -318,33 +311,21 @@
             will-change: transform;
         }
         
-        /* Optimasi Desktop untuk Story Container */
         @media (min-width: 768px) {
             .story-container { 
-                height: 75vh; /* Menyesuaikan tinggi viewport desktop */
+                height: 75vh;
                 max-height: 800px;
-                width: auto; /* Width dihitung otomatis berdasar aspect-ratio & height */
+                width: auto;
                 max-width: none;
                 aspect-ratio: 9/16; 
             }
         }
 
         .story-progress-bg {
-            flex: 1;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-            overflow: hidden;
-            transform: translateZ(0); /* Force HW acceleration */
+            flex: 1; height: 3px; background: rgba(255, 255, 255, 0.3); border-radius: 2px; overflow: hidden; transform: translateZ(0); 
         }
         .story-progress-fill {
-            height: 100%;
-            background: #fff;
-            width: 100%;
-            transform: scaleX(0); /* Optimized GPU Animation */
-            transform-origin: left;
-            border-radius: 2px;
-            will-change: transform;
+            height: 100%; background: #fff; width: 100%; transform: scaleX(0); transform-origin: left; border-radius: 2px; will-change: transform;
         }
         .story-img-overlay {
             background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 20%, transparent 50%, rgba(0,0,0,0.9) 100%);
@@ -380,12 +361,10 @@
         <div id="smoke-container" class="absolute bottom-[10%] left-1/2 -translate-x-1/2 w-[200px] h-[100px] z-30 pointer-events-none"></div>
     </div>
 
-    <!-- Background Elements -->
+    <!-- Background Elements (Simplified for CPU) -->
     <div id="bg-image"></div>
     <div class="bg-shape bg-shape-1"></div>
     <div class="bg-shape bg-shape-2"></div>
-    <canvas id="neural-canvas" class="hidden md:block"></canvas>
-    <div id="stars-container" class="md:hidden"></div>
     <div class="mouse-glow hidden md:block" id="mouse-glow"></div>
 
     <!-- Main Container -->
@@ -916,8 +895,8 @@
                     
                     const bars = slide.querySelectorAll('.bar-fill');
                     bars.forEach(b => {
-                        b.style.width = '0%';
-                        setTimeout(() => b.style.width = b.getAttribute('data-width'), 100);
+                        b.style.transform = 'scaleX(0)';
+                        setTimeout(() => b.style.transform = `scaleX(${parseInt(b.getAttribute('data-width')) / 100})`, 100);
                     });
                 }
             });
@@ -1109,13 +1088,11 @@
 
         const pauseStoryEvent = () => { storyIsPaused = true; };
         const resumeStoryEvent = () => { 
-            // If explicit pause button wasn't clicked, resume on mouse up/leave
             if (iconPauseBtn.classList.contains('fa-pause')) {
                 storyIsPaused = false; 
             }
         };
 
-        // Pause on Hold
         const storyZones = [document.getElementById('story-prev-zone'), document.getElementById('story-next-zone')];
         storyZones.forEach(zone => {
             zone.addEventListener('mousedown', pauseStoryEvent);
@@ -1125,7 +1102,6 @@
             zone.addEventListener('touchend', resumeStoryEvent);
         });
 
-        // Click to Navigate
         document.getElementById('story-prev-zone').addEventListener('click', () => { playClick(); prevStorySlide(); });
         document.getElementById('story-next-zone').addEventListener('click', () => { playClick(); nextStorySlide(); });
         document.getElementById('story-btn-prev').addEventListener('click', () => { playClick(); prevStorySlide(); });
@@ -1166,22 +1142,15 @@
         };
         fetchGH();
 
-        /* --- Effects: Mouse Glow & Parallax --- */
+        /* --- Effects: Mouse Glow --- */
         const glowEl = document.getElementById('mouse-glow');
-        const heroEl = document.getElementById('hero-title');
         let rafId = null;
 
         document.addEventListener('mousemove', (e) => {
             if (!isLoaded || isMobile || rafId) return;
             rafId = requestAnimationFrame(() => {
                 if (glowEl) {
-                    // Optimized GPU translate
                     glowEl.style.transform = `translate3d(${e.clientX - 200}px, ${e.clientY - 200}px, 0)`;
-                }
-                if (isHomeActive && viewHome.classList.contains('active') && heroEl) {
-                    const x = (e.clientX - window.innerWidth / 2) / 80;
-                    const y = (e.clientY - window.innerHeight / 2) / 80;
-                    heroEl.style.transform = `translate(${-x}px, ${-y}px)`;
                 }
                 rafId = null;
             });
@@ -1197,83 +1166,6 @@
             });
             btn.addEventListener('mouseleave', () => btn.style.transform = '');
         });
-
-        /* --- Easter Egg --- */
-        let keyBuffer = '';
-        document.addEventListener('keydown', e => {
-            keyBuffer += e.key.toLowerCase();
-            if (keyBuffer.length > 4) keyBuffer = keyBuffer.slice(-4);
-            if (keyBuffer === 'adam') {
-                playClick();
-                const modal = document.createElement('div');
-                modal.className = 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gold/90 text-obsidian px-8 py-5 rounded-xl text-sm font-bold tracking-wider shadow-2xl z-[999999] transition-all animate-bounce';
-                modal.innerHTML = '🔓 Access Granted. Welcome, Creator.';
-                document.body.appendChild(modal);
-                setTimeout(() => modal.remove(), 3500);
-                keyBuffer = '';
-            }
-        });
-
-        /* --- Neural Canvas (Desktop Only) - Throttled for Performance --- */
-        if (!isMobile) {
-            const cvs = document.getElementById('neural-canvas');
-            const ctx = cvs.getContext('2d');
-            let w = window.innerWidth, h = window.innerHeight;
-            cvs.width = w; cvs.height = h;
-            
-            const pts = [];
-            const maxPts = Math.min(Math.floor((w * h) / 20000), 60);
-            
-            for(let i=0; i<maxPts; i++) {
-                pts.push({
-                    x: Math.random() * w, y: Math.random() * h,
-                    vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
-                    r: Math.random() * 1.5 + 0.5,
-                    gold: Math.random() > 0.6
-                });
-            }
-
-            let lastCanvasTime = 0;
-            const drawCanvas = (ts) => {
-                requestAnimationFrame(drawCanvas);
-                // CPU Opt: Completely halt rendering if home is not active
-                if (!isHomeActive) return; 
-
-                // CPU Opt: Limit to ~30fps
-                if (ts - lastCanvasTime < 33) return; 
-                lastCanvasTime = ts;
-
-                ctx.clearRect(0, 0, w, h);
-                for(let i=0; i<pts.length; i++) {
-                    const p = pts[i];
-                    p.x += p.vx; p.y += p.vy;
-                    if(p.x < 0 || p.x > w) p.vx *= -1;
-                    if(p.y < 0 || p.y > h) p.vy *= -1;
-                    
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = p.gold ? 'rgba(197,160,89,0.5)' : 'rgba(255,255,255,0.1)';
-                    ctx.fill();
-
-                    for(let j=i+1; j<pts.length; j++) {
-                        const q = pts[j];
-                        const distSq = (p.x - q.x)**2 + (p.y - q.y)**2;
-                        if(distSq < 15000) {
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
-                            ctx.strokeStyle = `rgba(197,160,89,${(1 - Math.sqrt(distSq)/122) * 0.1})`;
-                            ctx.stroke();
-                        }
-                    }
-                }
-            };
-            requestAnimationFrame(drawCanvas);
-
-            window.addEventListener('resize', () => {
-                w = window.innerWidth; h = window.innerHeight;
-                cvs.width = w; cvs.height = h;
-            });
-        }
 
         /* --- Gemini API Integration (Flora Mini) --- */
         const aiChatBtn = document.getElementById('ai-chat-btn');
