@@ -79,7 +79,6 @@
         }
         .bg-shape {
             position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: -2;
-            /* Dihapus animasinya agar CPU tidak meledak saat merender blur terus menerus */
         }
         .bg-shape-1 {
             width: 60vw; height: 60vw; max-width: 700px; max-height: 700px;
@@ -96,7 +95,7 @@
             position: fixed; inset: 0; z-index: -1; pointer-events: none;
         }
 
-        /* Mouse Glow - OPTIMIZED (Removed mix-blend-mode) */
+        /* Mouse Glow - OPTIMIZED */
         .mouse-glow {
             position: fixed; width: 400px; height: 400px; border-radius: 50%;
             background: radial-gradient(circle, rgba(197,160,89,0.04) 0%, transparent 60%);
@@ -107,44 +106,6 @@
             will-change: transform;
         }
 
-        /* Preloader */
-        #preloader {
-            position: fixed; inset: 0; background: #000; z-index: 99999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        #preloader.loaded { opacity: 0; pointer-events: none; transform: scale(1.05); }
-        .loader-counter {
-            font-family: 'Cormorant Garamond', serif; font-size: clamp(4rem, 15vw, 8rem);
-            font-weight: 700; color: #C5A059; line-height: 0.8;
-            text-shadow: 0 0 40px rgba(197,160,89,0.5);
-        }
-        
-        /* Rocket Animation */
-        .rocket-wrap {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 50; display: flex; flex-direction: column; align-items: center;
-        }
-        .rocket-wrap.rumble { animation: rumble 0.1s infinite linear; }
-        .rocket-wrap.launch { animation: launchRocket 1.2s cubic-bezier(0.7,0,0.84,0) forwards; }
-        @keyframes rumble {
-            0%, 100% { transform: translate(-50%, -50%) translate(1px, 1px); }
-            50% { transform: translate(-50%, -50%) translate(-1px, -1px); }
-        }
-        @keyframes launchRocket {
-            0% { transform: translate(-50%, -50%) translateY(0); }
-            15% { transform: translate(-50%, -50%) translateY(20px); }
-            100% { transform: translate(-50%, -50%) translateY(-150vh) scale(0.6); }
-        }
-        .thruster-fire {
-            width: 24px; height: 60px; border-radius: 50% 50% 20% 20%;
-            background: linear-gradient(to bottom, #fff, #ffeb3b 20%, #ff9800 40%, #ff4d4d 70%, transparent);
-            filter: blur(3px); opacity: 0; animation: flameFlicker 0.1s infinite alternate; margin-top: -5px;
-            will-change: transform;
-        }
-        .rocket-wrap.rumble .thruster-fire, .rocket-wrap.launch .thruster-fire { opacity: 1; }
-        @keyframes flameFlicker { 0% { transform: scaleY(0.9); } 100% { transform: scaleY(1.1); } }
-
         /* Typography & Text FX */
         .text-gradient {
             background: linear-gradient(135deg, #fff 30%, #C5A059 100%);
@@ -154,7 +115,7 @@
         .glitch-hover { position: relative; transition: text-shadow 0.3s; }
         .glitch-hover:hover { text-shadow: 0 0 20px rgba(197,160,89,0.6); color: #C5A059; }
 
-        /* Glass & Cards */
+        /* Glass & Image Cards */
         .glass-panel {
             background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -167,18 +128,37 @@
         
         .card-menu {
             position: relative; overflow: hidden; cursor: pointer;
-            height: 160px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .card-menu::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(197,160,89,0.15), transparent);
-            transform: skewX(-20deg) translateZ(0); transition: left 0.5s var(--ease);
-            will-change: left;
+        
+        /* New Editorial Image Card Hover System */
+        .card-bg-img {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(100%) brightness(0.35);
+            transform: scale(1.1);
+            transition: all 0.7s var(--ease);
+            z-index: 0;
+            pointer-events: none;
         }
-        .card-menu:hover::before { left: 150%; }
+        .card-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(5,11,8,0.95), rgba(5,11,8,0.2));
+            z-index: 1;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+        
+        .card-menu:hover .card-bg-img {
+            filter: grayscale(0%) brightness(0.6);
+            transform: scale(1);
+        }
         .card-menu:hover {
-            transform: translateY(-8px); border-color: rgba(197,160,89,0.4);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 25px rgba(197,160,89,0.15);
+            transform: translateY(-8px); border-color: rgba(197,160,89,0.5);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 25px rgba(197,160,89,0.2);
+        }
+        .card-menu:hover .card-icon {
+            transform: scale(1.15) translateY(-5px);
+            text-shadow: 0 0 15px rgba(197,160,89,0.8);
         }
 
         /* View Transitions */
@@ -196,7 +176,6 @@
             position: absolute; top: 0; height: 100%; width: 55%;
             transition: all 1.2s var(--ease); pointer-events: none; z-index: 1;
         }
-        /* Model Positions based on Slide Index */
         @media(min-width: 768px) {
             #model-container.pos-0 { left: 45%; transform: scale(1); }
             #model-container.pos-1 { left: 5%; transform: scale(1.1); }
@@ -227,7 +206,6 @@
 
         model-viewer {
             width: 100%; height: 100%; outline: none; --poster-color: transparent;
-            /* Static drop shadow is fine if not animated */
             filter: drop-shadow(0 0 20px rgba(197,160,89,0.3)); 
         }
 
@@ -337,28 +315,18 @@
 </head>
 <body class="antialiased selection:bg-gold selection:text-obsidian">
 
-    <!-- Preloader -->
-    <div id="preloader" role="alert">
-        <div class="relative z-10 text-center transition-opacity duration-300" id="loader-content">
-            <div class="loader-counter" id="loader-counter">0</div>
-            <p class="mt-6 text-[0.65rem] tracking-[0.4em] uppercase text-white/40 font-mono" id="loader-status">System Initializing</p>
+    <!-- Preloader Elegan -->
+    <div id="preloader" class="fixed inset-0 bg-[#050B08] z-[99999] flex flex-col justify-center items-center transition-transform duration-1000 ease-in-out">
+        <div class="relative z-10 text-center w-full max-w-md px-8" id="loader-content">
+            <div class="font-serif-c text-7xl md:text-9xl font-bold text-gold tracking-tighter mb-4" id="loader-counter">00</div>
+            
+            <!-- Progress Line -->
+            <div class="w-full h-[2px] bg-white/10 relative overflow-hidden rounded-full shadow-[0_0_15px_rgba(197,160,89,0.3)]">
+                <div id="loader-bar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-gold to-gold-light w-0 transition-all duration-75 ease-out"></div>
+            </div>
+            
+            <p class="mt-6 text-[0.6rem] tracking-[0.4em] uppercase text-white/40 font-mono" id="loader-status">System Initializing</p>
         </div>
-        
-        <!-- SVG Rocket -->
-        <div class="rocket-wrap" id="mega-rocket">
-            <svg width="90" height="120" viewBox="0 0 90 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 15px rgba(197,160,89,0.5));">
-                <path d="M45 4 C45 4 20 30 20 70 L45 82 L70 70 C70 30 45 4 45 4Z" fill="#FDFBF7"/>
-                <path d="M45 4 C45 4 38 20 38 50 L45 55 L52 50 C52 20 45 4 45 4Z" fill="rgba(255,255,255,0.3)"/>
-                <circle cx="45" cy="48" r="11" fill="#050B08" stroke="#C5A059" stroke-width="2.5"/>
-                <circle cx="45" cy="48" r="6" fill="#0A261D"/>
-                <circle cx="43" cy="45" r="2" fill="rgba(197,160,89,0.5)"/>
-                <path d="M20 70 L6 88 L22 80Z" fill="#C5A059"/>
-                <path d="M70 70 L84 88 L68 80Z" fill="#C5A059"/>
-                <path d="M28 78 Q45 88 62 78 L62 82 Q45 92 28 82Z" fill="#e0d0b0"/>
-            </svg>
-            <div class="thruster-fire"></div>
-        </div>
-        <div id="smoke-container" class="absolute bottom-[10%] left-1/2 -translate-x-1/2 w-[200px] h-[100px] z-30 pointer-events-none"></div>
     </div>
 
     <!-- Background Elements (Simplified for CPU) -->
@@ -380,21 +348,44 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto z-20 relative">
-                <div class="glass-panel card-menu" onclick="navigateTo('datadiri')">
-                    <i class="fas fa-user-astronaut text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)]"></i>
-                    <span class="text-sm font-medium tracking-wider text-white">Data Diri & Sistem</span>
+                <!-- Menu 1 -->
+                <div class="glass-panel card-menu group" onclick="navigateTo('datadiri')">
+                    <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
+                    <div class="card-overlay"></div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <i class="fas fa-user-astronaut text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
+                        <span class="text-sm font-medium tracking-wider text-white">Data Diri & Sistem</span>
+                    </div>
                 </div>
-                <div class="glass-panel card-menu" onclick="navigateTo('proyek')">
-                    <i class="fas fa-layer-group text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)]"></i>
-                    <span class="text-sm font-medium tracking-wider text-white">Karya & Project</span>
+                
+                <!-- Menu 2 -->
+                <div class="glass-panel card-menu group" onclick="navigateTo('proyek')">
+                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
+                    <div class="card-overlay"></div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <i class="fas fa-layer-group text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
+                        <span class="text-sm font-medium tracking-wider text-white">Karya & Project</span>
+                    </div>
                 </div>
-                <div class="glass-panel card-menu" onclick="navigateTo('pengalaman')">
-                    <i class="fas fa-route text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)]"></i>
-                    <span class="text-sm font-medium tracking-wider text-white">Eksplorasi Perjalanan</span>
+
+                <!-- Menu 3 -->
+                <div class="glass-panel card-menu group" onclick="navigateTo('pengalaman')">
+                    <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
+                    <div class="card-overlay"></div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <i class="fas fa-route text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
+                        <span class="text-sm font-medium tracking-wider text-white">Eksplorasi Perjalanan</span>
+                    </div>
                 </div>
-                <div class="glass-panel card-menu" onclick="navigateTo('kontak')">
-                    <i class="fas fa-satellite-dish text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)]"></i>
-                    <span class="text-sm font-medium tracking-wider text-white">Hubungi Aku</span>
+
+                <!-- Menu 4 -->
+                <div class="glass-panel card-menu group" onclick="navigateTo('kontak')">
+                    <img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
+                    <div class="card-overlay"></div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <i class="fas fa-satellite-dish text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
+                        <span class="text-sm font-medium tracking-wider text-white">Hubungi Aku</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -730,47 +721,44 @@
         let isLoaded = false;
         let currentSlideIdx = 0;
 
-        /* --- Preloader Logic --- */
+        /* --- Preloader Logic (Minimalist) --- */
         const initPreloader = () => {
             const preEl = document.getElementById('preloader');
             const counter = document.getElementById('loader-counter');
+            const bar = document.getElementById('loader-bar');
             const status = document.getElementById('loader-status');
-            const rocket = document.getElementById('mega-rocket');
             let cnt = 0;
 
-            const safetyTimer = setTimeout(() => {
-                if (!isLoaded) dismissPreloader();
-            }, 7000);
-
             const dismissPreloader = () => {
-                clearTimeout(safetyTimer);
                 isLoaded = true;
-                status.textContent = 'IGNITION!'; status.style.color = '#ff4d4d';
+                status.textContent = 'SYSTEM READY'; 
+                status.style.color = '#C5A059';
                 initAC(); playWhoosh();
-                rocket.classList.remove('rumble'); rocket.classList.add('launch');
-                document.getElementById('loader-content').style.opacity = '0';
                 
                 setTimeout(() => {
-                    preEl.classList.add('loaded');
-                    setTimeout(startScramble, 800);
+                    preEl.style.transform = 'translateY(-100%)';
+                    setTimeout(startScramble, 600);
                     setTimeout(() => preEl.remove(), 1000);
-                }, 600);
+                }, 400);
             };
 
             const interval = setInterval(() => {
-                cnt += (cnt < 80) ? Math.random() * 3 + 1 : (cnt < 95 ? 1 : 0.5);
+                cnt += (cnt < 80) ? Math.random() * 4 + 1 : (cnt < 98 ? 1 : 0.2);
                 if (cnt >= 100) {
-                    cnt = 100; clearInterval(interval); counter.textContent = '100';
-                    setTimeout(dismissPreloader, 500); return;
+                    cnt = 100; 
+                    clearInterval(interval); 
+                    counter.textContent = '100';
+                    bar.style.width = '100%';
+                    setTimeout(dismissPreloader, 300); 
+                    return;
                 }
                 const val = Math.floor(cnt);
-                counter.textContent = val;
+                counter.textContent = val.toString().padStart(2, '0');
+                bar.style.width = `${val}%`;
+                
                 if (val === 30) status.textContent = 'Loading Core Modules';
                 if (val === 60) status.textContent = 'Establishing Neural Link';
-                if (val >= 90 && !rocket.classList.contains('rumble')) {
-                    status.textContent = 'READY FOR LAUNCH'; status.style.color = '#ffeb3b';
-                    rocket.classList.add('rumble');
-                }
+                if (val >= 90) status.textContent = 'Finalizing Interface';
             }, 30);
         };
         window.addEventListener('load', initPreloader);
@@ -806,11 +794,11 @@
         const viewHome = document.getElementById('view-home');
         const viewDetail = document.getElementById('view-detail');
         const allContents = document.querySelectorAll('.detail-content');
-        const mainModelViewer = document.getElementById('main-model-viewer'); // Optimize Model CPU
+        const mainModelViewer = document.getElementById('main-model-viewer');
 
         window.navigateTo = (targetId) => {
             playClick();
-            isHomeActive = false; // Turn off Home background animations
+            isHomeActive = false;
             viewHome.classList.remove('active');
             
             setTimeout(() => {
@@ -821,13 +809,12 @@
                 const targetEl = document.getElementById('content-' + targetId);
                 targetEl.classList.remove('hidden');
                 
-                // Pause model viewer if not in datadiri to save CPU
                 if (mainModelViewer) {
                     if (targetId === 'datadiri') {
-                        mainModelViewer.setAttribute('auto-rotate', ''); // Reactivate rotation
+                        mainModelViewer.setAttribute('auto-rotate', ''); 
                         mainModelViewer.play();
                     } else {
-                        mainModelViewer.removeAttribute('auto-rotate'); // Stop background rotation logic
+                        mainModelViewer.removeAttribute('auto-rotate'); 
                         mainModelViewer.pause();
                     }
                 }
@@ -844,14 +831,14 @@
 
         window.navigateHome = () => {
             playClick();
-            isHomeActive = true; // Turn Home background animations back on
+            isHomeActive = true; 
             viewDetail.classList.remove('active');
             
             document.querySelectorAll('.bar-fill').forEach(b => b.style.width = '0%');
-            if (storyRafId) { cancelAnimationFrame(storyRafId); storyRafId = null; } // Pause story loop completely
+            if (storyRafId) { cancelAnimationFrame(storyRafId); storyRafId = null; } 
             if (mainModelViewer) {
                 mainModelViewer.removeAttribute('auto-rotate');
-                mainModelViewer.pause(); // Pause 3D model
+                mainModelViewer.pause(); 
             }
             
             setTimeout(() => {
@@ -955,10 +942,10 @@
         ];
 
         let currentStoryIndex = 0;
-        let storyProgress = 0; // 0.0 to 1.0
+        let storyProgress = 0; 
         let storyIsPaused = false;
         let storyLastTime = 0;
-        let storyDuration = 5000; // 5 seconds per slide
+        let storyDuration = 5000; 
         let storyRafId = null;
 
         const elStoryImg = document.getElementById('story-img');
@@ -973,7 +960,6 @@
         const iconPauseBtn = document.querySelector('#story-pause-btn i');
         let storyProgressBars = [];
 
-        // Build Progress Bars
         function buildStoryProgressBars() {
             elStoryProgCont.innerHTML = '';
             storyProgressBars = [];
@@ -991,11 +977,10 @@
         function renderStoryContent(index) {
             const data = storyData[index];
             
-            // Fade text out then in
             elStoryTextContent.style.opacity = '0';
             setTimeout(() => {
                 elStoryImg.src = data.img;
-                elStoryImgBg.src = data.img; // Blurred bg fallback
+                elStoryImgBg.src = data.img; 
                 elStoryTitle.textContent = data.title;
                 elStoryDesc.textContent = data.desc;
                 elStoryDate.textContent = data.date;
@@ -1013,7 +998,6 @@
             }, 200);
         }
 
-        // Optimized UI Update using scaleX instead of width
         function updateProgressUI() {
             storyProgressBars.forEach((bar, idx) => {
                 if (idx < currentStoryIndex) {
@@ -1031,7 +1015,6 @@
             const deltaTime = time - storyLastTime;
             storyLastTime = time;
 
-            // Only run logic if the project section is active to save CPU
             if (viewDetail.classList.contains('active') && !document.getElementById('content-proyek').classList.contains('hidden')) {
                 if (!storyIsPaused) {
                     storyProgress += (deltaTime / storyDuration);
@@ -1043,14 +1026,14 @@
                 }
                 storyRafId = requestAnimationFrame(storyLoop);
             } else {
-                storyRafId = null; // stop loop
+                storyRafId = null; 
             }
         }
 
         function nextStorySlide() {
             currentStoryIndex++;
             if (currentStoryIndex >= storyData.length) {
-                currentStoryIndex = 0; // Loop back to start
+                currentStoryIndex = 0; 
             }
             storyProgress = 0;
             renderStoryContent(currentStoryIndex);
