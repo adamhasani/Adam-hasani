@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
     
     <!-- Scripts -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script type="module" src="model-viewer.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -238,10 +238,10 @@
         }
 
         /* Slider / Editorial Section */
-        .editorial-container { position: relative; min-height: 60vh; display: flex; align-items: center; }
+        .editorial-container { position: relative; min-height: 550px; height: 550px; display: flex; align-items: center; }
         #model-container {
-            position: absolute; top: 0; height: 100%; width: 55%;
-            transition: all 1.2s var(--ease); pointer-events: none; z-index: 1;
+            position: absolute; top: 25px; height: 500px; width: 55%;
+            transition: all 1.2s var(--ease); pointer-events: auto; z-index: 10;
         }
         @media(min-width: 768px) {
             #model-container.pos-0 { left: 45%; transform: scale(1); }
@@ -268,7 +268,7 @@
 
         /* Optimized CPU: Removed drop-shadow filter entirely */
         model-viewer {
-            width: 100%; height: 100%; outline: none; --poster-color: transparent;
+            display: block !important; width: 100% !important; height: 100% !important; outline: none; --poster-color: transparent;
         }
 
         .data-slide {
@@ -545,8 +545,7 @@
                     <!-- 3D Model BG -->
                     <div id="model-container" class="pos-0">
                         <div class="halo-ring"></div>
-                        <!-- CPU Optimized: Removed shadow-intensity and custom drop-shadow, lowered rotation speed -->
-                        <!-- Globe removed per user request -->
+                        <model-viewer id="main-model-viewer" src="globe.glb" alt="3D Robot Model" loading="eager" auto-rotate autoplay animation-name="Experiment" rotation-per-second="15deg" interaction-prompt="none" exposure="2.2" shadow-intensity="0" camera-orbit="45deg 75deg 100%" class="w-full h-full"></model-viewer>
                     </div>
 
                     <!-- Left Navigation (Desktop) -->
@@ -1185,10 +1184,10 @@
                 if (mainModelViewer) {
                     if (targetId === 'datadiri') {
                         mainModelViewer.setAttribute('auto-rotate', ''); 
-                        mainModelViewer.play();
+                        try { if (typeof mainModelViewer.play === 'function') mainModelViewer.play(); } catch(e) {}
                     } else {
                         mainModelViewer.removeAttribute('auto-rotate'); 
-                        mainModelViewer.pause();
+                        try { if (typeof mainModelViewer.pause === 'function') mainModelViewer.pause(); } catch(e) {}
                     }
                 }
                 
@@ -1211,7 +1210,7 @@
             if (storyRafId) { cancelAnimationFrame(storyRafId); storyRafId = null; } 
             if (mainModelViewer) {
                 mainModelViewer.removeAttribute('auto-rotate');
-                mainModelViewer.pause(); 
+                try { if (typeof mainModelViewer.pause === 'function') mainModelViewer.pause(); } catch(e) {}
             }
             
             setTimeout(() => {
