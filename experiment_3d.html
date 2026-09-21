@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam Hasani | 3D Spatial Command Deck (Experiment)</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#05080E',
+                        gold: '#C5A059',
+                        'gold-light': '#E5C378',
+                        ivory: '#F9F6F0',
+                        forest: '#0A1A12',
+                        cyan: '#00F5D4',
+                        emerald: '#10B981'
+                    },
+                    fontFamily: {
+                        'serif-c': ['Cormorant Garamond', 'serif'],
+                        'mono': ['Space Grotesk', 'DM Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #05080E;
+            color: #F9F6F0;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            user-select: none;
+        }
+
+        /* 3D Scene Viewport Canvas */
+        #webgl-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: all;
+        }
+
+        /* Ambient Glassmorphism HUD */
+        .glass-cockpit {
+            background: rgba(10, 16, 26, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(197, 160, 89, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(12, 20, 32, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(197, 160, 89, 0.6);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 30px rgba(197, 160, 89, 0.25);
+        }
+
+        /* Dynamic Specular Glare */
+        .card-glare {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            mix-blend-mode: overlay;
+            z-index: 5;
+        }
+        .glass-card:hover .card-glare { opacity: 1; }
+
+        .card-content {
+            transform: translateZ(35px);
+            transition: transform 0.3s ease;
+        }
+
+        /* 3D Station Overlay Drawer */
+        #detail-station-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background: rgba(5, 8, 14, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #detail-station-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content-box {
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #detail-station-modal.active .modal-content-box {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Cyber Pulse & Glitch */
+        .cyber-scanner-line {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #C5A059, #00F5D4, transparent);
+            animation: scanLine 3s linear infinite;
+        }
+        @keyframes scanLine {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+    </style>
+</head>
+<body class="relative flex flex-col justify-between p-4 md:p-8">
+
+    <!-- WebGL Canvas for 3D Spatial Scene -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- TOP HUD BAR -->
+    <header class="relative z-20 flex justify-between items-center w-full max-w-7xl mx-auto px-4 py-3 rounded-full glass-cockpit">
+        <div class="flex items-center gap-3">
+            <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald"></span>
+            </span>
+            <div class="flex flex-col">
+                <span class="text-xs font-mono font-bold tracking-widest text-gold uppercase">Adam_OS // 3D Spatial</span>
+                <span class="text-[0.6rem] font-mono text-white/50 tracking-wider hidden sm:inline">4-QUADRANT COMMAND DECK</span>
+            </div>
+        </div>
+
+        <!-- Center System Mode Status -->
+        <div id="system-mode-indicator" class="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/10 text-[0.65rem] font-mono text-gold tracking-widest uppercase transition-all duration-300">
+            <i class="fas fa-microchip animate-spin text-xs"></i> <span>Core Orbit: Neutral</span>
+        </div>
+
+        <!-- Right Controls -->
+        <div class="flex items-center gap-3">
+            <button id="sfx-btn" onclick="toggleAudio()" class="px-3.5 py-1.5 rounded-full border border-gold/40 text-[0.65rem] font-mono tracking-widest text-gold hover:bg-gold hover:text-obsidian transition-colors flex items-center gap-1.5">
+                <i id="sfx-icon" class="fas fa-volume-up text-xs"></i> <span id="sfx-text">SFX ON</span>
+            </button>
+            <a href="https://github.com/adamhasani" target="_blank" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs text-white transition-colors flex items-center gap-1.5">
+                <i class="fab fa-github"></i> <span class="hidden sm:inline font-mono text-[0.65rem]">@adamhasani</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- CENTER HERO & 4-QUADRANT BENTO COMMAND DECK -->
+    <main class="relative z-10 flex-1 flex flex-col justify-center items-center max-w-6xl w-full mx-auto my-2 pointer-events-none">
+        
+        <!-- Header Hero Identity -->
+        <div class="text-center pointer-events-auto transition-transform duration-300 mb-2">
+            <h1 class="font-serif-c text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-ivory drop-shadow-[0_0_35px_rgba(197,160,89,0.35)] leading-none">
+                Adam Hasani<span class="text-gold">.</span>
+            </h1>
+            <p class="text-gold text-xs md:text-sm tracking-[0.45em] font-mono uppercase mt-2">AI ENGINEER · CREATIVE DEVELOPER</p>
+            <div class="inline-flex items-center gap-2 mt-2 px-4 py-1 rounded-full bg-black/40 border border-white/10 text-[0.65rem] font-mono text-white/60 tracking-wider">
+                <i class="fas fa-hand-pointer text-cyan animate-pulse"></i> Hover kartu untuk memicu reaksi 3D Core · Klik untuk masuk
+            </div>
+        </div>
+
+        <!-- 4-QUADRANT INTERACTIVE GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full max-w-4xl px-2 mt-3 pointer-events-auto">
+            
+            <!-- QUADRANT 1: Data Diri & Sistem -->
+            <div class="glass-card rounded-2xl p-5 md:p-6 cursor-pointer group" 
+                 onmouseenter="onCardHover('datadiri')" 
+                 onmouseleave="onCardLeave()" 
+                 onclick="openStation('datadiri')">
+                <div class="card-glare"></div>
+                <div class="card-content flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald/30 to-gold/20 border border-emerald/40 flex items-center justify-center text-2xl text-emerald group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[0.6rem] font-mono tracking-widest text-emerald uppercase">Quadrant // 01</span>
+                            <span class="text-xs text-white/40 group-hover:text-gold transition-colors">Masuk ➔</span>
+                        </div>
+                        <h3 class="font-mono text-base md:text-lg font-bold text-ivory mt-0.5 group-hover:text-gold transition-colors">Data Diri & Sistem</h3>
+                        <p class="text-xs text-white/60 mt-1 line-clamp-1">Spesifikasi sistem, tech stack Python/TS, & biodata.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUADRANT 2: Karya & Project -->
+            <div class="glass-card rounded-2xl p-5 md:p-6 cursor-pointer group" 
+                 onmouseenter="onCardHover('karya')" 
+                 onmouseleave="onCardLeave()" 
+                 onclick="openStation('karya')">
+                <div class="card-glare"></div>
+                <div class="card-content flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan/30 to-blue-500/20 border border-cyan/40 flex items-center justify-center text-2xl text-cyan group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(0,245,212,0.5)] transition-all">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[0.6rem] font-mono tracking-widest text-cyan uppercase">Quadrant // 02</span>
+                            <span class="text-xs text-white/40 group-hover:text-gold transition-colors">Masuk ➔</span>
+                        </div>
+                        <h3 class="font-mono text-base md:text-lg font-bold text-ivory mt-0.5 group-hover:text-cyan transition-colors">Karya & Project</h3>
+                        <p class="text-xs text-white/60 mt-1 line-clamp-1">Flora AI, OmliteRoute Gateway, Harkat Photobooth.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUADRANT 3: Eksplorasi Perjalanan -->
+            <div class="glass-card rounded-2xl p-5 md:p-6 cursor-pointer group" 
+                 onmouseenter="onCardHover('eksplorasi')" 
+                 onmouseleave="onCardLeave()" 
+                 onclick="openStation('eksplorasi')">
+                <div class="card-glare"></div>
+                <div class="card-content flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-gold/30 to-amber-500/20 border border-gold/40 flex items-center justify-center text-2xl text-gold group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(197,160,89,0.5)] transition-all">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[0.6rem] font-mono tracking-widest text-gold uppercase">Quadrant // 03</span>
+                            <span class="text-xs text-white/40 group-hover:text-gold transition-colors">Masuk ➔</span>
+                        </div>
+                        <h3 class="font-mono text-base md:text-lg font-bold text-ivory mt-0.5 group-hover:text-gold transition-colors">Eksplorasi Perjalanan</h3>
+                        <p class="text-xs text-white/60 mt-1 line-clamp-1">Milestones, riset AI agentik, dan arsitektur model.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUADRANT 4: Hubungi Aku -->
+            <div class="glass-card rounded-2xl p-5 md:p-6 cursor-pointer group" 
+                 onmouseenter="onCardHover('kontak')" 
+                 onmouseleave="onCardLeave()" 
+                 onclick="openStation('kontak')">
+                <div class="card-glare"></div>
+                <div class="card-content flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500/30 to-pink-500/20 border border-purple-400/40 flex items-center justify-center text-2xl text-purple-300 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(192,132,252,0.5)] transition-all">
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[0.6rem] font-mono tracking-widest text-purple-300 uppercase">Quadrant // 04</span>
+                            <span class="text-xs text-white/40 group-hover:text-gold transition-colors">Masuk ➔</span>
+                        </div>
+                        <h3 class="font-mono text-base md:text-lg font-bold text-ivory mt-0.5 group-hover:text-purple-300 transition-colors">Hubungi Aku</h3>
+                        <p class="text-xs text-white/60 mt-1 line-clamp-1">WhatsApp langsung, Telegram, Instagram, & diskusi AI.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- BOTTOM HUD STATUS BAR -->
+    <footer class="relative z-20 flex justify-between items-center w-full max-w-7xl mx-auto px-6 py-2.5 rounded-full glass-cockpit text-[0.65rem] font-mono text-white/50">
+        <div class="flex items-center gap-4">
+            <span>📍 BASE: TEGAL, INDONESIA</span>
+            <span class="hidden sm:inline">⚡ STACK: PYTHON · TS · THREE.JS · AI GATEWAYS</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <span id="uptime-clock">UPTIME: JAKARTA TIME</span>
+            <span class="text-emerald font-bold">● LATENCY: 0.8ms</span>
+        </div>
+    </footer>
+
+    <!-- STATION MODAL (WARP ZOOM DETAILED VIEW) -->
+    <div id="detail-station-modal">
+        <div class="modal-content-box relative w-full max-w-3xl max-h-[85vh] p-6 md:p-8 rounded-3xl glass-cockpit overflow-y-auto border border-gold/30">
+            
+            <!-- Modal Close Button -->
+            <button onclick="closeStation()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 hover:bg-gold hover:text-obsidian text-white flex items-center justify-center transition-colors">
+                <i class="fas fa-times text-base"></i>
+            </button>
+
+            <!-- Dynamic Station Content -->
+            <div id="modal-station-body"></div>
+        </div>
+    </div>
+
+    <!-- THREE.JS SPATIAL ENGINE SCRIPT -->
+    <script>
+        'use strict';
+
+        /* Audio SFX Synthesizer (Web Audio API) */
+        let sfxEnabled = true;
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playBeep(freq, type = 'sine', dur = 0.1, gainVal = 0.05) {
+            if (!sfxEnabled) return;
+            try {
+                const ctx = getAudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + dur);
+            } catch(e) {}
+        }
+
+        function playWarpSound() {
+            if (!sfxEnabled) return;
+            try {
+                const ctx = getAudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(200, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.35);
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.35);
+            } catch(e) {}
+        }
+
+        function toggleAudio() {
+            sfxEnabled = !sfxEnabled;
+            const icon = document.getElementById('sfx-icon');
+            const txt = document.getElementById('sfx-text');
+            if (sfxEnabled) {
+                icon.className = 'fas fa-volume-up text-xs';
+                txt.textContent = 'SFX ON';
+                playBeep(600);
+            } else {
+                icon.className = 'fas fa-volume-mute text-xs';
+                txt.textContent = 'SFX OFF';
+            }
+        }
+
+        /* Uptime Clock */
+        setInterval(() => {
+            const el = document.getElementById('uptime-clock');
+            if (el) {
+                el.textContent = 'WIB: ' + new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta' });
+            }
+        }, 1000);
+
+        /* ================= THREE.JS 3D SCENE SETUP ================= */
+        const canvas = document.getElementById('webgl-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 18);
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        /* --- 1. Central 3D Core Sphere --- */
+        const coreGroup = new THREE.Group();
+        scene.add(coreGroup);
+
+        // Inner glowing core
+        const coreGeo = new THREE.IcosahedronGeometry(2.5, 3);
+        const coreMat = new THREE.MeshBasicMaterial({
+            color: 0xC5A059,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.75
+        });
+        const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        coreGroup.add(coreMesh);
+
+        // Center radiant sphere
+        const centerSphereGeo = new THREE.SphereGeometry(1.6, 32, 32);
+        const centerSphereMat = new THREE.MeshBasicMaterial({
+            color: 0x00F5D4,
+            transparent: true,
+            opacity: 0.35
+        });
+        const centerSphere = new THREE.Mesh(centerSphereGeo, centerSphereMat);
+        coreGroup.add(centerSphere);
+
+        /* --- 2. Dual Gyroscopic Orbital Rings --- */
+        // Ring 1 (Cyan)
+        const ring1Geo = new THREE.TorusGeometry(3.6, 0.04, 16, 100);
+        const ring1Mat = new THREE.MeshBasicMaterial({ color: 0x00F5D4, transparent: true, opacity: 0.85 });
+        const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
+        ring1.rotation.x = Math.PI / 3;
+        coreGroup.add(ring1);
+
+        // Ring 2 (Gold)
+        const ring2Geo = new THREE.TorusGeometry(4.2, 0.04, 16, 100);
+        const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xC5A059, transparent: true, opacity: 0.85 });
+        const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+        ring2.rotation.y = Math.PI / 4;
+        ring2.rotation.x = -Math.PI / 6;
+        coreGroup.add(ring2);
+
+        // Ring 3 (Outer Emerald Scanner)
+        const ring3Geo = new THREE.TorusGeometry(4.8, 0.02, 16, 120);
+        const ring3Mat = new THREE.MeshBasicMaterial({ color: 0x10B981, transparent: true, opacity: 0.5 });
+        const ring3 = new THREE.Mesh(ring3Geo, ring3Mat);
+        ring3.rotation.z = Math.PI / 5;
+        coreGroup.add(ring3);
+
+        /* --- 3. Cosmic Particle Dust Nebula --- */
+        const particleCount = 800;
+        const particleGeo = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        const colorGold = new THREE.Color(0xC5A059);
+        const colorCyan = new THREE.Color(0x00F5D4);
+        const colorWhite = new THREE.Color(0xFFFFFF);
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 50;
+            positions[i + 1] = (Math.random() - 0.5) * 40;
+            positions[i + 2] = (Math.random() - 0.5) * 40;
+
+            const chosenColor = Math.random() < 0.4 ? colorGold : (Math.random() < 0.7 ? colorCyan : colorWhite);
+            colors[i] = chosenColor.r;
+            colors[i + 1] = chosenColor.g;
+            colors[i + 2] = chosenColor.b;
+        }
+
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particleMat = new THREE.PointsMaterial({
+            size: 0.12,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.65
+        });
+        const particles = new THREE.Points(particleGeo, particleMat);
+        scene.add(particles);
+
+        /* ================= 3D INTERACTION & CAMERA LERP ================= */
+        let targetCorePos = { x: 0, y: 0, z: 0 };
+        let targetCoreRot = { x: 0, y: 0, z: 0 };
+        let targetCamPos = { x: 0, y: 0, z: 18 };
+        let activeQuadrant = 'neutral';
+        let rotSpeed = 0.005;
+
+        // Mouse Parallax
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        // 3D Card Hover Reaction Engine
+        const modeIndicator = document.getElementById('system-mode-indicator');
+
+        window.onCardHover = function(quadrant) {
+            activeQuadrant = quadrant;
+            playBeep(520, 'sine', 0.08, 0.04);
+
+            if (quadrant === 'datadiri') {
+                targetCorePos = { x: -3.2, y: 1.8, z: 2 };
+                targetCoreRot = { x: 0.5, y: -0.8, z: 0.2 };
+                coreMat.color.setHex(0x10B981); // Emerald
+                modeIndicator.innerHTML = '<i class="fas fa-user-astronaut text-emerald"></i> <span>Scan: Telemetry & Bio</span>';
+                modeIndicator.style.borderColor = 'rgba(16,185,129,0.5)';
+            } else if (quadrant === 'karya') {
+                targetCorePos = { x: 3.2, y: 1.8, z: 2 };
+                targetCoreRot = { x: -0.4, y: 0.9, z: -0.3 };
+                coreMat.color.setHex(0x00F5D4); // Cyan
+                modeIndicator.innerHTML = '<i class="fas fa-layer-group text-cyan"></i> <span>Orbit: Project Matrix</span>';
+                modeIndicator.style.borderColor = 'rgba(0,245,212,0.5)';
+            } else if (quadrant === 'eksplorasi') {
+                targetCorePos = { x: -3.2, y: -1.6, z: 2 };
+                targetCoreRot = { x: 0.8, y: -0.5, z: 0.4 };
+                coreMat.color.setHex(0xC5A059); // Gold
+                modeIndicator.innerHTML = '<i class="fas fa-route text-gold"></i> <span>Trajectory: AI Milestones</span>';
+                modeIndicator.style.borderColor = 'rgba(197,160,89,0.5)';
+            } else if (quadrant === 'kontak') {
+                targetCorePos = { x: 3.2, y: -1.6, z: 2 };
+                targetCoreRot = { x: -0.6, y: 0.6, z: 0.5 };
+                coreMat.color.setHex(0xC084FC); // Purple
+                modeIndicator.innerHTML = '<i class="fas fa-satellite-dish text-purple-300"></i> <span>Comms: Radar Beam Active</span>';
+                modeIndicator.style.borderColor = 'rgba(192,132,252,0.5)';
+            }
+        };
+
+        window.onCardLeave = function() {
+            activeQuadrant = 'neutral';
+            targetCorePos = { x: 0, y: 0, z: 0 };
+            coreMat.color.setHex(0xC5A059);
+            modeIndicator.innerHTML = '<i class="fas fa-microchip text-gold"></i> <span>Core Orbit: Neutral</span>';
+            modeIndicator.style.borderColor = 'rgba(197,160,89,0.3)';
+        };
+
+        /* ================= 3D CARD TILT WITH SPECULAR GLARE ================= */
+        document.querySelectorAll('.glass-card').forEach(card => {
+            const glare = card.querySelector('.card-glare');
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = ((y - centerY) / centerY) * -12;
+                const rotateY = ((x - centerX) / centerX) * 12;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+                if (glare) {
+                    const glareX = (x / rect.width) * 100;
+                    const glareY = (y / rect.height) * 100;
+                    glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.25) 0%, transparent 65%)`;
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            });
+        });
+
+        /* ================= MODAL STATION (WARP ZOOM VIEW) ================= */
+        const stationModal = document.getElementById('detail-station-modal');
+        const stationBody = document.getElementById('modal-station-body');
+
+        const stationData = {
+            datadiri: `
+                <div class="flex items-center gap-3 mb-6 border-b border-emerald/20 pb-4">
+                    <span class="w-12 h-12 rounded-2xl bg-emerald/20 border border-emerald/40 flex items-center justify-center text-emerald text-xl">
+                        <i class="fas fa-user-astronaut"></i>
+                    </span>
+                    <div>
+                        <span class="text-[0.6rem] font-mono text-emerald uppercase tracking-widest">Station 01 // Dossier</span>
+                        <h2 class="font-mono text-2xl font-bold text-ivory">Data Diri & Spesifikasi Sistem</h2>
+                    </div>
+                </div>
+                <div class="space-y-4 text-sm text-white/80 leading-relaxed font-sans">
+                    <p>Halo! Saya <strong>Muhammad Adam Hasani</strong>, mahasiswa Sains Data dan AI Engineer yang berfokus membangun sistem berbasis <em>autonomous agents</em>, <em>computer vision</em>, dan <em>local-first AI architecture</em>.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                        <div class="p-3.5 rounded-xl bg-white/5 border border-white/10">
+                            <span class="text-[0.65rem] font-mono text-gold uppercase">Pendidikan & Basis</span>
+                            <p class="font-bold text-ivory mt-0.5">Sains Data · Tegal, Indonesia</p>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white/5 border border-white/10">
+                            <span class="text-[0.65rem] font-mono text-cyan uppercase">Core Tech Stack</span>
+                            <p class="font-bold text-ivory mt-0.5">Python, TypeScript, Node.js, WebGL</p>
+                        </div>
+                    </div>
+                </div>
+            `,
+            karya: `
+                <div class="flex items-center gap-3 mb-6 border-b border-cyan/20 pb-4">
+                    <span class="w-12 h-12 rounded-2xl bg-cyan/20 border border-cyan/40 flex items-center justify-center text-cyan text-xl">
+                        <i class="fas fa-layer-group"></i>
+                    </span>
+                    <div>
+                        <span class="text-[0.6rem] font-mono text-cyan uppercase tracking-widest">Station 02 // Project Matrix</span>
+                        <h2 class="font-mono text-2xl font-bold text-ivory">Karya & Proyek Unggulan</h2>
+                    </div>
+                </div>
+                <div class="space-y-4 text-sm font-sans">
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan/40 transition-colors">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-cyan text-base">Flora AI (Flagship Assistant)</h3>
+                            <span class="text-[0.6rem] px-2 py-0.5 rounded bg-cyan/20 text-cyan font-mono">AI ASSISTANT</span>
+                        </div>
+                        <p class="text-white/70 text-xs mt-1">Asisten AI pribadi cerdas dengan arsitektur plugin modular, integrasi multi-turn memori, dan speech synthesis.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan/40 transition-colors">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-gold text-base">OmliteRoute — AI Gateway</h3>
+                            <span class="text-[0.6rem] px-2 py-0.5 rounded bg-gold/20 text-gold font-mono">GATEWAY</span>
+                        </div>
+                        <p class="text-white/70 text-xs mt-1">Gateway AI ultra-ringan (~120MB RAM) yang menghubungkan 350+ model AI dengan auto-fallback dan multi-key rotation.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan/40 transition-colors">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-emerald text-base">Harkat Photobooth Vision</h3>
+                            <span class="text-[0.6rem] px-2 py-0.5 rounded bg-emerald/20 text-emerald font-mono">CV & HARDWARE</span>
+                        </div>
+                        <p class="text-white/70 text-xs mt-1">Sistem photobooth modern dengan MediaPipe face-mesh, filter dinamis offline, dan generator cetak instan.</p>
+                    </div>
+                </div>
+            `,
+            eksplorasi: `
+                <div class="flex items-center gap-3 mb-6 border-b border-gold/20 pb-4">
+                    <span class="w-12 h-12 rounded-2xl bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-xl">
+                        <i class="fas fa-route"></i>
+                    </span>
+                    <div>
+                        <span class="text-[0.6rem] font-mono text-gold uppercase tracking-widest">Station 03 // Milestones</span>
+                        <h2 class="font-mono text-2xl font-bold text-ivory">Eksplorasi & Perjalanan Riset</h2>
+                    </div>
+                </div>
+                <div class="space-y-4 text-xs font-mono text-white/80">
+                    <div class="p-3.5 rounded-xl bg-white/5 border-l-4 border-gold">
+                        <span class="text-gold font-bold">2026 // AI Gateways & Multi-Agent Orchestration</span>
+                        <p class="font-sans text-white/70 mt-1">Mengembangkan sistem routing API terdistribusi, reverse proxy AI, serta koordinasi bot otonom multi-profil.</p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-white/5 border-l-4 border-cyan">
+                        <span class="text-cyan font-bold">2025 // Computer Vision & Photobooth Systems</span>
+                        <p class="font-sans text-white/70 mt-1">Membangun arsitektur booth foto pintar dengan live landmark tracking dan pipeline rendering klien ringan.</p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-white/5 border-l-4 border-emerald">
+                        <span class="text-emerald font-bold">2024 // Self-Taught Developer & Automation</span>
+                        <p class="font-sans text-white/70 mt-1">Menulis bot otomatisasi WhatsApp, scraper data, serta sistem interaktif web modern.</p>
+                    </div>
+                </div>
+            `,
+            kontak: `
+                <div class="flex items-center gap-3 mb-6 border-b border-purple-400/20 pb-4">
+                    <span class="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 text-xl">
+                        <i class="fas fa-satellite-dish"></i>
+                    </span>
+                    <div>
+                        <span class="text-[0.6rem] font-mono text-purple-300 uppercase tracking-widest">Station 04 // Comms</span>
+                        <h2 class="font-mono text-2xl font-bold text-ivory">Koneksi & Diskusi Proyek</h2>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <a href="https://wa.me/6287751121269" target="_blank" class="p-4 rounded-xl bg-emerald/10 border border-emerald/30 hover:bg-emerald/20 transition-colors flex items-center gap-3">
+                        <i class="fab fa-whatsapp text-2xl text-emerald"></i>
+                        <div>
+                            <span class="text-[0.6rem] font-mono text-emerald uppercase tracking-widest">Chat WhatsApp</span>
+                            <p class="font-bold text-white text-sm">+62 877-5112-1269</p>
+                        </div>
+                    </a>
+                    <a href="https://t.me/adamhasani" target="_blank" class="p-4 rounded-xl bg-cyan/10 border border-cyan/30 hover:bg-cyan/20 transition-colors flex items-center gap-3">
+                        <i class="fab fa-telegram-plane text-2xl text-cyan"></i>
+                        <div>
+                            <span class="text-[0.6rem] font-mono text-cyan uppercase tracking-widest">Telegram Direct</span>
+                            <p class="font-bold text-white text-sm">@adamhasani</p>
+                        </div>
+                    </a>
+                    <a href="https://instagram.com/adamhsni_" target="_blank" class="p-4 rounded-xl bg-pink-500/10 border border-pink-400/30 hover:bg-pink-500/20 transition-colors flex items-center gap-3">
+                        <i class="fab fa-instagram text-2xl text-pink-400"></i>
+                        <div>
+                            <span class="text-[0.6rem] font-mono text-pink-400 uppercase tracking-widest">Instagram</span>
+                            <p class="font-bold text-white text-sm">@adamhsni_</p>
+                        </div>
+                    </a>
+                    <a href="https://github.com/adamhasani" target="_blank" class="p-4 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 transition-colors flex items-center gap-3">
+                        <i class="fab fa-github text-2xl text-white"></i>
+                        <div>
+                            <span class="text-[0.6rem] font-mono text-white/70 uppercase tracking-widest">GitHub Repository</span>
+                            <p class="font-bold text-white text-sm">@adamhasani</p>
+                        </div>
+                    </a>
+                </div>
+            `
+        };
+
+        window.openStation = function(quadrant) {
+            playWarpSound();
+            targetCamPos.z = 10; // Zoom forward in 3D
+            stationBody.innerHTML = stationData[quadrant] || '';
+            stationModal.classList.add('active');
+        };
+
+        window.closeStation = function() {
+            playBeep(350, 'sine', 0.1, 0.04);
+            targetCamPos.z = 18; // Zoom back out to 4-quadrant overview
+            stationModal.classList.remove('active');
+        };
+
+        /* ================= MAIN ANIMATION RENDER LOOP ================= */
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Core Self-Rotation
+            coreMesh.rotation.y += rotSpeed;
+            coreMesh.rotation.x += rotSpeed * 0.5;
+            ring1.rotation.z += 0.008;
+            ring2.rotation.x += 0.006;
+            ring3.rotation.y += 0.004;
+
+            // Cosmic particle slow drift
+            particles.rotation.y += 0.0004;
+            particles.rotation.x += 0.0002;
+
+            // Smooth Lerp Core Position & Rotation towards hover targets
+            coreGroup.position.x += (targetCorePos.x + mouseX * 0.8 - coreGroup.position.x) * 0.08;
+            coreGroup.position.y += (targetCorePos.y - mouseY * 0.8 - coreGroup.position.y) * 0.08;
+            coreGroup.position.z += (targetCorePos.z - coreGroup.position.z) * 0.08;
+
+            // Smooth Lerp Camera
+            camera.position.z += (targetCamPos.z - camera.position.z) * 0.08;
+            camera.position.x += (mouseX * 1.2 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 1.2 - camera.position.y) * 0.05;
+            camera.lookAt(0, 0, 0);
+
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>

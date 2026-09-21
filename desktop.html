@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#050B08">
     <title>Adam Hasani | Creative Developer</title>
+    <link rel="preload" as="image" href="bg-creation-adam.jpg">
     
     <!-- Preload Assets -->
     
@@ -130,7 +131,7 @@
         /* Background Systems - OPTIMIZED FOR CPU */
         #bg-image {
             position: fixed; inset: 0; z-index: -3;
-            background-image: radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.08) 0%, rgba(5, 11, 8, 0.95) 100%);
+            background-image: url('bg-creation-adam.jpg'), url('https://files.catbox.moe/8whl73.jpg');
             background-size: cover; background-position: center;
             opacity: 0.15; mix-blend-mode: luminosity;
             pointer-events: none;
@@ -417,13 +418,7 @@
                 <p class="text-gold text-xs md:text-sm tracking-[0.4em] font-medium uppercase h-6" id="role-text">WEB DEVELOPER</p>
             </div>
 
-            <!-- 3D Interactive Hologram Canvas -->
-            <div class="relative w-full max-w-lg h-52 md:h-64 mx-auto my-0 flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing" id="hero-3d-container">
-                <canvas id="hero-3d-canvas" class="w-full h-full"></canvas>
-                <div class="absolute bottom-1 px-3 py-0.5 rounded-full bg-black/50 border border-gold/20 text-[0.55rem] font-mono text-gold/80 tracking-widest uppercase pointer-events-none">
-                    ✦ Drag to Rotate 3D Core ✦
-                </div>
-            </div>
+            
 
             
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto z-20 relative perspective-stage" id="menu-cards-container">
@@ -493,7 +488,7 @@
                     <div id="model-container" class="pos-0">
                         <div class="halo-ring"></div>
                         <!-- CPU Optimized: Removed shadow-intensity and custom drop-shadow, lowered rotation speed -->
-                        <model-viewer id="main-model-viewer" src="globe.glb" alt="3D Globe Model" loading="lazy" auto-rotate autoplay rotation-per-second="1deg" interaction-prompt="none" exposure="1.0" disable-zoom></model-viewer>
+                        <!-- Globe removed per user request -->
                     </div>
 
                     <!-- Left Navigation (Desktop) -->
