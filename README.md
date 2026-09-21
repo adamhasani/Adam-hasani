@@ -1,19 +1,19 @@
-.
 <!-- Hero Section dengan Banner -->
 <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:0F0F23,50:1A1A3E,100:00D4FF&height=200&section=header&text=ADAM%20HASANI&fontSize=45&fontColor=FFFFFF&animation=fadeIn&fontAlignY=35&desc=Data%20Science%20Student%20|%20AI%20Enthusiast&descAlignY=55&descSize=18"/>
 
 <!-- Typing Animation -->
 <p align="center">
   <a href="https://github.com/adamhasani">
-    <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=3000&pause=800&color=00F5D4&center=true&vCenter=true&random=false&width=600&lines=%F0%9F%A7%A0+Building+Flora+AI+%26+AR;%F0%9F%A4%96+Crafting+Intelligent+Chatbots;%F0%9F%91%81%EF%B8%8F+Exploring+Computer+Vision;%F0%9F%9A%80+Turning+Data+Into+Insights" alt="Typing SVG"/>
+    <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=3000&pause=800&color=00F5D4&center=true&vCenter=true&random=false&width=600&lines=%F0%9F%A7%A0+Building+Flora+AI+%26+Gateways;%F0%9F%A4%96+Crafting+Intelligent+Chatbots;%F0%9F%91%81%EF%B8%8F+Exploring+Computer+Vision;%F0%9F%9A%80+Turning+Data+Into+Insights" alt="Typing SVG"/>
   </a>
 </p>
 
 <!-- Visitor Badge & Status -->
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=adamhasani&label=Profile%20Views&color=0A9396&style=for-the-badge&logo=github" alt="visitor count"/>
-  <img src="https://img.shields.io/badge/Status-Available%20For%20Collab-success?style=for-the-badge&logo=telegram" alt="status"/>
+  <a href="https://t.me/adamhasani"><img src="https://img.shields.io/badge/Status-Available%20For%20Collab-success?style=for-the-badge&logo=telegram" alt="status"/></a>
   <img src="https://img.shields.io/badge/Focus-AI%20%26%20Data%20Science-blueviolet?style=for-the-badge&logo=micropython" alt="focus"/>
+  <a href="https://adam-hasani.vercel.app"><img src="https://img.shields.io/badge/Portfolio-Live%20Web-00D4FF?style=for-the-badge&logo=vercel" alt="portfolio"/></a>
 </p>
 
 ---
@@ -28,17 +28,17 @@
 <tr>
 <td width="55%">
 
-### 🧑‍💻 Tentang Saya
+### 🧑💻 Tentang Saya
 
-Halo! Aku **Adam Hasani**, mahasiswa **Sains Data** yang punya ketertarikan mendalam pada dunia **Artificial Intelligence** dan teknologi emerging lainnya.
+Halo! Aku **Adam Hasani**, mahasiswa **Sains Data** yang berfokus membangun solusi digital, kecerdasan buatan (*Artificial Intelligence*), dan otomatisasi sistem mandiri.
 
 ``` python
 class AdamHasani:
     def __init__(self):
-        self.role = "Data Science Student"
+        self.role = "Data Science Student & AI Engineer"
         self.languages = ["Python", "JavaScript", "TypeScript"]
-        self.interests = ["AI/ML", "Computer Vision", "NLP", "AR"]
-        self.current_focus = "Flora AI & Flora AR"
+        self.interests = ["AI/ML", "Computer Vision", "Autonomous Agents", "Web Systems"]
+        self.current_focus = "Flora AI, Gateways & Vision Booth"
     
     def code(self):
         return "Turning ideas into reality 💡"
@@ -50,16 +50,17 @@ class AdamHasani:
 ### 🎯 Current Focus
 
 <img src="https://img.shields.io/badge/🌱%20Flora%20AI-Active-success?style=flat-square"/>
-<img src="https://img.shields.io/badge/📱%20Flora%20AR-In%20Progress-blue?style=flat-square"/>
+<img src="https://img.shields.io/badge/⚡%20OmliteRoute-Active-blue?style=flat-square"/>
+<img src="https://img.shields.io/badge/📸%20Harkat%20Photobooth-Active-orange?style=flat-square"/>
 
 <br/><br/>
 
 **🔍 Research Interests:**
-- Machine Learning & Deep Learning
-- Computer Vision Applications
-- Natural Language Processing
-- Augmented Reality Integration
-- Conversational AI & Chatbots
+- Autonomous Multi-Agent Systems
+- AI Gateways & Multi-Provider Fallbacks
+- Computer Vision (Face-Mesh / MediaPipe)
+- Full-Stack Creative Web Architecture
+- WhatsApp & Telegram Intelligent Bots
 
 </td>
 </tr>
@@ -133,15 +134,6 @@ class AdamHasani:
   </tr>
 </table>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/AI-TensorFlow-FF6F00?style=flat-square&logo=tensorflow&logoColor=white"/>
-  <img src="https://img.shields.io/badge/AI-PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Data-Pandas-150458?style=flat-square&logo=pandas&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Data-NumPy-013243?style=flat-square&logo=numpy&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Viz-Matplotlib-11557C?style=flat-square"/>
-  <img src="https://img.shields.io/badge/ML-Scikit%20Learn-F7931E?style=flat-square&logo=scikitlearn&logoColor=white"/>
-</p>
-
 ---
 
 <!-- GitHub Stats -->
@@ -177,56 +169,24 @@ class AdamHasani:
 
 ---
 
-<!-- Featured Projects -->
-<h2 align="center">🚀 Featured Projects</h2>
-
-<div align="center">
-  <a href="https://github.com/adamhasani/flora-ai">
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=adamhasani&repo=flora-ai&theme=transparent&hide_border=true&title_color=00F5D4&icon_color=00D4FF&text_color=FFFFFF&bg_color=0D1117&description_lines_count=2" alt="Flora AI"/>
-  </a>
-  <a href="https://github.com/adamhasani/flora-ar">
-    <img src="https://github-readme-stats.vercel.app/api/pin/?username=adamhasani&repo=flora-ar&theme=transparent&hide_border=true&title_color=00F5D4&icon_color=00D4FF&text_color=FFFFFF&bg_color=0D1117&description_lines_count=2" alt="Flora AR"/>
-  </a>
-</div>
-
----
-
-<!-- Activity Graph -->
-<h2 align="center">📊 Activity Graph</h2>
-
-<div align="center">
-  <a href="https://github.com/adamhasani">
-    <img src="https://github-readme-activity-graph.vercel.app/graph?username=adamhasani&bg_color=0D1117&color=00D4FF&line=00F5D4&point=FFFFFF&area=true&hide_border=true&area_color=00F5D430" width="100%" alt="Activity Graph"/>
-  </a>
-</div>
-
----
-
-<!-- Quote Section -->
-<div align="center">
-  <img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=tokyonight" alt="Random Dev Quote"/>
-</div>
-
-<br/>
-
 <!-- Social Links -->
 <div align="center">
   <h2>🔗 Let's Connect</h2>
   
-  <a href="mailto:adamhasani@email.com">
-    <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
+  <a href="https://wa.me/6287751121269" target="_blank">
+    <img src="https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white"/>
   </a>
-  <a href="https://linkedin.com/in/adamhasani">
-    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/>
+  <a href="https://t.me/adamhasani" target="_blank">
+    <img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white"/>
   </a>
-  <a href="https://github.com/adamhasani">
-    <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"/>
+  <a href="https://instagram.com/adamhsni_" target="_blank">
+    <img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white"/>
   </a>
-  <a href="https://twitter.com/adamhasani">
-    <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white"/>
+  <a href="https://github.com/adamhasani" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"/>
   </a>
-  <a href="https://discord.gg/adamhasani">
-    <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white"/>
+  <a href="https://adam-hasani.vercel.app" target="_blank">
+    <img src="https://img.shields.io/badge/Live_Portfolio-00D4FF?style=for-the-badge&logo=vercel&logoColor=black"/>
   </a>
 </div>
 
@@ -237,8 +197,4 @@ class AdamHasani:
 
 <p align="center">
   <i>⭐ Feel free to explore my repositories and don't forget to star the ones you find interesting!</i>
-</p>
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 </p>

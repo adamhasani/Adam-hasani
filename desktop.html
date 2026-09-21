@@ -7,7 +7,7 @@
     <title>Adam Hasani | Creative Developer</title>
     
     <!-- Preload Assets -->
-    <link rel="preload" as="image" href="https://files.catbox.moe/8whl73.jpg">
+    
     
     <!-- Fonts & Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -72,7 +72,7 @@
         /* Background Systems - OPTIMIZED FOR CPU */
         #bg-image {
             position: fixed; inset: 0; z-index: -3;
-            background-image: url('https://files.catbox.moe/8whl73.jpg');
+            background-image: radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.08) 0%, rgba(5, 11, 8, 0.95) 100%);
             background-size: cover; background-position: center;
             opacity: 0.15; mix-blend-mode: luminosity;
             pointer-events: none;
@@ -365,7 +365,7 @@
 
                 <!-- Menu 3 -->
                 <div class="glass-panel card-menu group" onclick="navigateTo('pengalaman')">
-                    <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
                     <div class="card-overlay"></div>
                     <div class="relative z-10 flex flex-col items-center">
                         <i class="fas fa-route text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
@@ -622,7 +622,7 @@
                     <a href="https://wa.me/6287751121269" target="_blank" class="magnetic-btn px-8 py-4 text-xs font-medium tracking-widest text-white">
                         <i class="fab fa-whatsapp text-lg mr-3 text-gold"></i> WhatsApp
                     </a>
-                    <a href="https://t.me/+6287810342030" target="_blank" class="magnetic-btn px-8 py-4 text-xs font-medium tracking-widest text-white">
+                    <a href="https://t.me/adamhasani" target="_blank" class="magnetic-btn px-8 py-4 text-xs font-medium tracking-widest text-white">
                         <i class="fab fa-telegram-plane text-lg mr-3 text-gold"></i> Telegram
                     </a>
                     <a href="https://instagram.com/adamhsni_" target="_blank" class="magnetic-btn px-8 py-4 text-xs font-medium tracking-widest text-white">
@@ -1185,6 +1185,27 @@ Tugasmu: Menjawab pertanyaan pengunjung seputar pengalaman, proyek, dan kemampua
 Gaya bahasa: Ramah, profesional, ringkas, dan modern (gunakan emoji secukupnya).
 Jika ada pengunjung yang menanyakan kontak, arahkan mereka untuk menggunakan tombol WhatsApp atau Telegram di bagian 'Hubungi Aku'.`;
 
+        
+        const getLocalFloraResponse = (query) => {
+            const q = query.toLowerCase();
+            if (q.includes('proyek') || q.includes('project') || q.includes('karya') || q.includes('terbaik')) {
+                return "Proyek unggulan Adam mencakup: <strong>Flora AI</strong> (asisten virtual modular), <strong>OmliteRoute</strong> (AI Gateway ultra-ringan multi-provider), <strong>Harkat Photobooth</strong> (vision face-mesh offline), dan <strong>WhatsApp Bot Otomatisasi</strong>. Cek menu <em>Karya & Project</em> untuk detailnya! ✨";
+            }
+            if (q.includes('tech') || q.includes('stack') || q.includes('bahasa') || q.includes('keahlian') || q.includes('skill')) {
+                return "Adam menguasai <strong>Python, JavaScript, TypeScript, Node.js, Next.js</strong>, serta teknologi AI/CV seperti <strong>MediaPipe & Google Gemini API</strong>. Fokusnya pada local-first engineering dan autonomous systems!";
+            }
+            if (q.includes('kontak') || q.includes('hubungi') || q.includes('wa') || q.includes('telegram') || q.includes('email') || q.includes('hire')) {
+                return "Kamu bisa langsung terhubung dengan Adam lewat WhatsApp di <strong>+62 877-5112-1269</strong> atau Telegram di <strong>@adamhasani</strong>. Silakan klik menu <em>Hubungi Aku</em>! 🚀";
+            }
+            if (q.includes('siapa') || q.includes('tentang') || q.includes('biodata') || q.includes('asal') || q.includes('kuliah')) {
+                return "Adam Hasani adalah mahasiswa Sains Data dan AI Engineer yang berdomisili di Tegal, Indonesia. Aktif membangun solusi AI terdesentralisasi, bot otomatisasi, dan arsitektur web modern. 💡";
+            }
+            if (q.includes('halo') || q.includes('hai') || q.includes('pagi') || q.includes('siang') || q.includes('malam') || q.includes('hi')) {
+                return "Halo! Ada yang bisa Flora bantu seputar proyek, portofolio, atau keahlian Adam Hasani? Ketik saja pertanyaanmu atau pilih tombol di bawah ya! ✨";
+            }
+            return "Terima kasih sudah berkunjung ke portofolio Adam! Untuk diskusi proyek, kolaborasi AI, atau pertanyaan mendalam, kamu bisa langsung menghubungi Adam via WhatsApp atau Telegram di menu <em>Hubungi Aku</em> ya! ✨";
+        };
+
         let chatHistory = [];
 
         const appendMessage = (text, isUser = false) => {
@@ -1210,6 +1231,10 @@ Jika ada pengunjung yang menanyakan kontak, arahkan mereka untuk menggunakan tom
         };
 
         const fetchGeminiResponse = async (userMessage) => {
+            if (!apiKey || apiKey.trim() === "") {
+                await new Promise(r => setTimeout(r, 600));
+                return getLocalFloraResponse(userMessage);
+            }
             const payload = {
                 systemInstruction: { parts: [{ text: systemPrompt }] },
                 contents: [
