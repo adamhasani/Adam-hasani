@@ -192,39 +192,40 @@
             transition: all 0.4s var(--ease);
         }
         
-        /* New Editorial Image Card Hover System */
+        /* New Editorial Image Card Hover System - NOIR INTERACTIVE */
         .card-bg-img {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-            opacity: 0.45;
+            filter: grayscale(100%) contrast(1.1) brightness(0.65);
+            opacity: 0.55;
             transform: translate3d(0, 0, 0) scale(1.02);
-            will-change: transform, opacity;
-            transition: opacity 0.4s ease, transform 0.6s var(--ease);
+            transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, transform 0.6s var(--ease);
             z-index: 0;
             pointer-events: none;
-        }
-        .card-menu:hover .card-bg-img {
-            opacity: 0.85;
-            transform: translate3d(0, 0, 0) scale(1.08);
+            will-change: filter, opacity, transform;
         }
         .card-overlay {
             position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(5,11,8,0.95), rgba(5,11,8,0.2));
+            background: linear-gradient(to top, rgba(5,11,8,0.92) 0%, rgba(5,11,8,0.3) 50%, rgba(5,11,8,0.5) 100%);
             z-index: 1;
-            transition: opacity 0.5s;
+            transition: opacity 0.5s ease;
             pointer-events: none;
         }
         
         .card-menu:hover .card-bg-img {
-            filter: grayscale(0%) brightness(0.6);
-            transform: scale(1);
+            filter: grayscale(0%) contrast(1.0) brightness(1.0);
+            opacity: 0.95;
+            transform: translate3d(0, 0, 0) scale(1.08);
+        }
+        .card-menu:hover .card-overlay {
+            opacity: 0.4;
         }
         .card-menu:hover {
-            transform: translateY(-8px); border-color: rgba(197,160,89,0.5);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 25px rgba(197,160,89,0.2);
+            transform: translateY(-8px); border-color: rgba(197,160,89,0.7);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.9), 0 0 30px rgba(197,160,89,0.25);
         }
         .card-menu:hover .card-icon {
-            transform: scale(1.15) translateY(-5px);
-            text-shadow: 0 0 15px rgba(197,160,89,0.8);
+            transform: scale(1.12);
+            text-shadow: 0 0 18px rgba(197,160,89,0.9);
         }
 
         /* View Transitions */
@@ -432,7 +433,7 @@
                 <!-- Menu 1 -->
                 <div class="glass-panel card-menu tilt-card-3d group" onclick="navigateTo('datadiri')">
                     <div class="card-glare"></div>
-                    <img src="card1-ronin.gif" class="card-bg-img" alt="Data Diri Animation">
+                    <video class="card-bg-img" loop muted playsinline preload="auto" poster="videos/card1.jpg"><source src="videos/card1-ronin.mp4" type="video/mp4"></video>
                     <div class="card-overlay"></div>
                     
                     <!-- Top Badge -->
@@ -460,7 +461,7 @@
                 <!-- Menu 2 -->
                 <div class="glass-panel card-menu tilt-card-3d group" onclick="navigateTo('proyek')">
                     <div class="card-glare"></div>
-                    <img src="card2-blackhole.gif" class="card-bg-img" alt="Karya AI Animation">
+                    <video class="card-bg-img" loop muted playsinline preload="auto" poster="videos/card2.jpg"><source src="videos/card2-blackhole.mp4" type="video/mp4"></video>
                     <div class="card-overlay"></div>
                     
                     <!-- Top Badge -->
@@ -488,7 +489,7 @@
                 <!-- Menu 3 -->
                 <div class="glass-panel card-menu tilt-card-3d group" onclick="navigateTo('pengalaman')">
                     <div class="card-glare"></div>
-                    <img src="card3-exoplanet.gif" class="card-bg-img" alt="Eksplorasi Animation">
+                    <video class="card-bg-img" loop muted playsinline preload="auto" poster="videos/card3.jpg"><source src="videos/card3-exoplanet.mp4" type="video/mp4"></video>
                     <div class="card-overlay"></div>
                     
                     <!-- Top Badge -->
@@ -516,7 +517,7 @@
                 <!-- Menu 4 -->
                 <div class="glass-panel card-menu tilt-card-3d group" onclick="navigateTo('kontak')">
                     <div class="card-glare"></div>
-                    <img src="card4-itachi.gif" class="card-bg-img" alt="Radar Comms Animation">
+                    <video class="card-bg-img" loop muted playsinline preload="auto" poster="videos/card4.jpg"><source src="videos/card4-itachi.mp4" type="video/mp4"></video>
                     <div class="card-overlay"></div>
                     
                     <!-- Top Badge -->
