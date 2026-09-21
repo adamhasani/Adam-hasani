@@ -15,6 +15,7 @@
     
     <!-- Scripts -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Tailwind Config -->
@@ -63,6 +64,63 @@
             -webkit-font-smoothing: antialiased;
         }
         
+        
+        /* 3D Perspective & Tilt Engine */
+        .perspective-stage {
+            perspective: 1200px;
+            perspective-origin: center center;
+        }
+        .tilt-card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+            will-change: transform;
+            position: relative;
+            overflow: hidden;
+        }
+        .tilt-card-3d .tilt-content {
+            transform: translateZ(28px);
+            transition: transform 0.3s ease;
+        }
+        .tilt-card-3d .card-glare {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.22) 0%, transparent 65%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            mix-blend-mode: overlay;
+            z-index: 6;
+        }
+        .tilt-card-3d:hover .card-glare {
+            opacity: 1;
+        }
+        .tilt-card-3d:hover {
+            border-color: rgba(197,160,89,0.7) !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(197,160,89,0.3) !important;
+        }
+        
+        /* 3D Floating Animation */
+        @keyframes float3D {
+            0%, 100% { transform: translateY(0px) rotateX(0deg); }
+            50% { transform: translateY(-10px) rotateX(4deg); }
+        }
+        .floating-3d {
+            animation: float3D 5s ease-in-out infinite;
+        }
+        
+        /* Holographic Ring FX */
+        .holo-badge {
+            background: rgba(197,160,89,0.08);
+            border: 1px solid rgba(197,160,89,0.3);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+        .holo-badge:hover {
+            background: rgba(197,160,89,0.2);
+            border-color: #C5A059;
+            box-shadow: 0 0 15px rgba(197,160,89,0.4);
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #050B08; }
@@ -331,7 +389,24 @@
     <div class="mouse-glow hidden md:block" id="mouse-glow"></div>
 
     <!-- Main Container -->
-    <main class="relative z-20 w-full min-h-screen px-4 py-12 md:px-8 lg:px-12 max-w-7xl mx-auto flex flex-col justify-center">
+    <main class="relative z-20 w-full min-h-screen px-4 py-8 md:px-8 lg:px-12 max-w-7xl mx-auto flex flex-col justify-center perspective-stage">
+
+        <!-- 3D Cyber HUD Bar -->
+        <header class="w-full max-w-4xl mx-auto flex justify-between items-center mb-8 px-2 z-30 relative">
+            <div class="flex items-center gap-3">
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
+                <span class="text-[0.65rem] tracking-[0.25em] uppercase text-white/70 font-mono">Adam_OS // <span class="text-gold">3D Interactive</span></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="sfx-toggle" class="holo-badge px-3 py-1.5 rounded-full text-[0.65rem] font-mono text-gold flex items-center gap-2 hover:text-white transition-colors cursor-pointer" title="Toggle Sound FX">
+                    <i class="fas fa-volume-up" id="sfx-icon"></i> <span id="sfx-text">SFX: ON</span>
+                </button>
+                <a href="https://github.com/adamhasani" target="_blank" class="holo-badge px-3 py-1.5 rounded-full text-[0.65rem] font-mono text-white/70 flex items-center gap-2 hover:text-gold transition-colors">
+                    <i class="fab fa-github"></i> @adamhasani
+                </a>
+            </div>
+        </header>
+
         
         <!-- ================= BERANDA (HOME) ================= -->
         <section id="view-home" class="view-section active w-full max-w-4xl mx-auto text-center">
@@ -341,45 +416,62 @@
                 </h1>
                 <p class="text-gold text-xs md:text-sm tracking-[0.4em] font-medium uppercase h-6" id="role-text">WEB DEVELOPER</p>
             </div>
+
+            <!-- 3D Interactive Hologram Canvas -->
+            <div class="relative w-full max-w-lg h-52 md:h-64 mx-auto my-0 flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing" id="hero-3d-container">
+                <canvas id="hero-3d-canvas" class="w-full h-full"></canvas>
+                <div class="absolute bottom-1 px-3 py-0.5 rounded-full bg-black/50 border border-gold/20 text-[0.55rem] font-mono text-gold/80 tracking-widest uppercase pointer-events-none">
+                    ✦ Drag to Rotate 3D Core ✦
+                </div>
+            </div>
+
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto z-20 relative">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto z-20 relative perspective-stage" id="menu-cards-container">
                 <!-- Menu 1 -->
-                <div class="glass-panel card-menu group" onclick="navigateTo('datadiri')">
+                <div class="glass-panel card-menu tilt-card-3d group" onclick="navigateTo('datadiri')">
+                    <div class="card-glare"></div>
                     <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
                     <div class="card-overlay"></div>
-                    <div class="relative z-10 flex flex-col items-center">
+                    <div class="relative z-10 flex flex-col items-center tilt-content">
                         <i class="fas fa-user-astronaut text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
                         <span class="text-sm font-medium tracking-wider text-white">Data Diri & Sistem</span>
+                        <span class="text-[0.6rem] text-gold/70 uppercase tracking-widest mt-1">Telemetry · Bio · Stats</span>
                     </div>
                 </div>
                 
                 <!-- Menu 2 -->
-                <div class="glass-panel card-menu group" onclick="navigateTo('proyek')">
+                <div class="glass-panel card-menu tilt-card-3d group" onclick="navigateTo('proyek')">
+                    <div class="card-glare"></div>
                     <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
                     <div class="card-overlay"></div>
-                    <div class="relative z-10 flex flex-col items-center">
+                    <div class="relative z-10 flex flex-col items-center tilt-content">
                         <i class="fas fa-layer-group text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
                         <span class="text-sm font-medium tracking-wider text-white">Karya & Project</span>
+                        <span class="text-[0.6rem] text-gold/70 uppercase tracking-widest mt-1">Flora AI · Bots · Vision</span>
                     </div>
                 </div>
 
                 <!-- Menu 3 -->
-                <div class="glass-panel card-menu group" onclick="navigateTo('pengalaman')">
+                <div class="glass-panel card-menu tilt-card-3d group" onclick="navigateTo('pengalaman')">
+                    <div class="card-glare"></div>
                     <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
                     <div class="card-overlay"></div>
-                    <div class="relative z-10 flex flex-col items-center">
+                    <div class="relative z-10 flex flex-col items-center tilt-content">
                         <i class="fas fa-route text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
                         <span class="text-sm font-medium tracking-wider text-white">Eksplorasi Perjalanan</span>
+                        <span class="text-[0.6rem] text-gold/70 uppercase tracking-widest mt-1">Timeline · Milestones</span>
                     </div>
                 </div>
 
                 <!-- Menu 4 -->
-                <div class="glass-panel card-menu group" onclick="navigateTo('kontak')">
+                <div class="glass-panel card-menu tilt-card-3d group" onclick="navigateTo('kontak')">
+                    <div class="card-glare"></div>
                     <img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
                     <div class="card-overlay"></div>
-                    <div class="relative z-10 flex flex-col items-center">
+                    <div class="relative z-10 flex flex-col items-center tilt-content">
                         <i class="fas fa-satellite-dish text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
                         <span class="text-sm font-medium tracking-wider text-white">Hubungi Aku</span>
+                        <span class="text-[0.6rem] text-gold/70 uppercase tracking-widest mt-1">WA · Telegram · Social</span>
                     </div>
                 </div>
             </div>
@@ -636,11 +728,11 @@
         </section>
 
         <!-- ================= FLORA AI MINI (GEMINI INTEGRATION) ================= -->
-        <button id="ai-chat-btn" class="fixed bottom-6 right-6 z-[100] w-14 h-14 rounded-full bg-gradient-to-tr from-gold to-gold-light text-obsidian shadow-[0_0_20px_rgba(197,160,89,0.5)] flex items-center justify-center text-2xl hover:scale-110 hover:shadow-[0_0_30px_rgba(197,160,89,0.8)] transition-all duration-300 cursor-pointer group" title="Tanya Flora AI ✨">
+        <button id="ai-chat-btn" class="fixed bottom-8 right-8 z-[100] w-14 h-14 rounded-full bg-gradient-to-tr from-gold to-gold-light text-obsidian shadow-[0_0_20px_rgba(197,160,89,0.5)] flex items-center justify-center text-2xl hover:scale-110 hover:shadow-[0_0_30px_rgba(197,160,89,0.8)] transition-all duration-300 cursor-pointer group" title="Tanya Flora AI ✨">
             ✨
         </button>
 
-        <div id="ai-chat-window" class="fixed bottom-24 right-6 z-[100] w-[350px] max-w-[calc(100vw-3rem)] h-[500px] max-h-[70vh] glass-panel hidden flex-col overflow-hidden transition-all duration-300 opacity-0 translate-y-4">
+        <div id="ai-chat-window" class="fixed bottom-26 right-8 z-[100] w-[350px] max-w-[calc(100vw-3rem)] h-[500px] max-h-[70vh] glass-panel hidden flex-col overflow-hidden transition-all duration-300 opacity-0 translate-y-4">
             <!-- Header -->
             <div class="p-4 border-b border-gold/20 flex justify-between items-center bg-obsidian/80 backdrop-blur-md">
                 <div class="flex items-center gap-3">
@@ -682,6 +774,214 @@
     <!-- Scripts -->
     <script>
         'use strict';
+
+        
+        /* ================= 3D INTERACTIVE ENGINE ================= */
+        
+        // --- SFX Toggle System ---
+        let sfxEnabled = true;
+        const sfxToggleBtn = document.getElementById('sfx-toggle');
+        const sfxIcon = document.getElementById('sfx-icon');
+        const sfxText = document.getElementById('sfx-text');
+        
+        if (sfxToggleBtn) {
+            sfxToggleBtn.addEventListener('click', () => {
+                sfxEnabled = !sfxEnabled;
+                if (sfxIcon) sfxIcon.className = sfxEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+                if (sfxText) sfxText.textContent = sfxEnabled ? 'SFX: ON' : 'SFX: OFF';
+                if (sfxEnabled) playClick();
+            });
+        }
+
+        // --- 3D Card Tilt & Specular Glare System ---
+        const tiltCards = document.querySelectorAll('.tilt-card-3d');
+        tiltCards.forEach(card => {
+            const glare = card.querySelector('.card-glare');
+            
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -12;
+                const rotateY = ((x - centerX) / centerX) * 12;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+                
+                if (glare) {
+                    const glareX = (x / rect.width) * 100;
+                    const glareY = (y / rect.height) * 100;
+                    glare.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.3) 0%, transparent 60%)`;
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                if (sfxEnabled) playClick();
+            });
+        });
+
+        // --- Three.js / Canvas 3D Holographic Core ---
+        (function init3DHeroCore() {
+            const canvas = document.getElementById('hero-3d-canvas');
+            if (!canvas) return;
+            
+            // Check WebGL availability
+            let hasWebGL = false;
+            try {
+                const testCanvas = document.createElement('canvas');
+                hasWebGL = !!(window.WebGLRenderingContext && (testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl')));
+            } catch(e) { hasWebGL = false; }
+            
+            if (hasWebGL && window.THREE) {
+                // High-End Three.js 3D Viewport
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+                camera.position.z = 6.2;
+                
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                
+                // 3D Wireframe Icosahedron Core
+                const geometry = new THREE.IcosahedronGeometry(2.4, 1);
+                const material = new THREE.MeshBasicMaterial({
+                    color: 0xC5A059,
+                    wireframe: true,
+                    transparent: true,
+                    opacity: 0.75
+                });
+                const core = new THREE.Mesh(geometry, material);
+                scene.add(core);
+                
+                // Orbiting Ring 1
+                const ringGeo1 = new THREE.TorusGeometry(3.3, 0.035, 16, 100);
+                const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x00F5D4, transparent: true, opacity: 0.6 });
+                const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+                ring1.rotation.x = Math.PI / 3;
+                scene.add(ring1);
+
+                // Orbiting Ring 2
+                const ringGeo2 = new THREE.TorusGeometry(3.8, 0.025, 16, 100);
+                const ringMat2 = new THREE.MeshBasicMaterial({ color: 0xE8D4A8, transparent: true, opacity: 0.4 });
+                const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+                ring2.rotation.y = Math.PI / 4;
+                scene.add(ring2);
+                
+                // Floating Star Particles
+                const particleCount = 120;
+                const particleGeo = new THREE.BufferGeometry();
+                const positions = new Float32Array(particleCount * 3);
+                for (let i = 0; i < particleCount * 3; i += 3) {
+                    positions[i] = (Math.random() - 0.5) * 12;
+                    positions[i+1] = (Math.random() - 0.5) * 8;
+                    positions[i+2] = (Math.random() - 0.5) * 8;
+                }
+                particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                const particleMat = new THREE.PointsMaterial({ color: 0xFFFFFF, size: 0.04, transparent: true, opacity: 0.8 });
+                const particles = new THREE.Points(particleGeo, particleMat);
+                scene.add(particles);
+                
+                // Interaction State
+                let isDragging = false;
+                let prevMouseX = 0, prevMouseY = 0;
+                let targetRotX = 0, targetRotY = 0;
+                
+                canvas.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    prevMouseX = e.clientX;
+                    prevMouseY = e.clientY;
+                });
+                window.addEventListener('mouseup', () => { isDragging = false; });
+                window.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        const deltaX = e.clientX - prevMouseX;
+                        const deltaY = e.clientY - prevMouseY;
+                        targetRotY += deltaX * 0.01;
+                        targetRotX += deltaY * 0.01;
+                        prevMouseX = e.clientX;
+                        prevMouseY = e.clientY;
+                    }
+                });
+                
+                // Render Loop
+                function animate() {
+                    requestAnimationFrame(animate);
+                    core.rotation.y += 0.005;
+                    core.rotation.x += 0.002;
+                    ring1.rotation.z += 0.008;
+                    ring2.rotation.x += 0.006;
+                    
+                    // Smooth lerp to mouse drag
+                    core.rotation.y += (targetRotY - core.rotation.y) * 0.1;
+                    core.rotation.x += (targetRotX - core.rotation.x) * 0.1;
+                    
+                    renderer.render(scene, camera);
+                }
+                animate();
+                
+                window.addEventListener('resize', () => {
+                    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+                });
+            } else {
+                // High-Performance 2D/3D Canvas Fallback
+                const ctx = canvas.getContext('2d');
+                canvas.width = canvas.clientWidth * 2;
+                canvas.height = canvas.clientHeight * 2;
+                
+                let angle = 0;
+                function drawFallback() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    const cx = canvas.width / 2;
+                    const cy = canvas.height / 2;
+                    const r = Math.min(cx, cy) * 0.78;
+                    
+                    // Outer Ring
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(angle);
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, r, r * 0.4, 0, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#00F5D4';
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+                    ctx.restore();
+
+                    // Inner Ring
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(-angle * 1.5);
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, r * 0.8, r * 0.3, Math.PI / 4, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#C5A059';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.restore();
+
+                    // Center Glowing Core
+                    const grad = ctx.createRadialGradient(cx, cy, 5, cx, cy, r * 0.4);
+                    grad.addColorStop(0, 'rgba(197, 160, 89, 0.8)');
+                    grad.addColorStop(0.5, 'rgba(0, 245, 212, 0.4)');
+                    grad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, r * 0.4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    angle += 0.02;
+                    requestAnimationFrame(drawFallback);
+                }
+                drawFallback();
+            }
+        })();
 
         /* --- Global App State --- */
         let isHomeActive = true; 
