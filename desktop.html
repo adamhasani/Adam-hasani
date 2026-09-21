@@ -860,10 +860,19 @@
             });
         }
 
-        // --- 3D Card Tilt & Specular Glare System ---
+        // --- 3D Card Tilt & Specular Glare & Video Play/Pause System ---
         const tiltCards = document.querySelectorAll('.tilt-card-3d');
         tiltCards.forEach(card => {
             const glare = card.querySelector('.card-glare');
+            const video = card.querySelector('video');
+            
+            if (video) {
+                video.muted = true;
+                video.defaultMuted = true;
+                video.playsInline = true;
+                video.pause();
+                try { video.currentTime = 0; } catch(e) {}
+            }
             
             card.addEventListener('mousemove', (e) => {
                 const rect = card.getBoundingClientRect();
@@ -885,13 +894,29 @@
                 }
             });
             
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-            });
-            
             card.addEventListener('mouseenter', () => {
                 if (sfxEnabled) playClick();
+                if (video) {
+                    video.muted = true;
+                    const p = video.play();
+                    if (p !== undefined) p.catch(err => console.warn('Video play prevented:', err));
+                }
             });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+                if (video) {
+                    video.pause();
+                }
+            });
+
+            // Touch mobile support
+            card.addEventListener('touchstart', () => {
+                if (video) {
+                    video.muted = true;
+                    video.play().catch(() => {});
+                }
+            }, { passive: true });
         });
 
         // --- Three.js / Canvas 3D Holographic Core ---
