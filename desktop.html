@@ -187,7 +187,9 @@
         
         .card-menu {
             position: relative; overflow: hidden; cursor: pointer;
-            height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            height: 350px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+            padding: 24px 16px; border-radius: 20px;
+            transition: all 0.4s var(--ease);
         }
         
         /* New Editorial Image Card Hover System */
@@ -421,16 +423,32 @@
             
 
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto z-20 relative perspective-stage" id="menu-cards-container">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 max-w-5xl mx-auto z-20 relative perspective-stage" id="menu-cards-container">
                 <!-- Menu 1 -->
                 <div class="glass-panel card-menu tilt-card-3d group" onclick="navigateTo('datadiri')">
                     <div class="card-glare"></div>
                     <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
                     <div class="card-overlay"></div>
-                    <div class="relative z-10 flex flex-col items-center tilt-content">
-                        <i class="fas fa-user-astronaut text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
-                        <span class="text-sm font-medium tracking-wider text-white">Data Diri & Sistem</span>
-                        <span class="text-[0.6rem] text-gold/70 uppercase tracking-widest mt-1">Telemetry · Bio · Stats</span>
+                    
+                    <!-- Top Badge -->
+                    <div class="w-full flex justify-between items-center relative z-10 text-[0.65rem] font-mono tracking-widest text-gold/70">
+                        <span>// 01</span>
+                        <span class="opacity-0 group-hover:opacity-100 transition-opacity text-emerald">ONLINE ●</span>
+                    </div>
+
+                    <!-- Center Content -->
+                    <div class="relative z-10 flex flex-col items-center text-center tilt-content my-auto">
+                        <div class="w-16 h-16 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:border-gold group-hover:shadow-[0_0_20px_rgba(197,160,89,0.4)] transition-all duration-500">
+                            <i class="fas fa-user-astronaut text-2xl text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon"></i>
+                        </div>
+                        <h3 class="text-base font-serif-c font-bold tracking-wider text-ivory group-hover:text-gold transition-colors">Data Diri & Sistem</h3>
+                        <p class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mt-1.5">Telemetry · Bio · Stats</p>
+                    </div>
+
+                    <!-- Bottom CTA -->
+                    <div class="w-full relative z-10 pt-3 border-t border-white/10 flex justify-between items-center text-[0.65rem] font-mono text-white/50 group-hover:text-gold transition-colors">
+                        <span>SPESIFIKASI</span>
+                        <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </div>
                 
@@ -439,10 +457,26 @@
                     <div class="card-glare"></div>
                     <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
                     <div class="card-overlay"></div>
-                    <div class="relative z-10 flex flex-col items-center tilt-content">
-                        <i class="fas fa-layer-group text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
-                        <span class="text-sm font-medium tracking-wider text-white">Karya & Project</span>
-                        <span class="text-[0.6rem] text-gold/70 uppercase tracking-widest mt-1">Flora AI · Bots · Vision</span>
+                    
+                    <!-- Top Badge -->
+                    <div class="w-full flex justify-between items-center relative z-10 text-[0.65rem] font-mono tracking-widest text-gold/70">
+                        <span>// 02</span>
+                        <span class="opacity-0 group-hover:opacity-100 transition-opacity text-cyan">ACTIVE ●</span>
+                    </div>
+
+                    <!-- Center Content -->
+                    <div class="relative z-10 flex flex-col items-center text-center tilt-content my-auto">
+                        <div class="w-16 h-16 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:border-gold group-hover:shadow-[0_0_20px_rgba(197,160,89,0.4)] transition-all duration-500">
+                            <i class="fas fa-layer-group text-2xl text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon"></i>
+                        </div>
+                        <h3 class="text-base font-serif-c font-bold tracking-wider text-ivory group-hover:text-gold transition-colors">Karya & Project</h3>
+                        <p class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mt-1.5">Flora AI · Bots · Vision</p>
+                    </div>
+
+                    <!-- Bottom CTA -->
+                    <div class="w-full relative z-10 pt-3 border-t border-white/10 flex justify-between items-center text-[0.65rem] font-mono text-white/50 group-hover:text-gold transition-colors">
+                        <span>PORTOFOLIO</span>
+                        <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </div>
 
@@ -451,10 +485,26 @@
                     <div class="card-glare"></div>
                     <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
                     <div class="card-overlay"></div>
-                    <div class="relative z-10 flex flex-col items-center tilt-content">
-                        <i class="fas fa-route text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
-                        <span class="text-sm font-medium tracking-wider text-white">Eksplorasi Perjalanan</span>
-                        <span class="text-[0.6rem] text-gold/70 uppercase tracking-widest mt-1">Timeline · Milestones</span>
+                    
+                    <!-- Top Badge -->
+                    <div class="w-full flex justify-between items-center relative z-10 text-[0.65rem] font-mono tracking-widest text-gold/70">
+                        <span>// 03</span>
+                        <span class="opacity-0 group-hover:opacity-100 transition-opacity text-gold">ROUTE ●</span>
+                    </div>
+
+                    <!-- Center Content -->
+                    <div class="relative z-10 flex flex-col items-center text-center tilt-content my-auto">
+                        <div class="w-16 h-16 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:border-gold group-hover:shadow-[0_0_20px_rgba(197,160,89,0.4)] transition-all duration-500">
+                            <i class="fas fa-route text-2xl text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon"></i>
+                        </div>
+                        <h3 class="text-base font-serif-c font-bold tracking-wider text-ivory group-hover:text-gold transition-colors">Eksplorasi Perjalanan</h3>
+                        <p class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mt-1.5">Timeline · Milestones</p>
+                    </div>
+
+                    <!-- Bottom CTA -->
+                    <div class="w-full relative z-10 pt-3 border-t border-white/10 flex justify-between items-center text-[0.65rem] font-mono text-white/50 group-hover:text-gold transition-colors">
+                        <span>HISTORI</span>
+                        <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </div>
 
@@ -463,10 +513,26 @@
                     <div class="card-glare"></div>
                     <img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=600&auto=format&fit=crop" class="card-bg-img" alt="">
                     <div class="card-overlay"></div>
-                    <div class="relative z-10 flex flex-col items-center tilt-content">
-                        <i class="fas fa-satellite-dish text-3xl mb-3 text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon transition-transform duration-500"></i>
-                        <span class="text-sm font-medium tracking-wider text-white">Hubungi Aku</span>
-                        <span class="text-[0.6rem] text-gold/70 uppercase tracking-widest mt-1">WA · Telegram · Social</span>
+                    
+                    <!-- Top Badge -->
+                    <div class="w-full flex justify-between items-center relative z-10 text-[0.65rem] font-mono tracking-widest text-gold/70">
+                        <span>// 04</span>
+                        <span class="opacity-0 group-hover:opacity-100 transition-opacity text-purple-400">CONNECT ●</span>
+                    </div>
+
+                    <!-- Center Content -->
+                    <div class="relative z-10 flex flex-col items-center text-center tilt-content my-auto">
+                        <div class="w-16 h-16 rounded-2xl bg-gold/10 border border-gold/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:border-gold group-hover:shadow-[0_0_20px_rgba(197,160,89,0.4)] transition-all duration-500">
+                            <i class="fas fa-satellite-dish text-2xl text-gold filter drop-shadow-[0_0_10px_rgba(197,160,89,0.5)] card-icon"></i>
+                        </div>
+                        <h3 class="text-base font-serif-c font-bold tracking-wider text-ivory group-hover:text-gold transition-colors">Hubungi Aku</h3>
+                        <p class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mt-1.5">WA · Telegram · Social</p>
+                    </div>
+
+                    <!-- Bottom CTA -->
+                    <div class="w-full relative z-10 pt-3 border-t border-white/10 flex justify-between items-center text-[0.65rem] font-mono text-white/50 group-hover:text-gold transition-colors">
+                        <span>KOMUNIKASI</span>
+                        <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </div>
             </div>
