@@ -203,12 +203,12 @@
                 <!-- OPPONENT CARD (BLACK / THE FLY) -->
                 <div class="deck-card w-full max-w-[460px] p-2.5 rounded-t-2xl border-b-0 flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-9 h-9 rounded-xl bg-black/80 border border-emerald-500/40 flex items-center justify-center text-lg shrink-0">
-                            🪰
+                        <div class="w-9 h-9 rounded-xl bg-black/80 border border-emerald-500/40 flex items-center justify-center shrink-0">
+                            <i class="fas fa-brain text-emerald-400 text-sm"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="font-mono text-xs font-bold text-white">Drosophila Melanogaster</span>
+                                <span class="font-mono text-xs font-bold text-white">Drosophila Connectome</span>
                                 <span id="fly-status-badge" class="text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-medium">READY</span>
                             </div>
                             <div id="black-captured" class="flex items-center gap-1 mt-0.5 min-h-[14px]">
@@ -256,12 +256,12 @@
                 <!-- PLAYER CARD (WHITE / HUMAN) -->
                 <div class="deck-card w-full max-w-[460px] p-2.5 rounded-b-2xl border-t-0 flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-900/50 to-black border border-gold/40 flex items-center justify-center text-base shrink-0">
-                            🧑💻
+                        <div class="w-9 h-9 rounded-xl bg-black/80 border border-gold/40 flex items-center justify-center shrink-0">
+                            <i class="fas fa-user text-gold text-sm"></i>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="font-mono text-xs font-bold text-gold">Adam Hasani</span>
+                                <span class="font-mono text-xs font-bold text-gold">Player</span>
                                 <span class="text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-gold/20 text-gold font-medium">WHITE</span>
                             </div>
                             <div id="white-captured" class="flex items-center gap-1 mt-0.5 min-h-[14px]">
@@ -385,7 +385,7 @@
 
                     <!-- TAB BODY 1: BIOLOGICAL THOUGHT LOG -->
                     <div id="tab-body-log" class="min-h-[85px] max-h-[110px] overflow-y-auto bg-black/50 p-2.5 rounded-xl border border-white/5 text-xs font-mono text-white/85 leading-relaxed">
-                        <p id="thought-log">🪰 Sistem siap. Jalankan bidak Putih untuk memulai duel dengan sirkuit saraf lalat.</p>
+                        <p id="thought-log"><span class="text-emerald-400 font-bold">● [SYSTEM]</span> Sirkuit simulasi aktif. Silakan tentukan langkah pertamamu (Putih).</p>
                     </div>
 
                     <!-- TAB BODY 2: PGN MOVE HISTORY -->
@@ -730,12 +730,12 @@
 
             if (executed.captured) {
                 flyEngine.applyDopamineReinforcement(executed, true);
-                thoughtLogEl.innerHTML = `🪰 <strong class="text-emerald-400">DOPAMINE SURGE!</strong> Lalat menyambar bidak <strong>${executed.captured.toUpperCase()}</strong> di <strong>${executed.to}</strong>. Reseptor manis +${telem.chosen.sugarStimulus}mV. Memori sinapsis diperkuat.`;
+                thoughtLogEl.innerHTML = `<span class="text-emerald-400 font-bold">● [DOPAMINE SURGE]</span> Menyambar bidak <strong>${executed.captured.toUpperCase()}</strong> di <strong>${executed.to}</strong>. Reseptor manis +${telem.chosen.sugarStimulus}mV. Sinapsis diperkuat.`;
             } else if (executed.san.includes('+')) {
                 flyEngine.applyDopamineReinforcement(executed, true);
-                thoughtLogEl.innerHTML = `🪰 <strong class="text-gold">SKAK!</strong> Manuver <strong>${executed.san}</strong> memicu pelepasan dopamin di Mushroom Body.`;
+                thoughtLogEl.innerHTML = `<span class="text-gold font-bold">● [CHECK]</span> Manuver <strong>${executed.san}</strong> memicu pelepasan dopamin di Mushroom Body.`;
             } else {
-                thoughtLogEl.innerHTML = `🪰 Memilih <strong>${executed.san}</strong> (${telem.chosen.netActionPotential} mV). Refleks terkuat dari ${telem.allCandidates.length} opsi saraf.`;
+                thoughtLogEl.innerHTML = `<span class="text-emerald-400 font-bold">● [NEURAL]</span> Memilih <strong>${executed.san}</strong> (${telem.chosen.netActionPotential} mV). Refleks potensial aksi tertinggi dari ${telem.allCandidates.length} opsi legal.`;
             }
 
             updateHebbianUI();
@@ -897,11 +897,11 @@
 
                 if (game.in_checkmate()) {
                     if (game.turn() === 'b') {
-                        title.textContent = "🏆 KAMU MENANG!";
+                        title.textContent = "VICTORY · CHECKMATE";
                         desc.textContent = "Skakmat! Kamu berhasil mengungguli komputasi saraf lalat.";
                     } else {
-                        title.textContent = "🪰 LALAT MENANG!";
-                        desc.textContent = "Skakmat! Insting biologis lalat berhasil menjebak rajamu.";
+                        title.textContent = "CONNECTOME VICTORY";
+                        desc.textContent = "Skakmat! Insting sirkuit saraf lalat memenangkan duel.";
                     }
                 } else if (game.in_draw()) {
                     title.textContent = "REMIS (DRAW)";
@@ -916,13 +916,13 @@
             game.reset();
             document.getElementById('game-over-modal').classList.add('hidden');
             initBoardUI();
-            thoughtLogEl.innerHTML = '🪰 Papan di-reset. Silakan buat langkah pertamamu (Putih).';
+            thoughtLogEl.innerHTML = '<span class="text-emerald-400 font-bold">● [SYSTEM]</span> Papan di-reset. Silakan buat langkah pertamamu (Putih).';
         };
 
         window.clearBrainMemory = () => {
             flyEngine.resetBrain();
             updateHebbianUI();
-            thoughtLogEl.innerHTML = '🧬 Memori Hebbian dikosongkan. Otak lalat kembali menjadi serangga yang baru menetas (*naive instinct*).';
+            thoughtLogEl.innerHTML = '<span class="text-amber-400 font-bold">● [SYSTEM]</span> Memori Hebbian dikosongkan. Jaringan sinapsis kembali ke status awal (naive baseline).';
         };
 
         initBoardUI();
