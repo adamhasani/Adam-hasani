@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 3D Virtual Try-On Engine — Real-time AR Garment Draping</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=DM+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="./three.min.js"></script>
+
+    <style>
+        :root {
+            --gold: #C5A059;
+            --gold-light: #E8D4A8;
+            --obsidian: #050B08;
+        }
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #050B08;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #fff;
+        }
+        #viewport-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+        #webcam-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            z-index: 1;
+        }
+        #ar-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .glass-panel {
+            background: rgba(10, 18, 14, 0.72);
+            border: 1px solid rgba(197, 160, 89, 0.35);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .outfit-btn {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .outfit-btn.active {
+            border-color: #C5A059 !important;
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.5);
+            transform: translateY(-2px);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="flex flex-col justify-between">
+
+    <!-- AR VIEWPORT -->
+    <div id="viewport-container">
+        <!-- Hidden video element for raw camera stream -->
+        <video id="webcam-video" playsinline autoplay muted></video>
+        <!-- Three.js WebGL overlay canvas -->
+        <canvas id="ar-canvas"></canvas>
+
+        <!-- CAMERA SCANNING GRID / GUIDES (Visible when locating body) -->
+        <div id="pose-guide" class="absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center transition-opacity duration-500">
+            <div class="w-64 h-96 border-2 border-dashed border-gold/40 rounded-3xl relative flex flex-col items-center justify-start pt-8 animate-pulse">
+                <div class="w-20 h-20 rounded-full border border-gold/50 mb-4"></div>
+                <div class="w-48 h-56 border-t-2 border-gold/50 rounded-t-2xl"></div>
+                <div class="absolute bottom-4 text-center px-4">
+                    <p class="text-[0.65rem] font-mono tracking-widest text-gold uppercase font-bold">Posisikan Badan di Kotak</p>
+                    <p class="text-[0.55rem] font-mono text-white/50 mt-0.5">Berdiri ~1.5 - 2 meter dari kamera</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOP BAR: TELEMETRY & BRANDING -->
+        <header class="absolute top-0 left-0 right-0 z-30 p-4 md:p-6 flex items-center justify-between pointer-events-auto">
+            <div class="flex items-center gap-3">
+                <a href="../desktop.html" class="glass-panel px-3.5 py-2 rounded-xl text-xs font-mono text-gold hover:text-white flex items-center gap-2 transition-colors">
+                    <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Hub</span>
+                </a>
+                <div class="glass-panel px-3.5 py-1.5 rounded-xl flex items-center gap-2.5 text-xs font-mono">
+                    <span id="tracking-dot" class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    <span id="tracking-status" class="text-white/80 font-medium">SEARCHING BODY...</span>
+                </div>
+            </div>
+
+            <!-- PERFORMANCE METRICS & SWITCHERS -->
+            <div class="flex items-center gap-2.5">
+                <div class="glass-panel px-3 py-1.5 rounded-xl hidden sm:flex items-center gap-3 text-[0.65rem] font-mono">
+                    <span class="text-white/60">FPS: <strong id="fps-counter" class="text-gold">--</strong></span>
+                    <span class="text-white/60">LATENCY: <strong id="latency-counter" class="text-emerald-400">--ms</strong></span>
+                </div>
+                <button id="btn-mesh-toggle" onclick="toggleMeshMode()" class="glass-panel px-3 py-2 rounded-xl text-xs font-mono text-white/80 hover:text-gold flex items-center gap-1.5 transition-colors" title="Toggle 3D Wireframe / Texture">
+                    <i class="fas fa-cubes"></i> <span class="hidden md:inline" id="mesh-mode-label">Texture</span>
+                </button>
+                <button id="btn-mirror" onclick="toggleMirror()" class="glass-panel px-3 py-2 rounded-xl text-xs font-mono text-white/80 hover:text-gold flex items-center gap-1.5 transition-colors" title="Flip Mirror">
+                    <i class="fas fa-arrows-alt-h"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- SNAPSHOT NOTIFICATION TOAST -->
+        <div id="snapshot-toast" class="absolute top-20 left-1/2 -translate-x-1/2 z-40 glass-panel px-6 py-2.5 rounded-full text-xs font-mono text-gold border border-gold/60 opacity-0 pointer-events-none transition-all duration-300">
+            📸 FOTO TERSIMPAN KE PERANGKAT!
+        </div>
+
+        <!-- BOTTOM CONTROLS: OUTFIT SELECTOR & FIT TWEAKER -->
+        <footer class="absolute bottom-0 left-0 right-0 z-30 p-4 md:p-6 flex flex-col gap-3 pointer-events-auto bg-gradient-to-t from-black/90 via-black/50 to-transparent">
+            
+            <!-- Fit Size & Accessories Row -->
+            <div class="flex items-center justify-between max-w-4xl mx-auto w-full px-2">
+                <!-- Size Selector -->
+                <div class="flex items-center gap-1.5 glass-panel p-1 rounded-xl text-[0.65rem] font-mono">
+                    <span class="px-2 text-white/50">FIT:</span>
+                    <button onclick="setGarmentFit('slim')" id="fit-slim" class="fit-btn px-2.5 py-1 rounded-lg text-white/70 hover:text-white transition-colors">SLIM</button>
+                    <button onclick="setGarmentFit('regular')" id="fit-regular" class="fit-btn px-2.5 py-1 rounded-lg bg-gold/20 text-gold font-bold transition-colors">REGULAR</button>
+                    <button onclick="setGarmentFit('oversized')" id="fit-oversized" class="fit-btn px-2.5 py-1 rounded-lg text-white/70 hover:text-white transition-colors">OVERSIZED</button>
+                </div>
+
+                <!-- Accessories Toggles -->
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleAccessory('visor')" id="acc-visor" class="glass-panel px-3 py-1.5 rounded-xl text-[0.65rem] font-mono text-white/70 hover:text-white flex items-center gap-1.5">
+                        <i class="fas fa-glasses text-xs"></i> <span class="hidden sm:inline">HUD Visor</span>
+                    </button>
+                    <button onclick="toggleAccessory('cap')" id="acc-cap" class="glass-panel px-3 py-1.5 rounded-xl text-[0.65rem] font-mono text-white/70 hover:text-white flex items-center gap-1.5">
+                        <i class="fas fa-hat-cowboy text-xs"></i> <span class="hidden sm:inline">Snapback</span>
+                    </button>
+                    <!-- Shutter Button -->
+                    <button onclick="takeSnapshot()" class="w-10 h-10 rounded-full bg-gold text-obsidian flex items-center justify-center text-sm font-bold shadow-[0_0_20px_rgba(197,160,89,0.6)] hover:scale-105 active:scale-95 transition-transform" title="Ambil Foto">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Outfit Carousels (Horizontal Scroll) -->
+            <div class="flex items-center gap-3 overflow-x-auto pb-1 max-w-4xl mx-auto w-full px-2" id="outfit-carousel">
+                <!-- Outfit 1 -->
+                <button onclick="selectOutfit(0)" id="outfit-btn-0" class="outfit-btn active glass-panel shrink-0 p-2.5 rounded-2xl flex items-center gap-3 text-left w-52 border border-gold/40">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-zinc-900 to-black border border-gold/50 flex items-center justify-center text-gold text-lg shrink-0">
+                        🧥
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-bold text-white font-mono truncate">CYBER BOMBER</p>
+                        <p class="text-[0.6rem] text-gold/80 font-mono">Techwear · Gold Trim</p>
+                    </div>
+                </button>
+
+                <!-- Outfit 2 -->
+                <button onclick="selectOutfit(1)" id="outfit-btn-1" class="outfit-btn glass-panel shrink-0 p-2.5 rounded-2xl flex items-center gap-3 text-left w-52 border border-white/10 hover:border-gold/30">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-stone-900 to-stone-800 border border-stone-600 flex items-center justify-center text-white text-lg shrink-0">
+                        👕
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-bold text-white font-mono truncate">OVERSIZED TEE</p>
+                        <p class="text-[0.6rem] text-white/50 font-mono">280 GSM · Vintage Off-White</p>
+                    </div>
+                </button>
+
+                <!-- Outfit 3 -->
+                <button onclick="selectOutfit(2)" id="outfit-btn-2" class="outfit-btn glass-panel shrink-0 p-2.5 rounded-2xl flex items-center gap-3 text-left w-52 border border-white/10 hover:border-gold/30">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-950 to-indigo-900 border border-indigo-400 flex items-center justify-center text-indigo-300 text-lg shrink-0">
+                        ⚾
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-bold text-white font-mono truncate">VARSITY JACKET</p>
+                        <p class="text-[0.6rem] text-white/50 font-mono">Midnight Navy · Leather</p>
+                    </div>
+                </button>
+
+                <!-- Outfit 4 -->
+                <button onclick="selectOutfit(3)" id="outfit-btn-3" class="outfit-btn glass-panel shrink-0 p-2.5 rounded-2xl flex items-center gap-3 text-left w-52 border border-white/10 hover:border-gold/30">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-neutral-900 to-neutral-800 border border-gold/30 flex items-center justify-center text-amber-200 text-lg shrink-0">
+                        🥋
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-bold text-white font-mono truncate">NOIR HAORI COAT</p>
+                        <p class="text-[0.6rem] text-white/50 font-mono">Modern Kimono Drape</p>
+                    </div>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MAIN ENGINE SCRIPT (THREE.JS + MEDIAPIPE POSE 3D) -->
+    <script type="module">
+        import { FilesetResolver, PoseLandmarker } from './wasm/vision_bundle.mjs';
+
+        // --- GLOBAL ENGINE STATE ---
+        let poseLandmarker = null;
+        let video = document.getElementById('webcam-video');
+        let canvas = document.getElementById('ar-canvas');
+        let trackingDot = document.getElementById('tracking-dot');
+        let trackingStatus = document.getElementById('tracking-status');
+        let fpsCounter = document.getElementById('fps-counter');
+        let latencyCounter = document.getElementById('latency-counter');
+        let poseGuide = document.getElementById('pose-guide');
+
+        let isMirrored = true;
+        let wireframeMode = false;
+        let activeOutfitIdx = 0;
+        let garmentFit = 'regular'; // slim, regular, oversized
+        let showVisor = false;
+        let showCap = false;
+
+        // Three.js Core
+        let renderer, scene, camera;
+        let garmentMesh = null;
+        let leftSleeveMesh = null;
+        let rightSleeveMesh = null;
+        let visorMesh = null;
+        let capMesh = null;
+        let dirLight, ambientLight;
+
+        // FPS & Profiling
+        let lastFrameTime = performance.now();
+        let frameCount = 0;
+        let fps = 60;
+
+        // Smoothing Buffer for 33 Landmarks (Exponential Moving Average anti-jitter)
+        let smoothedLandmarks = null;
+        const SMOOTH_FACTOR = 0.65; // High responsiveness + anti-jitter
+
+        // ─────────────────────────────────────────────
+        // 1. PROCEDURAL PBR FABRIC TEXTURE GENERATOR
+        // ─────────────────────────────────────────────
+        function createFabricTexture(outfitIdx) {
+            const size = 1024;
+            const texCanvas = document.createElement('canvas');
+            texCanvas.width = size;
+            texCanvas.height = size;
+            const ctx = texCanvas.getContext('2d');
+
+            if (outfitIdx === 0) {
+                // CYBER BOMBER TECHWEAR (Matte Black, Gold Trim, Zipper, Buckles)
+                ctx.fillStyle = '#111514';
+                ctx.fillRect(0, 0, size, size);
+
+                // Techwear subtle micro-hex pattern
+                ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+                ctx.lineWidth = 1;
+                for (let y = 0; y < size; y += 16) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(size, y);
+                    ctx.stroke();
+                }
+
+                // Front Center Zipper Line
+                ctx.fillStyle = '#1a1f1d';
+                ctx.fillRect(size / 2 - 18, 0, 36, size);
+                ctx.strokeStyle = '#C5A059';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(size / 2, 0);
+                ctx.lineTo(size / 2, size);
+                ctx.stroke();
+
+                // Zipper teeth
+                ctx.fillStyle = '#C5A059';
+                for (let y = 20; y < size; y += 12) {
+                    ctx.fillRect(size / 2 - 10, y, 8, 4);
+                    ctx.fillRect(size / 2 + 2, y + 6, 8, 4);
+                }
+
+                // Cyber reflective gold stripes across chest
+                ctx.strokeStyle = '#C5A059';
+                ctx.lineWidth = 10;
+                ctx.beginPath();
+                ctx.moveTo(size * 0.15, size * 0.35);
+                ctx.lineTo(size * 0.45, size * 0.38);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(size * 0.85, size * 0.35);
+                ctx.lineTo(size * 0.55, size * 0.38);
+                ctx.stroke();
+
+                // Chest Tactical Emblem / Pocket
+                ctx.fillStyle = '#080d0b';
+                ctx.strokeStyle = 'rgba(197,160,89,0.5)';
+                ctx.lineWidth = 3;
+                ctx.roundRect(size * 0.2, size * 0.45, size * 0.22, size * 0.25, 12);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#C5A059';
+                ctx.font = 'bold 22px "DM Mono", monospace';
+                ctx.fillText('ADM//TECH', size * 0.23, size * 0.52);
+
+            } else if (outfitIdx === 1) {
+                // LUXURY OVERSIZED TEE (Vintage Off-White / Graphic)
+                ctx.fillStyle = '#E8E5DD';
+                ctx.fillRect(0, 0, size, size);
+
+                // Heavyweight Cotton Slub texture
+                ctx.fillStyle = 'rgba(0,0,0,0.02)';
+                for (let i = 0; i < 4000; i++) {
+                    ctx.fillRect(Math.random() * size, Math.random() * size, 2, 2);
+                }
+
+                // Ribbed collar line
+                ctx.fillStyle = '#D6D2C4';
+                ctx.fillRect(0, 0, size, 80);
+
+                // Vintage Front Graphic Emblem
+                ctx.fillStyle = '#1e1c18';
+                ctx.font = 'bold 64px "Cinzel", serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('CREATION', size / 2, size * 0.45);
+                ctx.font = '500 24px "DM Mono", monospace';
+                ctx.fillText('AUTONOMOUS SYSTEMS · 2026', size / 2, size * 0.52);
+                ctx.fillStyle = '#C5A059';
+                ctx.fillRect(size / 2 - 120, size * 0.55, 240, 4);
+
+            } else if (outfitIdx === 2) {
+                // VARSITY BOMBER JACKET (Midnight Navy Body, Cream Trim)
+                ctx.fillStyle = '#0c1626';
+                ctx.fillRect(0, 0, size, size);
+
+                // Center Button Placket
+                ctx.fillStyle = '#162238';
+                ctx.fillRect(size / 2 - 25, 0, 50, size);
+
+                // Metallic snap buttons
+                for (let y = 100; y < size - 50; y += 140) {
+                    ctx.fillStyle = '#E8D4A8';
+                    ctx.beginPath();
+                    ctx.arc(size / 2, y, 14, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#b89d67';
+                    ctx.beginPath();
+                    ctx.arc(size / 2, y, 9, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Chenille Varsity Letter 'A'
+                ctx.fillStyle = '#C5A059';
+                ctx.font = 'bold 160px "Cinzel", serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('A', size * 0.3, size * 0.45);
+
+                // Striped Ribbing at Bottom Hem
+                ctx.fillStyle = '#E8D4A8';
+                ctx.fillRect(0, size - 80, size, 80);
+                ctx.fillStyle = '#0c1626';
+                ctx.fillRect(0, size - 55, size, 30);
+
+            } else if (outfitIdx === 3) {
+                // NOIR HAORI COAT (Modern Kimono Style, Gold Floral Trims)
+                ctx.fillStyle = '#0a0a0c';
+                ctx.fillRect(0, 0, size, size);
+
+                // Open Lapel Gold Brocade Borders
+                ctx.strokeStyle = '#C5A059';
+                ctx.lineWidth = 18;
+                ctx.beginPath();
+                ctx.moveTo(size * 0.35, 0);
+                ctx.lineTo(size * 0.35, size);
+                ctx.moveTo(size * 0.65, 0);
+                ctx.lineTo(size * 0.65, size);
+                ctx.stroke();
+
+                // Subtle Wave / Cloud Motif
+                ctx.fillStyle = 'rgba(197, 160, 89, 0.15)';
+                for (let y = 150; y < size; y += 180) {
+                    ctx.beginPath();
+                    ctx.arc(size * 0.2, y, 60, 0, Math.PI);
+                    ctx.arc(size * 0.8, y + 60, 60, 0, Math.PI);
+                    ctx.fill();
+                }
+            }
+
+            const texture = new THREE.CanvasTexture(texCanvas);
+            texture.wrapS = THREE.ClampToEdgeWrapping;
+            texture.wrapT = THREE.ClampToEdgeWrapping;
+            return texture;
+        }
+
+        // ─────────────────────────────────────────────
+        // 2. THREE.JS SCENE & 3D GARMENT MESH RIGGING
+        // ─────────────────────────────────────────────
+        const ROWS = 20; // Vertical height resolution (Collar to Hem)
+        const COLS = 24; // Radial cross-section resolution around torso
+
+        function initThreeScene() {
+            scene = new THREE.Scene();
+            camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1000);
+            camera.position.z = 10;
+
+            renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                alpha: true,
+                antialias: true,
+                preserveDrawingBuffer: true
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Lighting: Directional Key light + Ambient fill
+            ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+            scene.add(ambientLight);
+
+            dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+            dirLight.position.set(0, 2, 5);
+            scene.add(dirLight);
+
+            buildGarmentMesh();
+            buildSleeveMeshes();
+            buildAccessories();
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onWindowResize() {
+            camera.left = -1;
+            camera.right = 1;
+            camera.top = 1;
+            camera.bottom = -1;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // PARAMETRIC CYLINDER TORSO MESH (Wraps around body with volume)
+        function buildGarmentMesh() {
+            if (garmentMesh) scene.remove(garmentMesh);
+
+            // Plane geometry with custom vertex deformation
+            const geom = new THREE.PlaneGeometry(2, 2, COLS - 1, ROWS - 1);
+            const texture = createFabricTexture(activeOutfitIdx);
+
+            const mat = new THREE.MeshStandardMaterial({
+                map: texture,
+                roughness: 0.6,
+                metalness: 0.15,
+                wireframe: wireframeMode,
+                side: THREE.DoubleSide
+            });
+
+            garmentMesh = new THREE.Mesh(geom, mat);
+            garmentMesh.visible = false;
+            scene.add(garmentMesh);
+        }
+
+        // LEFT & RIGHT SLEEVE MESHES (Cylinders for upper arms)
+        function buildSleeveMeshes() {
+            if (leftSleeveMesh) scene.remove(leftSleeveMesh);
+            if (rightSleeveMesh) scene.remove(rightSleeveMesh);
+
+            const sleeveGeom = new THREE.CylinderGeometry(0.08, 0.07, 0.35, 16, 8, true);
+            const sleeveColors = [0x111514, 0xE8E5DD, 0xf0ede6, 0x0a0a0c];
+            const sleeveMat = new THREE.MeshStandardMaterial({
+                color: sleeveColors[activeOutfitIdx] || 0x111514,
+                roughness: activeOutfitIdx === 1 ? 0.8 : 0.45,
+                metalness: activeOutfitIdx === 1 ? 0.05 : 0.2,
+                wireframe: wireframeMode,
+                side: THREE.DoubleSide
+            });
+
+            leftSleeveMesh = new THREE.Mesh(sleeveGeom, sleeveMat);
+            rightSleeveMesh = new THREE.Mesh(sleeveGeom.clone(), sleeveMat.clone());
+
+            leftSleeveMesh.visible = false;
+            rightSleeveMesh.visible = false;
+
+            scene.add(leftSleeveMesh);
+            scene.add(rightSleeveMesh);
+        }
+
+        // ACCESSORIES: CYBER VISOR & SNAPBACK CAP
+        function buildAccessories() {
+            // 1. Cyber HUD Visor
+            const visorGeom = new THREE.BoxGeometry(0.32, 0.08, 0.05);
+            const visorMat = new THREE.MeshStandardMaterial({
+                color: 0xC5A059,
+                roughness: 0.1,
+                metalness: 0.9,
+                transparent: true,
+                opacity: 0.85
+            });
+            visorMesh = new THREE.Mesh(visorGeom, visorMat);
+            visorMesh.visible = false;
+            scene.add(visorMesh);
+
+            // 2. Snapback Cap
+            const capGroup = new THREE.Group();
+            const crownGeom = new THREE.SphereGeometry(0.18, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.5);
+            const crownMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.7 });
+            const crown = new THREE.Mesh(crownGeom, crownMat);
+
+            const brimGeom = new THREE.CylinderGeometry(0.24, 0.24, 0.02, 16, 1, false, -Math.PI * 0.4, Math.PI * 0.8);
+            const brimMat = new THREE.MeshStandardMaterial({ color: 0xC5A059, roughness: 0.4, metalness: 0.3 });
+            const brim = new THREE.Mesh(brimGeom, brimMat);
+            brim.position.set(0, 0.02, 0.1);
+            brim.rotation.x = 0.15;
+
+            capGroup.add(crown);
+            capGroup.add(brim);
+            capMesh = capGroup;
+            capMesh.visible = false;
+            scene.add(capMesh);
+        }
+
+        // ─────────────────────────────────────────────
+        // 3. 3D POSE ESTIMATION & VERTEX DEFORMATION
+        // ─────────────────────────────────────────────
+        async function initPoseEngine() {
+            try {
+                trackingStatus.textContent = 'LOADING AI WASM...';
+                const vision = await FilesetResolver.forVisionTasks('./wasm/');
+                poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
+                    baseOptions: {
+                        modelAssetPath: './models/pose_landmarker_lite.task',
+                        delegate: 'CPU'
+                    },
+                    runningMode: 'VIDEO',
+                    numPoses: 1,
+                    minPoseDetectionConfidence: 0.5,
+                    minPosePresenceConfidence: 0.5,
+                    minTrackingConfidence: 0.5
+                });
+
+                trackingStatus.textContent = 'STARTING CAMERA...';
+                await startCamera();
+            } catch (err) {
+                console.error('AI Engine init failed:', err);
+                trackingStatus.textContent = 'INIT FAILED — CHECK PERMISSION';
+                trackingDot.className = 'w-2 h-2 rounded-full bg-red-600';
+            }
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                });
+                video.srcObject = stream;
+                await video.play();
+
+                trackingStatus.textContent = 'TRACKING ACTIVE';
+                trackingDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+                
+                requestAnimationFrame(renderLoop);
+            } catch (err) {
+                console.error('Camera access denied:', err);
+                trackingStatus.textContent = 'CAMERA BLOCKED';
+                trackingDot.className = 'w-2 h-2 rounded-full bg-amber-500';
+            }
+        }
+
+        // CONVERT NORMALIZED LANDMARKS (0..1) TO THREE.JS ORTHO (-1..1)
+        function lmToThree(lm) {
+            // Mirror flip X if isMirrored
+            const x = isMirrored ? -(lm.x * 2 - 1) : (lm.x * 2 - 1);
+            const y = -(lm.y * 2 - 1); // Flip Y for WebGL
+            const z = -lm.z;
+            return new THREE.Vector3(x, y, z);
+        }
+
+        // ─────────────────────────────────────────────
+        // 4. THE CORE DEFORMATION LOOP (SHRINKWRAP & RIGGING)
+        // ─────────────────────────────────────────────
+        function updateGarmentDeformation(lms) {
+            // Essential Landmarks:
+            // 11 = Left Shoulder, 12 = Right Shoulder
+            // 23 = Left Hip, 24 = Right Hip
+            // 13, 14 = Left/Right Elbow
+            // 15, 16 = Left/Right Wrist
+            // 0 = Nose, 7, 8 = Ears
+            const lSh = lmToThree(lms[11]);
+            const rSh = lmToThree(lms[12]);
+            const lHip = lmToThree(lms[23]);
+            const rHip = lmToThree(lms[24]);
+
+            // Collar / Neck midpoint
+            const neck = new THREE.Vector3().addVectors(lSh, rSh).multiplyScalar(0.5);
+            // Hip midpoint
+            const hipMid = new THREE.Vector3().addVectors(lHip, rHip).multiplyScalar(0.5);
+
+            // Torso vectors
+            const spine = new THREE.Vector3().subVectors(hipMid, neck);
+            const torsoHeight = spine.length();
+            const shoulderWidth = lSh.distanceTo(rSh);
+
+            // Fit multiplier
+            let fitMult = 1.0;
+            if (garmentFit === 'slim') fitMult = 0.92;
+            if (garmentFit === 'oversized') fitMult = 1.15;
+
+            // Extrude Collar slightly above shoulder line
+            neck.y += torsoHeight * 0.08;
+
+            // Deform the Garment Torso Mesh Vertices
+            const posAttr = garmentMesh.geometry.attributes.position;
+            const vertex = new THREE.Vector3();
+
+            for (let row = 0; row < ROWS; row++) {
+                const vT = row / (ROWS - 1); // 0 (neck) to 1 (hem)
+
+                // Spine center point at this height
+                const center = new THREE.Vector3().copy(neck).addScaledVector(spine, vT);
+
+                // Interpolate width between shoulder width and hip width
+                const currentWidth = THREE.MathUtils.lerp(shoulderWidth * 0.55, shoulderWidth * 0.48, vT) * fitMult;
+                
+                // Torso depth / volume (Z curvature)
+                const currentDepth = (shoulderWidth * 0.28) * fitMult;
+
+                // Lateral vector along shoulders
+                const lateral = new THREE.Vector3().subVectors(lSh, rSh).normalize();
+                // Normal vector facing forward from chest
+                const forward = new THREE.Vector3(0, 0, 1);
+
+                for (let col = 0; col < COLS; col++) {
+                    const uT = col / (COLS - 1); // 0 (right edge) to 1 (left edge)
+                    
+                    // Angle around front half of cylinder (-PI/2 to PI/2)
+                    const angle = (uT - 0.5) * Math.PI;
+
+                    const xOffset = Math.sin(angle) * currentWidth;
+                    const zOffset = Math.cos(angle) * currentDepth;
+
+                    vertex.copy(center)
+                          .addScaledVector(lateral, xOffset)
+                          .addScaledVector(forward, zOffset);
+
+                    // Add subtle natural fabric fold ripple based on row & angle
+                    const ripple = Math.sin(vT * 8 + uT * 6) * 0.012;
+                    vertex.z += ripple;
+
+                    const idx = row * COLS + col;
+                    posAttr.setXYZ(idx, vertex.x, vertex.y, vertex.z);
+                }
+            }
+
+            posAttr.needsUpdate = true;
+            garmentMesh.geometry.computeVertexNormals();
+            garmentMesh.visible = true;
+
+            // RIG SLEEVES (Shoulder to Elbow)
+            const lElbow = lmToThree(lms[13]);
+            const rElbow = lmToThree(lms[14]);
+
+            // Left Sleeve
+            positionSleeve(leftSleeveMesh, lSh, lElbow, shoulderWidth * 0.18 * fitMult);
+            // Right Sleeve
+            positionSleeve(rightSleeveMesh, rSh, rElbow, shoulderWidth * 0.18 * fitMult);
+
+            // RIG ACCESSORIES
+            if (showVisor && visorMesh) {
+                const nose = lmToThree(lms[0]);
+                visorMesh.position.set(nose.x, nose.y + 0.03, nose.z + 0.05);
+                visorMesh.scale.setScalar(shoulderWidth * 1.8);
+                visorMesh.visible = true;
+            } else if (visorMesh) {
+                visorMesh.visible = false;
+            }
+
+            if (showCap && capMesh) {
+                const nose = lmToThree(lms[0]);
+                capMesh.position.set(nose.x, nose.y + 0.18, nose.z);
+                capMesh.scale.setScalar(shoulderWidth * 1.9);
+                capMesh.visible = true;
+            } else if (capMesh) {
+                capMesh.visible = false;
+            }
+        }
+
+        // HELPER TO ORIENT & SCALE SLEEVE CYLINDERS
+        function positionSleeve(mesh, start, end, radius) {
+            const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+            const dir = new THREE.Vector3().subVectors(end, start);
+            const len = dir.length();
+
+            mesh.position.copy(mid);
+            mesh.scale.set(radius * 10, len * 2.8, radius * 10);
+            
+            // Align cylinder Y-axis to arm direction
+            mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+            mesh.visible = true;
+        }
+
+        // ─────────────────────────────────────────────
+        // 5. MAIN RENDER LOOP (60 FPS REAL-TIME)
+        // ─────────────────────────────────────────────
+        let lastDetectTime = 0;
+        let missCount = 0;
+
+        async function renderLoop(timestamp) {
+            // FPS calculation
+            frameCount++;
+            if (timestamp - lastFrameTime >= 1000) {
+                fps = Math.round((frameCount * 1000) / (timestamp - lastFrameTime));
+                fpsCounter.textContent = fps;
+                lastFrameTime = timestamp;
+                frameCount = 0;
+            }
+
+            // DEMO / SIMULATION OVERRIDE
+            if (window.debugPoseOverride) {
+                poseGuide.style.opacity = '0';
+                trackingStatus.textContent = 'BODY LOCKED · 60 FPS';
+                trackingDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                updateGarmentDeformation(window.debugPoseOverride);
+                renderer.render(scene, camera);
+                requestAnimationFrame(renderLoop);
+                return;
+            }
+
+            if (poseLandmarker && video.readyState >= 2) {
+                if (timestamp - lastDetectTime >= 33) { // 30 FPS pose inference
+                    lastDetectTime = timestamp;
+                    const startTime = performance.now();
+                    const results = poseLandmarker.detectForVideo(video, timestamp);
+                    const inferenceTime = Math.round(performance.now() - startTime);
+                    latencyCounter.textContent = `${inferenceTime}ms`;
+
+                    if (results.landmarks && results.landmarks.length > 0) {
+                        missCount = 0;
+                        const rawLms = results.landmarks[0];
+                        
+                        // Hide guide box once locked
+                        poseGuide.style.opacity = '0';
+                        trackingStatus.textContent = 'BODY LOCKED · 60 FPS';
+                        trackingDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+
+                        // Anti-jitter Smoothing Filter
+                        if (!smoothedLandmarks) {
+                            smoothedLandmarks = rawLms.map(l => ({ ...l }));
+                        } else {
+                            for (let i = 0; i < rawLms.length; i++) {
+                                smoothedLandmarks[i].x = THREE.MathUtils.lerp(smoothedLandmarks[i].x, rawLms[i].x, SMOOTH_FACTOR);
+                                smoothedLandmarks[i].y = THREE.MathUtils.lerp(smoothedLandmarks[i].y, rawLms[i].y, SMOOTH_FACTOR);
+                                smoothedLandmarks[i].z = THREE.MathUtils.lerp(smoothedLandmarks[i].z, rawLms[i].z, SMOOTH_FACTOR);
+                            }
+                        }
+                    } else {
+                        missCount++;
+                        if (missCount > 8) {
+                            poseGuide.style.opacity = '1';
+                            trackingStatus.textContent = 'SEARCHING BODY...';
+                            trackingDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+                            if (garmentMesh) garmentMesh.visible = false;
+                            if (leftSleeveMesh) leftSleeveMesh.visible = false;
+                            if (rightSleeveMesh) rightSleeveMesh.visible = false;
+                        }
+                    }
+                }
+
+                if (smoothedLandmarks && missCount <= 8) {
+                    updateGarmentDeformation(smoothedLandmarks);
+                }
+            }
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(renderLoop);
+        }
+
+        // ─────────────────────────────────────────────
+        // 6. UI INTERACTION HANDLERS (WINDOW EXPORTS)
+        // ─────────────────────────────────────────────
+        window.applyTestPose = (lms) => {
+            if (poseGuide) poseGuide.style.opacity = '0';
+            trackingStatus.textContent = 'BODY LOCKED · 60 FPS';
+            trackingDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+            updateGarmentDeformation(lms);
+            renderer.render(scene, camera);
+        };
+
+        window.selectOutfit = (idx) => {
+            activeOutfitIdx = idx;
+            document.querySelectorAll('.outfit-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === idx);
+                btn.classList.toggle('border-gold/40', i === idx);
+                btn.classList.toggle('border-white/10', i !== idx);
+            });
+            buildGarmentMesh();
+            buildSleeveMeshes();
+        };
+
+        window.toggleMeshMode = () => {
+            wireframeMode = !wireframeMode;
+            document.getElementById('mesh-mode-label').textContent = wireframeMode ? 'Wireframe' : 'Texture';
+            if (garmentMesh) garmentMesh.material.wireframe = wireframeMode;
+            if (leftSleeveMesh) leftSleeveMesh.material.wireframe = wireframeMode;
+            if (rightSleeveMesh) rightSleeveMesh.material.wireframe = wireframeMode;
+        };
+
+        window.toggleMirror = () => {
+            isMirrored = !isMirrored;
+            video.style.transform = isMirrored ? 'scaleX(-1)' : 'scaleX(1)';
+        };
+
+        window.setGarmentFit = (fit) => {
+            garmentFit = fit;
+            document.querySelectorAll('.fit-btn').forEach(btn => {
+                btn.classList.remove('bg-gold/20', 'text-gold', 'font-bold');
+                btn.classList.add('text-white/70');
+            });
+            const activeBtn = document.getElementById(`fit-${fit}`);
+            activeBtn.classList.add('bg-gold/20', 'text-gold', 'font-bold');
+            activeBtn.classList.remove('text-white/70');
+        };
+
+        window.toggleAccessory = (acc) => {
+            if (acc === 'visor') {
+                showVisor = !showVisor;
+                document.getElementById('acc-visor').classList.toggle('border-gold', showVisor);
+                document.getElementById('acc-visor').classList.toggle('text-gold', showVisor);
+            }
+            if (acc === 'cap') {
+                showCap = !showCap;
+                document.getElementById('acc-cap').classList.toggle('border-gold', showCap);
+                document.getElementById('acc-cap').classList.toggle('text-gold', showCap);
+            }
+        };
+
+        window.takeSnapshot = () => {
+            // Flash effect
+            const flash = document.createElement('div');
+            flash.className = 'fixed inset-0 bg-white z-[999] transition-opacity duration-300 pointer-events-none';
+            document.body.appendChild(flash);
+            setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 300); }, 50);
+
+            // Composite video frame + WebGL AR canvas
+            const shotCanvas = document.createElement('canvas');
+            shotCanvas.width = canvas.width;
+            shotCanvas.height = canvas.height;
+            const shotCtx = shotCanvas.getContext('2d');
+
+            // Draw video frame
+            shotCtx.save();
+            if (isMirrored) {
+                shotCtx.scale(-1, 1);
+                shotCtx.drawImage(video, -shotCanvas.width, 0, shotCanvas.width, shotCanvas.height);
+            } else {
+                shotCtx.drawImage(video, 0, 0, shotCanvas.width, shotCanvas.height);
+            }
+            shotCtx.restore();
+
+            // Draw 3D Garment
+            shotCtx.drawImage(canvas, 0, 0);
+
+            // Download file
+            const link = document.createElement('a');
+            link.download = `VTON_TRYON_${Date.now()}.png`;
+            link.href = shotCanvas.toDataURL('image/png');
+            link.click();
+
+            // Show Toast
+            const toast = document.getElementById('snapshot-toast');
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 2500);
+        };
+
+        // START ENGINE ON LOAD
+        initThreeScene();
+        initPoseEngine();
+    </script>
+</body>
+</html>
