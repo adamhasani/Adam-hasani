@@ -60,7 +60,9 @@
         body {
             background-color: #050B08;
             color: #e0e0e0;
-            overflow-x: hidden;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
             font-family: 'DM Mono', monospace;
             -webkit-font-smoothing: antialiased;
         }
@@ -238,22 +240,36 @@
         }
 
         /* Slider / Editorial Section */
-        .editorial-container { position: relative; min-height: 550px; height: 550px; display: flex; align-items: center; }
+        .editorial-container { 
+            position: relative; 
+            flex: 1;
+            min-height: 0;
+            max-height: calc(100vh - 140px);
+            display: flex; 
+            align-items: center; 
+            overflow: hidden;
+        }
         #model-container {
-            position: absolute; top: 25px; height: 500px; width: 55%;
-            transition: all 1.2s var(--ease); pointer-events: auto; z-index: 10;
+            position: absolute; 
+            top: 50%;
+            height: 95%; 
+            max-height: 460px;
+            width: 55%;
+            transition: all 1.2s var(--ease); 
+            pointer-events: auto; 
+            z-index: 10;
         }
         @media(min-width: 768px) {
-            #model-container.pos-0 { left: 45%; transform: scale(1); }
-            #model-container.pos-1 { left: 5%; transform: scale(1.1); }
-            #model-container.pos-2 { left: 22%; transform: scale(1.2); opacity: 0.4; }
-            #model-container.pos-3 { left: 50%; transform: scale(0.9); }
+            #model-container.pos-0 { left: 45%; transform: translateY(-50%) scale(1); }
+            #model-container.pos-1 { left: 5%; transform: translateY(-50%) scale(1.1); }
+            #model-container.pos-2 { left: 22%; transform: translateY(-50%) scale(1.2); opacity: 0.4; }
+            #model-container.pos-3 { left: 50%; transform: translateY(-50%) scale(0.9); }
         }
         @media(max-width: 767px) {
-            .editorial-container { flex-direction: column; min-height: auto; padding-top: 2rem; }
+            .editorial-container { flex-direction: column; min-height: auto; height: auto; padding-top: 1rem; }
             #model-container { 
-                position: relative; width: 100% !important; height: 300px; 
-                left: 0 !important; opacity: 0.3; transform: scale(1) !important;
+                position: relative; width: 100% !important; height: 260px; 
+                left: 0 !important; top: 0 !important; opacity: 0.3; transform: scale(1) !important;
             }
         }
         
@@ -398,7 +414,7 @@
     <div class="mouse-glow hidden md:block" id="mouse-glow"></div>
 
     <!-- Main Container -->
-    <main class="relative z-20 w-full min-h-screen px-4 py-8 md:px-8 lg:px-12 max-w-7xl mx-auto flex flex-col justify-center perspective-stage">
+    <main class="relative z-20 w-full h-screen max-h-screen px-4 py-4 md:px-8 lg:px-12 max-w-7xl mx-auto flex flex-col justify-center overflow-hidden perspective-stage">
 
 
 
@@ -531,16 +547,21 @@
         </section>
 
         <!-- ================= DETAIL CONTAINER ================= -->
-        <section id="view-detail" class="view-section w-full hidden">
-            <!-- Global Back Button -->
-            <nav class="mb-8 md:mb-12 sticky top-4 z-50 flex justify-center md:justify-start">
-                <button onclick="navigateHome()" class="glass-panel px-6 py-3 rounded-full text-xs font-medium tracking-widest uppercase text-gold hover:text-obsidian hover:bg-gold transition-all duration-300 flex items-center gap-3">
+        <section id="view-detail" class="view-section w-full h-full max-h-full flex flex-col justify-between overflow-hidden hidden">
+            <!-- Top Navigation Bar -->
+            <nav class="mb-2 md:mb-4 flex items-center justify-between z-50 w-full">
+                <button onclick="navigateHome()" class="glass-panel px-5 py-2.5 rounded-full text-xs font-medium tracking-widest uppercase text-gold hover:text-obsidian hover:bg-gold transition-all duration-300 flex items-center gap-3">
                     <i class="fas fa-arrow-left"></i> Kembali ke Pusat
                 </button>
+                <div class="flex items-center gap-3" id="detail-nav-actions">
+                    <button onclick="nextSlide()" class="glass-panel px-5 py-2.5 rounded-full text-xs font-medium tracking-widest uppercase text-gold hover:text-obsidian hover:bg-gold transition-all duration-300 flex items-center gap-3">
+                        Next Sequence <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
             </nav>
 
             <!-- 1. DATA DIRI -->
-            <div id="content-datadiri" class="detail-content hidden">
+            <div id="content-datadiri" class="detail-content w-full h-full flex flex-col justify-between overflow-hidden hidden">
                 <div class="editorial-container w-full">
                     <!-- 3D Model BG -->
                     <div id="model-container" class="pos-0">
@@ -557,14 +578,14 @@
                     </div>
 
                     <!-- Slide Content Area -->
-                    <div id="slide-wrapper" class="relative z-20 w-full md:w-11/12 flex flex-col justify-center min-h-[400px]">
+                    <div id="slide-wrapper" class="relative z-20 w-full md:w-11/12 flex flex-col justify-center min-h-[320px]">
                         
                         <!-- Slide 0: Bio -->
                         <div class="data-slide active-slide md:pl-12 text-center md:text-left">
-                            <img src="IMG_20260127_140845_874.webp" alt="Adam Hasani" onerror="this.style.display='none'" class="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border-2 border-gold p-1 shadow-[0_0_20px_rgba(197,160,89,0.3)] mb-6 mx-auto md:mx-0">
-                            <p class="text-[0.6rem] tracking-[0.25em] uppercase text-white/50 mb-2">11 Feb 2006 — Tegal, ID</p>
-                            <h2 class="font-serif-c text-5xl md:text-7xl leading-none mb-4 drop-shadow-lg">Adam<br>Hasani</h2>
-                            <p class="text-sm text-white/80 leading-relaxed max-w-md mx-auto md:mx-0">
+                            <img src="IMG_20260127_140845_874.webp" alt="Adam Hasani" onerror="this.style.display='none'" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-gold p-1 shadow-[0_0_20px_rgba(197,160,89,0.3)] mb-3 mx-auto md:mx-0">
+                            <p class="text-[0.6rem] tracking-[0.25em] uppercase text-white/50 mb-1">11 Feb 2006 — Tegal, ID</p>
+                            <h2 class="font-serif-c text-4xl md:text-6xl leading-none mb-3 drop-shadow-lg">Adam<br>Hasani</h2>
+                            <p class="text-xs md:text-sm text-white/80 leading-relaxed max-w-md mx-auto md:mx-0">
                                 Namaku <span class="text-gold font-medium">Adam Hasani</span>! Sistem aktif diinisiasi 11 Februari 2006. Aktif merancang arsitektur web yang rapi, memberikan interaktivitas, dan mengintegrasikan API untuk menghidupkan proyek AI pribadiku — <span class="text-gold">Flora AI</span> — dengan pondasi <span class="text-gold">JavaScript</span> & <span class="text-gold">Node.js</span>.
                             </p>
                         </div>
@@ -657,13 +678,6 @@
                         </div>
 
                     </div>
-                </div>
-
-                <!-- Next Button Container -->
-                <div class="flex justify-center md:justify-start md:pl-24 mt-8 z-30 relative">
-                    <button onclick="nextSlide()" class="text-gold text-[0.65rem] uppercase tracking-[0.15em] flex items-center gap-2 hover:text-white transition-colors duration-300">
-                        Next Sequence <i class="fas fa-arrow-right"></i>
-                    </button>
                 </div>
             </div>
 
