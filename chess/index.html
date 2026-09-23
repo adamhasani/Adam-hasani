@@ -220,6 +220,20 @@
                         MAIN LAGI (REMATCH)
                     </button>
                 </div>
+
+                <!-- PROMOTION SELECTION MODAL -->
+                <div id="promotion-modal" class="absolute inset-0 z-30 glass-panel rounded-xl flex flex-col items-center justify-center p-4 text-center hidden bg-black/90 backdrop-blur-md">
+                    <p class="text-[0.65rem] font-mono text-gold uppercase tracking-widest font-bold mb-1">PROMOSI PION</p>
+                    <h3 class="font-serif-c text-lg font-bold text-white mb-4">PILIH BIDAK PENGGANTI</h3>
+                    
+                    <div class="grid grid-cols-4 gap-2.5 max-w-xs w-full mb-4" id="promotion-options">
+                        <!-- Injected dynamically -->
+                    </div>
+
+                    <button onclick="cancelPromotion()" class="text-xs font-mono text-white/60 hover:text-white px-3 py-1 rounded bg-white/10 transition-colors">
+                        Batal
+                    </button>
+                </div>
             </div>
 
             <!-- PLAYER CARD (WHITE / HUMAN) -->
@@ -241,11 +255,14 @@
                 </div>
 
                 <!-- CONTROLS -->
-                <div class="flex items-center gap-2">
-                    <button onclick="resetGame()" class="glass-panel px-3 py-1.5 rounded-xl text-[0.65rem] font-mono text-white/80 hover:text-gold flex items-center gap-1.5 transition-colors" title="Ulang Permainan">
+                <div class="flex items-center gap-1.5">
+                    <button onclick="undoMove()" class="glass-panel px-2.5 py-1.5 rounded-xl text-[0.65rem] font-mono text-white/80 hover:text-gold flex items-center gap-1 transition-colors" title="Tarik Kembali Langkah">
+                        <i class="fas fa-undo"></i> Undo
+                    </button>
+                    <button onclick="resetGame()" class="glass-panel px-2.5 py-1.5 rounded-xl text-[0.65rem] font-mono text-white/80 hover:text-gold flex items-center gap-1 transition-colors" title="Ulang Permainan">
                         <i class="fas fa-redo"></i> Reset
                     </button>
-                    <button onclick="clearBrainMemory()" class="glass-panel px-3 py-1.5 rounded-xl text-[0.65rem] font-mono text-amber-300 hover:text-white flex items-center gap-1.5 transition-colors" title="Kosongkan Memori Lalat">
+                    <button onclick="clearBrainMemory()" class="glass-panel px-2.5 py-1.5 rounded-xl text-[0.65rem] font-mono text-amber-300 hover:text-white flex items-center gap-1 transition-colors" title="Kosongkan Memori Lalat">
                         <i class="fas fa-trash-alt"></i> Naive
                     </button>
                 </div>
@@ -502,6 +519,16 @@
             updateHistoryUI();
         }
 
+        let pendingPromotion = null;
+
+        function isPromotionMove(from, to) {
+            const piece = game.get(from);
+            if (!piece || piece.type !== 'p') return false;
+            if (piece.color === 'w' && to[1] === '8') return true;
+            if (piece.color === 'b' && to[1] === '1') return true;
+            return false;
+        }
+
         function onSquareClick(sqId) {
             if (game.game_over() || game.turn() !== 'w') return;
 
@@ -509,6 +536,12 @@
 
             // Execute move if clicking highlighted target
             if (selectedSquare && legalTargetSquares.includes(sqId)) {
+                if (isPromotionMove(selectedSquare, sqId)) {
+                    // Open promotion dialog!
+                    pendingPromotion = { from: selectedSquare, to: sqId };
+                    openPromotionModal('w');
+                    return;
+                }
                 executeUserMove(selectedSquare, sqId);
                 return;
             }
@@ -523,6 +556,56 @@
                 clearSelection();
             }
         }
+
+        function openPromotionModal(color) {
+            const modal = document.getElementById('promotion-modal');
+            const options = document.getElementById('promotion-options');
+            options.innerHTML = `
+                <button onclick="confirmPromotion('q')" class="glass-panel p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
+                    <img src="./pieces/${color}Q.svg" class="w-12 h-12 object-contain group-hover:scale-110 transition-transform">
+                    <span class="text-[0.6rem] font-mono text-gold font-bold">Menteri (Q)</span>
+                </button>
+                <button onclick="confirmPromotion('n')" class="glass-panel p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
+                    <img src="./pieces/${color}N.svg" class="w-12 h-12 object-contain group-hover:scale-110 transition-transform">
+                    <span class="text-[0.6rem] font-mono text-gold font-bold">Kuda (N)</span>
+                </button>
+                <button onclick="confirmPromotion('r')" class="glass-panel p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
+                    <img src="./pieces/${color}R.svg" class="w-12 h-12 object-contain group-hover:scale-110 transition-transform">
+                    <span class="text-[0.6rem] font-mono text-gold font-bold">Benteng (R)</span>
+                </button>
+                <button onclick="confirmPromotion('b')" class="glass-panel p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
+                    <img src="./pieces/${color}B.svg" class="w-12 h-12 object-contain group-hover:scale-110 transition-transform">
+                    <span class="text-[0.6rem] font-mono text-gold font-bold">Gajah (B)</span>
+                </button>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        window.confirmPromotion = (pieceType) => {
+            document.getElementById('promotion-modal').classList.add('hidden');
+            if (pendingPromotion) {
+                executeUserMove(pendingPromotion.from, pendingPromotion.to, pieceType);
+                pendingPromotion = null;
+            }
+        };
+
+        window.cancelPromotion = () => {
+            document.getElementById('promotion-modal').classList.add('hidden');
+            pendingPromotion = null;
+            clearSelection();
+        };
+
+        window.undoMove = () => {
+            if (game.history().length === 0) return;
+            // Undo Black's move and White's move
+            game.undo(); // Undos Black if it was White's turn
+            if (game.turn() === 'b') {
+                game.undo(); // Undos White if it was Black's turn
+            }
+            clearSelection();
+            initBoardUI();
+            thoughtLogEl.innerHTML = '⏪ Langkah ditarik kembali (Undo). Silakan pilih langkah alternatif.';
+        };
 
         function clearSelection() {
             selectedSquare = null;
@@ -572,8 +655,8 @@
             }
         }
 
-        function executeUserMove(from, to) {
-            const move = game.move({ from, to, promotion: 'q' });
+        function executeUserMove(from, to, promotion = 'q') {
+            const move = game.move({ from, to, promotion });
             if (!move) return;
 
             clearSelection();
@@ -684,18 +767,26 @@
         }
 
         function updateCapturedPieces() {
-            // Count missing pieces from starting set
+            const pieceValues = { p: 1, n: 3, b: 3, r: 5, q: 9 };
             const fullSet = { p: 8, n: 2, b: 2, r: 2, q: 1 };
             const currentWhite = { p: 0, n: 0, b: 0, r: 0, q: 0 };
             const currentBlack = { p: 0, n: 0, b: 0, r: 0, q: 0 };
+
+            let whiteScore = 0;
+            let blackScore = 0;
 
             const board = game.board();
             for (let r = 0; r < 8; r++) {
                 for (let c = 0; c < 8; c++) {
                     const p = board[r][c];
                     if (p && p.type !== 'k') {
-                        if (p.color === 'w') currentWhite[p.type]++;
-                        else currentBlack[p.type]++;
+                        if (p.color === 'w') {
+                            currentWhite[p.type]++;
+                            whiteScore += pieceValues[p.type];
+                        } else {
+                            currentBlack[p.type]++;
+                            blackScore += pieceValues[p.type];
+                        }
                     }
                 }
             }
@@ -711,6 +802,13 @@
                     whiteCapturedEl.appendChild(img);
                 }
             }
+            const whiteDiff = whiteScore - blackScore;
+            if (whiteDiff > 0) {
+                const badge = document.createElement('span');
+                badge.className = 'text-[0.6rem] font-mono px-1 rounded bg-gold/20 text-gold font-bold ml-1';
+                badge.textContent = `+${whiteDiff}`;
+                whiteCapturedEl.appendChild(badge);
+            }
 
             // Black captured (lost by white)
             blackCapturedEl.innerHTML = '';
@@ -722,6 +820,13 @@
                     img.className = 'w-3.5 h-3.5 opacity-80';
                     blackCapturedEl.appendChild(img);
                 }
+            }
+            const blackDiff = blackScore - whiteScore;
+            if (blackDiff > 0) {
+                const badge = document.createElement('span');
+                badge.className = 'text-[0.6rem] font-mono px-1 rounded bg-emerald-500/20 text-emerald-400 font-bold ml-1';
+                badge.textContent = `+${blackDiff}`;
+                blackCapturedEl.appendChild(badge);
             }
         }
 
