@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Drosophila Gambit — Otak Lalat (139K Connectome) vs Manusia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=DM+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chess.js Engine & Fly Connectome -->
+    <script src="./chess.min.js"></script>
+    <script src="./fly_connectome_engine.js"></script>
+
+    <style>
+        :root {
+            --gold: #C5A059;
+            --gold-light: #E8D4A8;
+            --emerald: #10b981;
+            --obsidian: #050B08;
+            --danger: #ef4444;
+        }
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: #050B08;
+            color: #fff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        .font-mono { font-family: 'DM Mono', monospace; }
+        .font-serif-c { font-family: 'Cinzel', serif; }
+        
+        .glass-panel {
+            background: rgba(10, 18, 14, 0.78);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* Chess Board Styles */
+        .chess-grid {
+            display: grid;
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border: 2px solid rgba(197, 160, 89, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(197, 160, 89, 0.2);
+        }
+        .sq-light {
+            background-color: #dfd7c5;
+            color: #262421;
+        }
+        .sq-dark {
+            background-color: #8c7b66;
+            color: #ece8e1;
+        }
+        .sq-selected {
+            background-color: #bbc743 !important;
+        }
+        .sq-target-hint {
+            position: relative;
+        }
+        .sq-target-hint::after {
+            content: '';
+            position: absolute;
+            width: 32%;
+            height: 32%;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.7);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+            pointer-events: none;
+        }
+        .sq-last-move {
+            background-color: rgba(197, 160, 89, 0.45) !important;
+        }
+        .sq-in-check {
+            background-color: rgba(239, 68, 68, 0.65) !important;
+        }
+
+        /* Chess Piece Font Glyphs */
+        .piece {
+            font-size: clamp(1.8rem, 6vw, 3.2rem);
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        .piece:hover {
+            transform: scale(1.12);
+        }
+        .piece-white {
+            color: #ffffff;
+            text-shadow: 0 0 4px #000, 0 1px 2px #000;
+        }
+        .piece-black {
+            color: #1a1a1a;
+            text-shadow: 0 0 3px rgba(197, 160, 89, 0.5), 0 1px 1px #000;
+        }
+
+        /* Synaptic Pulse Animation */
+        @keyframes neuron-pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 8px #10b981); }
+        }
+        .animate-neuron {
+            animation: neuron-pulse 1.8s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-3 md:p-6 flex flex-col justify-between">
+
+    <!-- TOP HEADER: BRANDING & NAVIGATION -->
+    <header class="max-w-6xl mx-auto w-full flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+            <a href="../desktop.html" class="glass-panel px-3.5 py-2 rounded-xl text-xs font-mono text-gold hover:text-white flex items-center gap-2 transition-colors">
+                <i class="fas fa-arrow-left"></i> <span>Hub</span>
+            </a>
+            <div>
+                <h1 class="font-serif-c text-lg md:text-xl font-bold tracking-wide text-white flex items-center gap-2">
+                    <span>DROSOPHILA GAMBIT</span>
+                    <span class="text-[0.6rem] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">139K NEURONS</span>
+                </h1>
+                <p class="text-[0.65rem] font-mono text-white/50">Simulasi Connectome FlyWire (Nature 2024) vs Manusia · No Minimax / Pure Biology</p>
+            </div>
+        </div>
+
+        <!-- REINFORCEMENT MEMORY BADGE -->
+        <div class="glass-panel px-3.5 py-1.5 rounded-xl hidden sm:flex items-center gap-2.5 text-xs font-mono">
+            <i class="fas fa-dna text-emerald-400"></i>
+            <span class="text-white/60">Hebbian Memory:</span>
+            <strong id="hebbian-counter" class="text-gold font-bold">0 Synapses</strong>
+        </div>
+    </header>
+
+    <!-- MAIN ARENA: CHESSBOARD + NEURAL TELEMETRY -->
+    <main class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        
+        <!-- LEFT: CHESS ARENA (COL 1 to 7) -->
+        <div class="lg:col-span-7 flex flex-col items-center">
+            
+            <!-- OPPONENT CARD (BLACK / THE FLY BRAIN) -->
+            <div class="glass-panel w-full p-3 rounded-2xl mb-3 flex items-center justify-between border-emerald-500/30">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-emerald-500/50 flex items-center justify-center text-xl shrink-0 animate-neuron">
+                        🪰
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-mono text-xs font-bold text-white">Drosophila Melanogaster</span>
+                            <span id="fly-status-badge" class="text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400">WAITING MOVE</span>
+                        </div>
+                        <p class="text-[0.6rem] font-mono text-white/50" id="fly-sub-status">Optic Lobe idle · Ready for sensory input</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 text-right">
+                    <div>
+                        <p class="text-[0.55rem] font-mono text-white/40">DOPAMINE</p>
+                        <p id="top-dopamine-val" class="font-mono text-xs text-gold font-bold">0.00 μM</p>
+                    </div>
+                    <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" id="fly-active-led"></div>
+                </div>
+            </div>
+
+            <!-- CHESSBOARD CONTAINER -->
+            <div class="w-full max-w-[500px] relative">
+                <div id="chessboard" class="chess-grid">
+                    <!-- 64 Squares injected via JavaScript -->
+                </div>
+                
+                <!-- GAME OVER BANNER -->
+                <div id="game-over-modal" class="absolute inset-0 z-20 glass-panel rounded-2xl flex flex-col items-center justify-center p-6 text-center hidden bg-black/85">
+                    <h3 id="game-over-title" class="font-serif-c text-2xl font-bold text-gold mb-2">GAME OVER</h3>
+                    <p id="game-over-desc" class="text-xs font-mono text-white/80 mb-5 leading-relaxed">Status Permainan</p>
+                    <button onclick="resetGame()" class="px-5 py-2.5 rounded-xl bg-gold text-obsidian font-mono text-xs font-bold shadow-[0_0_15px_rgba(197,160,89,0.5)] hover:scale-105 active:scale-95 transition-transform">
+                        MAIN LAGI (REMATCH)
+                    </button>
+                </div>
+            </div>
+
+            <!-- PLAYER CARD (WHITE / HUMAN) -->
+            <div class="glass-panel w-full p-3 rounded-2xl mt-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-900/40 to-black border border-gold/40 flex items-center justify-center text-lg shrink-0">
+                        🧑💻
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-mono text-xs font-bold text-gold">Adam Hasani</span>
+                            <span class="text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-gold/20 text-gold">WHITE</span>
+                        </div>
+                        <p class="text-[0.6rem] font-mono text-white/50" id="turn-indicator">Giliranmu Melangkah</p>
+                    </div>
+                </div>
+
+                <!-- CONTROLS BUTTONS -->
+                <div class="flex items-center gap-2">
+                    <button onclick="resetGame()" class="glass-panel px-3 py-1.5 rounded-xl text-[0.65rem] font-mono text-white/80 hover:text-gold flex items-center gap-1.5 transition-colors" title="Ulang Permainan">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button onclick="clearBrainMemory()" class="glass-panel px-3 py-1.5 rounded-xl text-[0.65rem] font-mono text-amber-300 hover:text-white flex items-center gap-1.5 transition-colors" title="Kosongkan Memori Lalat (Newborn)">
+                        <i class="fas fa-trash-alt"></i> Naive Fly
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT: LIVE CONNECTOME TELEMETRY HUD (COL 8 to 12) -->
+        <div class="lg:col-span-5 flex flex-col gap-3">
+            
+            <!-- BIOLOGICAL SENSOR & TRANSMITTER GAUGES -->
+            <div class="glass-panel p-4 rounded-2xl">
+                <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
+                    <span class="text-xs font-mono font-bold text-white flex items-center gap-2">
+                        <i class="fas fa-brain text-emerald-400"></i> BIOLOGICAL RECEPTORS
+                    </span>
+                    <span class="text-[0.6rem] font-mono text-emerald-400">FLYWIRE LIF ACTIVE</span>
+                </div>
+
+                <!-- 4 Neural Sensor Bars -->
+                <div class="space-y-3 font-mono text-xs">
+                    <!-- 1. Sweet / Capture Reward -->
+                    <div>
+                        <div class="flex justify-between text-[0.65rem] mb-1">
+                            <span class="text-emerald-400"><i class="fas fa-candy-cane"></i> GUS_GRN_SWEET (Umpan/Makan)</span>
+                            <span id="val-sweet" class="text-white font-bold">0.0 mV</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/10">
+                            <div id="bar-sweet" class="h-full bg-emerald-400 transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Looming Danger / Fear -->
+                    <div>
+                        <div class="flex justify-between text-[0.65rem] mb-1">
+                            <span class="text-red-400"><i class="fas fa-exclamation-triangle"></i> VIS_LC (Ancaman Musuh)</span>
+                            <span id="val-threat" class="text-white font-bold">0.0 mV</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/10">
+                            <div id="bar-threat" class="h-full bg-red-400 transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Dopamine Spike -->
+                    <div>
+                        <div class="flex justify-between text-[0.65rem] mb-1">
+                            <span class="text-gold"><i class="fas fa-bolt"></i> MB_DAN_REW (Dopamin PAM)</span>
+                            <span id="val-dopamine" class="text-white font-bold">0.00 μM</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/10">
+                            <div id="bar-dopamine" class="h-full bg-gold transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Startle Escape Motor -->
+                    <div>
+                        <div class="flex justify-between text-[0.65rem] mb-1">
+                            <span class="text-amber-400"><i class="fas fa-running"></i> DN_STARTLE (Refleks Kabur)</span>
+                            <span id="val-startle" class="text-white font-bold">0.0 mV</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/10">
+                            <div id="bar-startle" class="h-full bg-amber-400 transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CANDIDATE MOVES EVALUATION TABLE (PROOF IT'S NOT A BOT) -->
+            <div class="glass-panel p-4 rounded-2xl flex-1 flex flex-col min-h-[220px]">
+                <div class="flex items-center justify-between mb-2 border-b border-white/10 pb-2">
+                    <span class="text-xs font-mono font-bold text-white flex items-center gap-1.5">
+                        <i class="fas fa-list-ol text-gold"></i> POTENSI AKSI SARAF
+                    </span>
+                    <span class="text-[0.6rem] font-mono text-white/50">RANKED BY mV</span>
+                </div>
+
+                <div class="overflow-y-auto max-h-48 text-[0.65rem] font-mono space-y-1.5 pr-1" id="candidate-list">
+                    <p class="text-white/40 italic py-4 text-center">Menunggu langkah White untuk simulasi sinapsis...</p>
+                </div>
+            </div>
+
+            <!-- NATURAL BIOLOGICAL THOUGHT LOG -->
+            <div class="glass-panel p-3.5 rounded-2xl">
+                <span class="text-[0.65rem] font-mono text-white/50 block mb-1">LOG PERILAKU BIOLOGIS LALAT:</span>
+                <p id="thought-log" class="text-xs font-mono text-white/90 leading-relaxed bg-black/40 p-2.5 rounded-xl border border-white/5">
+                    🪰 Simulasi aktif. 139.255 neuron FlyWire terhubung dalam mode integrasi Leaky Integrate-and-Fire. Silakan buat langkah pertamamu (Putih).
+                </p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER / CITATION -->
+    <footer class="max-w-6xl mx-auto w-full mt-4 text-center">
+        <p class="text-[0.6rem] font-mono text-white/40">
+            Drosophila Connectome Architecture · Dorkenwald et al. (Nature 2024) · Princeton FlyWire Consortium · Built with 100% Transparency
+        </p>
+    </footer>
+
+    <!-- INTERACTION SCRIPT -->
+    <script>
+        // UTF-8 Chess Piece Symbols
+        const PIECES = {
+            'p': '♟', 'n': '♞', 'b': '♝', 'r': '♜', 'q': '♛', 'k': '♚',
+            'P': '♙', 'N': '♘', 'B': '♗', 'R': '♖', 'Q': '♕', 'K': '♔'
+        };
+
+        const game = new Chess();
+        const flyEngine = new FlyBrainChessEngine();
+
+        let selectedSquare = null;
+        let legalTargetSquares = [];
+
+        const boardEl = document.getElementById('chessboard');
+        const turnIndicator = document.getElementById('turn-indicator');
+        const flyStatusBadge = document.getElementById('fly-status-badge');
+        const flySubStatus = document.getElementById('fly-sub-status');
+        const topDopamineVal = document.getElementById('top-dopamine-val');
+        const candidateListEl = document.getElementById('candidate-list');
+        const thoughtLogEl = document.getElementById('thought-log');
+        const hebbianCounter = document.getElementById('hebbian-counter');
+
+        // Render Initial Board
+        function initBoardUI() {
+            boardEl.innerHTML = '';
+            const board = game.board();
+
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const colLetter = String.fromCharCode('a'.charCodeAt(0) + c);
+                    const rowNumber = 8 - r;
+                    const sqId = `${colLetter}${rowNumber}`;
+
+                    const sqEl = document.createElement('div');
+                    sqEl.id = `sq-${sqId}`;
+                    sqEl.className = `flex items-center justify-center ${(r + c) % 2 === 0 ? 'sq-light' : 'sq-dark'}`;
+                    sqEl.dataset.square = sqId;
+
+                    const pieceObj = board[r][c];
+                    if (pieceObj) {
+                        const glyph = pieceObj.color === 'w' ? PIECES[pieceObj.type.toUpperCase()] : PIECES[pieceObj.type.toLowerCase()];
+                        const pEl = document.createElement('span');
+                        pEl.className = `piece ${pieceObj.color === 'w' ? 'piece-white' : 'piece-black'}`;
+                        pEl.textContent = glyph;
+                        sqEl.appendChild(pEl);
+                    }
+
+                    sqEl.addEventListener('click', () => onSquareClick(sqId));
+                    boardEl.appendChild(sqEl);
+                }
+            }
+
+            updateCheckHighlight();
+            updateHebbianUI();
+        }
+
+        // Handle User Click on Square
+        function onSquareClick(sqId) {
+            if (game.game_over() || game.turn() !== 'w') return;
+
+            const piece = game.get(sqId);
+
+            // If already selected and clicked a legal destination -> MAKE MOVE!
+            if (selectedSquare && legalTargetSquares.includes(sqId)) {
+                executeUserMove(selectedSquare, sqId);
+                return;
+            }
+
+            // Clicked a White piece -> Select it!
+            if (piece && piece.color === 'w') {
+                selectedSquare = sqId;
+                const moves = game.moves({ square: sqId, verbose: true });
+                legalTargetSquares = moves.map(m => m.to);
+                renderSquareHighlights();
+            } else {
+                clearSelection();
+            }
+        }
+
+        function clearSelection() {
+            selectedSquare = null;
+            legalTargetSquares = [];
+            renderSquareHighlights();
+        }
+
+        function renderSquareHighlights() {
+            document.querySelectorAll('.sq-selected, .sq-target-hint').forEach(el => {
+                el.classList.remove('sq-selected', 'sq-target-hint');
+            });
+
+            if (selectedSquare) {
+                const selEl = document.getElementById(`sq-${selectedSquare}`);
+                if (selEl) selEl.classList.add('sq-selected');
+
+                legalTargetSquares.forEach(tSq => {
+                    const tEl = document.getElementById(`sq-${tSq}`);
+                    if (tEl) tEl.classList.add('sq-target-hint');
+                });
+            }
+        }
+
+        function updateCheckHighlight() {
+            document.querySelectorAll('.sq-in-check').forEach(el => el.classList.remove('sq-in-check'));
+            if (game.in_check()) {
+                const turn = game.turn();
+                // Find king of that color
+                const board = game.board();
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        const p = board[r][c];
+                        if (p && p.type === 'k' && p.color === turn) {
+                            const col = String.fromCharCode('a'.charCodeAt(0) + c);
+                            const row = 8 - r;
+                            const el = document.getElementById(`sq-${col}${row}`);
+                            if (el) el.classList.add('sq-in-check');
+                        }
+                    }
+                }
+            }
+        }
+
+        // Execute User (White) Move
+        function executeUserMove(from, to) {
+            const move = game.move({ from, to, promotion: 'q' });
+            if (!move) return;
+
+            clearSelection();
+            initBoardUI();
+
+            // Highlight last move
+            highlightLastMove(from, to);
+
+            if (checkGameOver()) return;
+
+            // Trigger Drosophila Connectome after brief biological delay (400ms)
+            turnIndicator.textContent = "Lalat Sedang Memproses Impuls Saraf...";
+            flyStatusBadge.textContent = "SYNAPSES FIRING";
+            flyStatusBadge.className = "text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 animate-pulse";
+            flySubStatus.textContent = "Meneruskan input fotoreseptor ke Mushroom Body...";
+
+            setTimeout(runFlyBrainTurn, 450);
+        }
+
+        // Run Fly Brain Turn
+        function runFlyBrainTurn() {
+            const flyMove = flyEngine.chooseBestMove(game);
+            if (!flyMove) {
+                checkGameOver();
+                return;
+            }
+
+            const telem = flyEngine.lastMoveTelemetry;
+            updateTelemetryUI(telem);
+
+            // Execute Fly move
+            const executed = game.move(flyMove);
+            initBoardUI();
+            highlightLastMove(executed.from, executed.to);
+
+            // Reinforce learning: If Fly captured something or gave check, award dopamine!
+            if (executed.captured) {
+                flyEngine.applyDopamineReinforcement(executed, true);
+                thoughtLogEl.innerHTML = `🪰 <strong class="text-emerald-400">DOPAMINE SURGE!</strong> Lalat berhasil menangkap bidak <strong>${executed.captured.toUpperCase()}</strong> di <strong>${executed.to}</strong>! Reseptor rasa manis meledak +${telem.chosen.sugarStimulus}mV. Sinapsis diperkuat via Hebbian Plasticity.`;
+            } else if (executed.san.includes('+')) {
+                flyEngine.applyDopamineReinforcement(executed, true);
+                thoughtLogEl.innerHTML = `🪰 <strong class="text-gold">SKAK!</strong> Gerakan <strong>${executed.san}</strong> memicu lonjakan dopamin PAM cluster di Mushroom Body.`;
+            } else {
+                thoughtLogEl.innerHTML = `🪰 Gerakan <strong>${executed.san}</strong> dipilih karena potensial aksi tertinggi (<strong>${telem.chosen.netActionPotential} mV</strong>) di antara ${telem.allCandidates.length} pilihan legal.`;
+            }
+
+            updateHebbianUI();
+
+            flyStatusBadge.textContent = "WAITING MOVE";
+            flyStatusBadge.className = "text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400";
+            flySubStatus.textContent = "Optic Lobe idle · Menunggu gerakanmu";
+            turnIndicator.textContent = "Giliranmu Melangkah (Putih)";
+
+            checkGameOver();
+        }
+
+        function highlightLastMove(from, to) {
+            document.querySelectorAll('.sq-last-move').forEach(el => el.classList.remove('sq-last-move'));
+            const fEl = document.getElementById(`sq-${from}`);
+            const tEl = document.getElementById(`sq-${to}`);
+            if (fEl) fEl.classList.add('sq-last-move');
+            if (tEl) tEl.classList.add('sq-last-move');
+        }
+
+        function updateTelemetryUI(telem) {
+            if (!telem || !telem.chosen) return;
+            const chosen = telem.chosen;
+
+            // Gauges
+            const sweetVal = parseFloat(chosen.sugarStimulus);
+            const threatVal = parseFloat(chosen.bitterStimulus);
+            const dopVal = parseFloat(chosen.dopamineSpike);
+            const startleVal = parseFloat(chosen.aversiveDrive);
+
+            document.getElementById('val-sweet').textContent = `${sweetVal} mV`;
+            document.getElementById('bar-sweet').style.width = `${Math.min(sweetVal * 4, 100)}%`;
+
+            document.getElementById('val-threat').textContent = `${threatVal} mV`;
+            document.getElementById('bar-threat').style.width = `${Math.min(threatVal * 4, 100)}%`;
+
+            document.getElementById('val-dopamine').textContent = `${dopVal} μM`;
+            topDopamineVal.textContent = `${dopVal} μM`;
+            document.getElementById('bar-dopamine').style.width = `${Math.min(dopVal * 20, 100)}%`;
+
+            document.getElementById('val-startle').textContent = `${startleVal} mV`;
+            document.getElementById('bar-startle').style.width = `${Math.min(startleVal * 15, 100)}%`;
+
+            // Candidate List Leaderboard
+            candidateListEl.innerHTML = '';
+            telem.allCandidates.slice(0, 8).forEach((cand, idx) => {
+                const isSelected = idx === 0;
+                const row = document.createElement('div');
+                row.className = `flex items-center justify-between p-1.5 rounded-lg border ${isSelected ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 font-bold' : 'bg-black/30 border-white/5 text-white/70'}`;
+                
+                row.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 text-white/40">#${idx + 1}</span>
+                        <span class="font-bold text-white">${cand.san}</span>
+                        ${isSelected ? '<span class="text-[0.55rem] px-1 bg-emerald-500 text-obsidian rounded font-bold">CHOSEN</span>' : ''}
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span title="Net Firing Potential">${cand.netActionPotential} mV</span>
+                        <span class="text-[0.6rem] text-white/40" title="Sugar / Looming">S:${cand.sugarStimulus} | L:${cand.bitterStimulus}</span>
+                    </div>
+                `;
+                candidateListEl.appendChild(row);
+            });
+        }
+
+        function updateHebbianUI() {
+            const count = Object.keys(flyEngine.hebbianMemory).length;
+            hebbianCounter.textContent = `${count} Synapses`;
+        }
+
+        function checkGameOver() {
+            if (game.game_over()) {
+                const modal = document.getElementById('game-over-modal');
+                const title = document.getElementById('game-over-title');
+                const desc = document.getElementById('game-over-desc');
+                modal.classList.remove('hidden');
+
+                if (game.in_checkmate()) {
+                    if (game.turn() === 'b') {
+                        title.textContent = "🏆 KAMU MENANG!";
+                        desc.textContent = "Skakmat! Kamu berhasil mengalahkan jaringan saraf otak lalat.";
+                    } else {
+                        title.textContent = "🪰 LALAT MENANG!";
+                        desc.textContent = "Skakmat! Insting biologis lalat berhasil menjebak rajamu.";
+                    }
+                } else if (game.in_draw()) {
+                    title.textContent = "REMIS (DRAW)";
+                    desc.textContent = "Permainan berakhir imbang.";
+                }
+                return true;
+            }
+            return false;
+        }
+
+        window.resetGame = () => {
+            game.reset();
+            document.getElementById('game-over-modal').classList.add('hidden');
+            initBoardUI();
+            thoughtLogEl.innerHTML = '🪰 Papan di-reset. Silakan buat langkah pertamamu (Putih).';
+        };
+
+        window.clearBrainMemory = () => {
+            flyEngine.resetBrain();
+            updateHebbianUI();
+            thoughtLogEl.innerHTML = '🧬 Memori Hebbian dikosongkan. Otak lalat kembali menjadi serangga yang baru menetas (*naive instinct*).';
+        };
+
+        // Start
+        initBoardUI();
+    </script>
+</body>
+</html>
