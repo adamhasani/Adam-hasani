@@ -260,10 +260,10 @@
             z-index: 10;
         }
         @media(min-width: 768px) {
-            #model-container.pos-0 { left: 45%; transform: translateY(-50%) scale(1); }
-            #model-container.pos-1 { left: 5%; transform: translateY(-50%) scale(1.1); }
-            #model-container.pos-2 { left: 22%; transform: translateY(-50%) scale(1.2); opacity: 0.4; }
-            #model-container.pos-3 { left: 50%; transform: translateY(-50%) scale(0.9); }
+            #model-container.pos-0 { left: 48%; transform: translateY(-50%) scale(1); }
+            #model-container.pos-1 { left: 48%; transform: translateY(-50%) scale(1); }
+            #model-container.pos-2 { left: 48%; transform: translateY(-50%) scale(1); }
+            #model-container.pos-3 { left: 48%; transform: translateY(-50%) scale(0.95); }
         }
         @media(max-width: 767px) {
             .editorial-container { flex-direction: column; min-height: auto; height: auto; padding-top: 1rem; }
@@ -303,6 +303,48 @@
         }
         .nav-line:hover { background: rgba(197,160,89,0.7); }
         .nav-line.active { width: 48px; background: #C5A059; box-shadow: 0 0 10px rgba(197,160,89,0.6); }
+
+        /* Holographic Cyber ID Card */
+        .cyber-id-card {
+            position: relative;
+            background: rgba(10, 18, 14, 0.75);
+            border: 1px solid rgba(197, 160, 89, 0.45);
+            border-radius: 18px;
+            backdrop-filter: blur(20px);
+            padding: 1.25rem 1.5rem;
+            max-width: 440px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(197, 160, 89, 0.15);
+            overflow: hidden;
+            transition: all 0.4s var(--ease);
+        }
+        .cyber-id-card::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background: linear-gradient(115deg, transparent 20%, rgba(197, 160, 89, 0.12) 38%, rgba(56, 189, 248, 0.18) 50%, rgba(168, 85, 247, 0.15) 62%, transparent 80%);
+            transform: rotate(25deg);
+            pointer-events: none;
+            opacity: 0.7;
+            animation: holoFoil 7s linear infinite;
+        }
+        @keyframes holoFoil {
+            0% { transform: translateY(-30%) rotate(25deg); }
+            50% { transform: translateY(30%) rotate(25deg); }
+            100% { transform: translateY(-30%) rotate(25deg); }
+        }
+        .cyber-id-card:hover {
+            border-color: rgba(197, 160, 89, 0.85);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(197, 160, 89, 0.35);
+        }
+
+        /* Neural Graph Styles */
+        .neural-node circle {
+            transition: all 0.3s var(--ease);
+        }
+        .neural-node:hover circle {
+            transform: scale(1.1);
+            transform-origin: center;
+        }
 
         /* Progress Bars */
         .bar-bg { width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; position: relative; overflow: hidden; transform: translateZ(0); }
@@ -580,99 +622,208 @@
                     <!-- Slide Content Area -->
                     <div id="slide-wrapper" class="relative z-20 w-full md:w-11/12 flex flex-col justify-center min-h-[320px]">
                         
-                        <!-- Slide 0: Bio -->
-                        <div class="data-slide active-slide md:pl-12 text-center md:text-left">
-                            <img src="IMG_20260127_140845_874.webp" alt="Adam Hasani" onerror="this.style.display='none'" class="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-gold p-1 shadow-[0_0_20px_rgba(197,160,89,0.3)] mb-3 mx-auto md:mx-0">
-                            <p class="text-[0.6rem] tracking-[0.25em] uppercase text-white/50 mb-1">11 Feb 2006 — Tegal, ID</p>
-                            <h2 class="font-serif-c text-4xl md:text-6xl leading-none mb-3 drop-shadow-lg">Adam<br>Hasani</h2>
-                            <p class="text-xs md:text-sm text-white/80 leading-relaxed max-w-md mx-auto md:mx-0">
-                                Namaku <span class="text-gold font-medium">Adam Hasani</span>! Sistem aktif diinisiasi 11 Februari 2006. Aktif merancang arsitektur web yang rapi, memberikan interaktivitas, dan mengintegrasikan API untuk menghidupkan proyek AI pribadiku — <span class="text-gold">Flora AI</span> — dengan pondasi <span class="text-gold">JavaScript</span> & <span class="text-gold">Node.js</span>.
-                            </p>
-                        </div>
+                        <!-- Slide 0: Holographic Cyber ID Card -->
+                        <div class="data-slide active-slide md:pl-10 text-left">
+                            <div class="cyber-id-card tilt-card-3d relative mx-auto md:mx-0">
+                                <!-- Top Bar of Badge -->
+                                <div class="flex items-center justify-between border-b border-gold/20 pb-2 mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]"></span>
+                                        <span class="text-[0.6rem] tracking-[0.2em] uppercase font-mono text-emerald-300 font-semibold">LVL-3 SECURITY CLEARANCE</span>
+                                    </div>
+                                    <span class="text-[0.55rem] tracking-widest font-mono text-gold/70">ID: ADM-2006-TGL</span>
+                                </div>
+                                
+                                <!-- Identity Content Row -->
+                                <div class="flex items-center gap-4 mb-3">
+                                    <div class="relative shrink-0">
+                                        <img src="IMG_20260127_140845_874.webp" alt="Adam Hasani" onerror="this.style.display='none'" class="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover border-2 border-gold/70 p-0.5 shadow-[0_0_20px_rgba(197,160,89,0.4)]">
+                                        <div class="absolute -bottom-1 -right-1 bg-obsidian border border-gold/50 rounded-full px-1.5 py-0.2 text-[0.5rem] font-mono text-gold font-bold">ID</div>
+                                    </div>
+                                    <div>
+                                        <p class="text-[0.58rem] tracking-[0.25em] uppercase text-white/50 mb-0.5 font-mono">11 FEB 2006 · TEGAL, ID</p>
+                                        <h2 class="font-serif-c text-3xl md:text-4xl font-bold leading-none text-white drop-shadow-md decode-text" data-text="Adam Hasani">Adam Hasani</h2>
+                                        <p class="text-[0.62rem] text-gold font-mono tracking-wider mt-1 uppercase font-semibold">AI Lead & API Architect</p>
+                                    </div>
+                                </div>
 
-                        <!-- Slide 1: Telemetry -->
-                        <div class="data-slide md:pl-[45%] text-center md:text-left">
-                            <p class="text-[0.6rem] tracking-[0.25em] uppercase text-green-400 mb-2">● Status: Terbuka Kolaborasi</p>
-                            <h2 class="font-serif-c text-5xl md:text-7xl leading-none mb-4 drop-shadow-lg">System<br>Telemetry</h2>
-                            <p class="text-sm text-white/70 mb-8 max-w-sm mx-auto md:mx-0">Live monitor telemetri sistem vital Adam Hasani.</p>
-                            
-                            <div class="flex flex-col gap-4 items-center md:items-start">
-                                <div class="flex items-baseline gap-3">
-                                    <span class="font-serif-c text-3xl md:text-4xl text-gold drop-shadow-[0_0_10px_rgba(197,160,89,0.4)]" id="uptime-el">...</span>
-                                    <p class="text-[0.6rem] uppercase tracking-widest text-white/50">Uptime</p>
-                                </div>
-                                <div class="flex items-baseline gap-3">
-                                    <span class="font-serif-c text-2xl md:text-3xl text-gold drop-shadow-[0_0_10px_rgba(197,160,89,0.4)]" id="time-el">...</span>
-                                    <p class="text-[0.6rem] uppercase tracking-widest text-white/50">WIB Time</p>
-                                </div>
-                                <div class="flex items-baseline gap-3">
-                                    <span class="font-mono text-lg text-gold drop-shadow-[0_0_10px_rgba(197,160,89,0.4)]" id="gh-el">Fetching...</span>
-                                    <p class="text-[0.6rem] uppercase tracking-widest text-white/50">GitHub Status</p>
+                                <!-- Bio Narrative -->
+                                <p class="text-xs text-white/80 leading-relaxed font-sans mb-3 border-t border-white/5 pt-2">
+                                    Merancang arsitektur bot otonom, sistem multi-agent cerdas, dan integrasi API tangguh dengan pondasi <strong class="text-gold font-mono">JavaScript</strong>, <strong class="text-gold font-mono">Node.js (ESM)</strong>, dan <strong class="text-gold font-mono">Three.js WebGL</strong>.
+                                </p>
+
+                                <!-- Badge Footer / PGP Key & Status -->
+                                <div class="flex items-center justify-between bg-black/50 rounded-lg px-2.5 py-1.5 border border-white/10 text-[0.6rem] font-mono">
+                                    <div class="flex items-center gap-2 text-white/60">
+                                        <i class="fas fa-fingerprint text-gold"></i>
+                                        <span id="pgp-key" class="tracking-wider">PGP: 7B4F-8E91-2A06</span>
+                                    </div>
+                                    <button onclick="copyPgpKey(this)" class="text-gold hover:text-white transition-colors uppercase tracking-wider text-[0.55rem] px-2 py-0.5 rounded bg-gold/10 hover:bg-gold/30">
+                                        Copy Key
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Slide 2: Stats -->
-                        <div class="data-slide text-center md:pl-12">
-                            <p class="text-[0.65rem] tracking-[0.3em] uppercase text-gold mb-2">Data Eksplorasi</p>
-                            <h2 class="font-serif-c text-5xl md:text-7xl leading-none mb-8 drop-shadow-lg">Core<br>Metrics</h2>
-                            
-                            <div class="grid grid-cols-2 gap-8 max-w-lg mx-auto md:mx-0 md:ml-auto md:mr-auto">
-                                <div class="text-center">
-                                    <div class="flex items-end justify-center mb-1">
-                                        <span class="stat-counter font-serif-c text-5xl md:text-6xl text-gold drop-shadow-[0_0_15px_rgba(197,160,89,0.5)]" data-target="4">0</span>
-                                        <span class="font-serif-c text-3xl text-gold mb-1">+</span>
+                        <!-- Slide 1: Live Node Telemetry -->
+                        <div class="data-slide md:pl-10 text-left">
+                            <div class="relative bg-black/65 border border-gold/35 rounded-2xl p-4 md:p-5 backdrop-blur-xl max-w-lg mx-auto md:mx-0 shadow-[0_15px_35px_rgba(0,0,0,0.8)]">
+                                <div class="flex items-center justify-between border-b border-gold/20 pb-2 mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]"></span>
+                                        <span class="text-[0.62rem] tracking-[0.2em] uppercase font-mono text-emerald-400 font-bold">NODE LIVE TELEMETRY</span>
                                     </div>
-                                    <p class="text-[0.6rem] uppercase tracking-widest text-white/50">Proyek Utama</p>
+                                    <span class="text-[0.6rem] font-mono text-gold/90 font-semibold" id="live-latency">LATENCY: 18ms</span>
                                 </div>
-                                <div class="text-center">
-                                    <div class="flex items-end justify-center mb-1">
-                                        <span class="stat-counter font-serif-c text-5xl md:text-6xl text-gold drop-shadow-[0_0_15px_rgba(197,160,89,0.5)]" data-target="3">0</span>
+
+                                <h2 class="font-serif-c text-2xl md:text-3xl font-bold mb-3 text-white decode-text" data-text="System Kernel Deck">System Kernel Deck</h2>
+
+                                <div class="grid grid-cols-2 gap-3 mb-3 font-mono text-xs">
+                                    <div class="bg-white/5 border border-white/10 rounded-xl p-2.5">
+                                        <p class="text-[0.55rem] uppercase tracking-widest text-white/50 mb-1">Host Node</p>
+                                        <p class="text-gold font-bold text-sm flex items-center gap-1.5"><i class="fas fa-server text-xs"></i> SGP-VPS (SG-1)</p>
+                                        <p class="text-[0.55rem] text-white/40 mt-0.5">Kernel 5.15 Linux · Ubuntu</p>
                                     </div>
-                                    <p class="text-[0.6rem] uppercase tracking-widest text-white/50">Fokus Tech<br><span class="text-[0.5rem] opacity-60">JS · Node · API</span></p>
+                                    <div class="bg-white/5 border border-white/10 rounded-xl p-2.5">
+                                        <p class="text-[0.55rem] uppercase tracking-widest text-white/50 mb-1">System Uptime</p>
+                                        <p class="text-gold font-bold text-sm flex items-center gap-1.5" id="uptime-el">... <span class="text-[0.55rem] font-normal text-emerald-400">99.9%</span></p>
+                                        <p class="text-[0.55rem] text-white/40 mt-0.5" id="time-el">WIB Time</p>
+                                    </div>
                                 </div>
-                                <div class="text-center">
-                                    <div class="flex items-end justify-center mb-1">
-                                        <span class="stat-counter font-serif-c text-5xl md:text-6xl text-gold drop-shadow-[0_0_15px_rgba(197,160,89,0.5)]" data-target="99">0</span>
-                                        <span class="font-serif-c text-3xl text-gold mb-1">%</span>
+
+                                <div class="flex flex-col gap-2 font-mono text-[0.68rem]">
+                                    <div class="flex items-center justify-between bg-white/[0.03] border border-white/5 rounded-lg px-2.5 py-1.5">
+                                        <span class="text-white/60">Core Runtime:</span>
+                                        <span class="text-gold font-semibold">Node.js 22 (ESM) · Baileys Engine</span>
                                     </div>
-                                    <p class="text-[0.6rem] uppercase tracking-widest text-white/50">Komitmen</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="flex items-end justify-center mb-1">
-                                        <span class="stat-counter font-serif-c text-5xl md:text-6xl text-gold drop-shadow-[0_0_15px_rgba(197,160,89,0.5)]" data-target="3">0</span>
-                                        <span class="font-serif-c text-3xl text-gold mb-1">+</span>
+                                    <div class="flex items-center justify-between bg-white/[0.03] border border-white/5 rounded-lg px-2.5 py-1.5">
+                                        <span class="text-white/60">AI Gateway:</span>
+                                        <span class="text-gold font-semibold">OmniRoute :20128 · Multi-Agent</span>
                                     </div>
-                                    <p class="text-[0.6rem] uppercase tracking-widest text-white/50">Tahun Eksplorasi</p>
+                                    <div class="flex items-center justify-between bg-white/[0.03] border border-white/5 rounded-lg px-2.5 py-1.5">
+                                        <span class="text-white/60">Network Edge:</span>
+                                        <span class="text-emerald-300 font-semibold flex items-center gap-1"><i class="fas fa-shield-alt text-[0.6rem]"></i> Cloudflare Zero-Trust Tunnel</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Slide 3: Skills -->
-                        <div class="data-slide md:pl-12 text-center md:text-left">
-                            <p class="text-[0.65rem] tracking-[0.3em] uppercase text-gold mb-2">Tech Stack</p>
-                            <h2 class="font-serif-c text-5xl md:text-7xl leading-none mb-8 drop-shadow-lg">Core<br>Systems</h2>
-                            
-                            <div class="w-full max-w-md mx-auto md:mx-0 flex flex-col gap-4">
-                                <div>
-                                    <div class="flex justify-between text-[0.65rem] uppercase tracking-wider text-white/80 mb-1"><span>JavaScript (ES6+)</span><span class="text-gold">88%</span></div>
-                                    <div class="bar-bg"><div class="bar-fill" data-width="88%"></div></div>
+                        <!-- Slide 2: Stats (Core Metrics) -->
+                        <div class="data-slide md:pl-10 text-left">
+                            <div class="relative bg-black/65 border border-gold/35 rounded-2xl p-4 md:p-5 backdrop-blur-xl max-w-lg mx-auto md:mx-0 shadow-[0_15px_35px_rgba(0,0,0,0.8)]">
+                                <div class="flex items-center justify-between border-b border-gold/20 pb-2 mb-2">
+                                    <p class="text-[0.6rem] tracking-[0.2em] uppercase font-mono text-gold font-bold">✦ SYSTEM IMPACT & RECORD</p>
+                                    <span class="text-[0.55rem] font-mono text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> VERIFIED</span>
                                 </div>
-                                <div>
-                                    <div class="flex justify-between text-[0.65rem] uppercase tracking-wider text-white/80 mb-1"><span>Node.js</span><span class="text-gold">85%</span></div>
-                                    <div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div>
+                                <h2 class="font-serif-c text-2xl md:text-3xl font-bold mb-3 text-white decode-text" data-text="Core Metrics">Core Metrics</h2>
+                                
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 text-center">
+                                        <div class="flex items-end justify-center mb-0.5">
+                                            <span class="stat-counter font-serif-c text-3xl md:text-4xl text-gold font-bold drop-shadow-[0_0_12px_rgba(197,160,89,0.5)]" data-target="4">0</span>
+                                            <span class="font-serif-c text-2xl text-gold mb-0.5 ml-0.5">+</span>
+                                        </div>
+                                        <p class="text-[0.58rem] uppercase tracking-widest text-white/60 font-mono">Proyek Utama</p>
+                                        <p class="text-[0.5rem] text-white/40 mt-0.5">Flagship & Systems</p>
+                                    </div>
+                                    <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 text-center">
+                                        <div class="flex items-end justify-center mb-0.5">
+                                            <span class="stat-counter font-serif-c text-3xl md:text-4xl text-gold font-bold drop-shadow-[0_0_12px_rgba(197,160,89,0.5)]" data-target="3">0</span>
+                                        </div>
+                                        <p class="text-[0.58rem] uppercase tracking-widest text-white/60 font-mono">Fokus Inti</p>
+                                        <p class="text-[0.5rem] text-white/40 mt-0.5">JS · Node · API</p>
+                                    </div>
+                                    <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 text-center">
+                                        <div class="flex items-end justify-center mb-0.5">
+                                            <span class="stat-counter font-serif-c text-3xl md:text-4xl text-gold font-bold drop-shadow-[0_0_12px_rgba(197,160,89,0.5)]" data-target="99">0</span>
+                                            <span class="font-serif-c text-2xl text-gold mb-0.5 ml-0.5">%</span>
+                                        </div>
+                                        <p class="text-[0.58rem] uppercase tracking-widest text-white/60 font-mono">Uptime SLA</p>
+                                        <p class="text-[0.5rem] text-emerald-400/80 mt-0.5">High Reliability</p>
+                                    </div>
+                                    <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 text-center">
+                                        <div class="flex items-end justify-center mb-0.5">
+                                            <span class="stat-counter font-serif-c text-3xl md:text-4xl text-gold font-bold drop-shadow-[0_0_12px_rgba(197,160,89,0.5)]" data-target="3">0</span>
+                                            <span class="font-serif-c text-2xl text-gold mb-0.5 ml-0.5">+</span>
+                                        </div>
+                                        <p class="text-[0.58rem] uppercase tracking-widest text-white/60 font-mono">Tahun Eksplorasi</p>
+                                        <p class="text-[0.5rem] text-white/40 mt-0.5">Continuous Craft</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="flex justify-between text-[0.65rem] uppercase tracking-wider text-white/80 mb-1"><span>Bot Architecture</span><span class="text-gold">85%</span></div>
-                                    <div class="bar-bg"><div class="bar-fill" data-width="85%"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: Interactive Neural Skill Graph -->
+                        <div class="data-slide md:pl-10 text-left">
+                            <div class="relative bg-black/65 border border-gold/35 rounded-2xl p-4 md:p-5 backdrop-blur-xl max-w-xl mx-auto md:mx-0 shadow-[0_15px_35px_rgba(0,0,0,0.8)]">
+                                <div class="flex items-center justify-between border-b border-gold/20 pb-2 mb-2">
+                                    <p class="text-[0.6rem] tracking-[0.2em] uppercase font-mono text-gold font-bold">✦ INTERACTIVE NEURAL SKILL GRAPH</p>
+                                    <span class="text-[0.55rem] font-mono text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ACTIVE MESH</span>
                                 </div>
-                                <div>
-                                    <div class="flex justify-between text-[0.65rem] uppercase tracking-wider text-white/80 mb-1"><span>Problem Solving</span><span class="text-gold">82%</span></div>
-                                    <div class="bar-bg"><div class="bar-fill" data-width="82%"></div></div>
+                                <h2 class="font-serif-c text-xl md:text-2xl font-bold mb-2 text-white decode-text" data-text="Synaptic Architecture">Synaptic Architecture</h2>
+                                
+                                <!-- Neural SVG Canvas -->
+                                <div class="relative w-full h-[180px] bg-black/40 rounded-xl border border-white/10 overflow-hidden flex items-center justify-center" id="neural-graph-container">
+                                    <svg id="neural-svg" class="w-full h-full" viewBox="0 0 440 180">
+                                        <defs>
+                                            <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
+                                                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                                                <feMerge>
+                                                    <feMergeNode in="blur" />
+                                                    <feMergeNode in="SourceGraphic" />
+                                                </feMerge>
+                                            </filter>
+                                        </defs>
+
+                                        <!-- Synaptic Connecting Lines -->
+                                        <line id="edge-0" x1="220" y1="90" x2="80" y2="45" stroke="rgba(197,160,89,0.35)" stroke-width="2" stroke-dasharray="4,4" class="transition-all duration-300" />
+                                        <line id="edge-1" x1="220" y1="90" x2="80" y2="135" stroke="rgba(197,160,89,0.35)" stroke-width="2" stroke-dasharray="4,4" class="transition-all duration-300" />
+                                        <line id="edge-2" x1="220" y1="90" x2="360" y2="45" stroke="rgba(197,160,89,0.35)" stroke-width="2" stroke-dasharray="4,4" class="transition-all duration-300" />
+                                        <line id="edge-3" x1="220" y1="90" x2="360" y2="135" stroke="rgba(197,160,89,0.35)" stroke-width="2" stroke-dasharray="4,4" class="transition-all duration-300" />
+
+                                        <!-- Peripheral Nodes -->
+                                        <!-- Node 0: AI Agents -->
+                                        <g class="neural-node cursor-pointer group" onmouseenter="inspectNode(0)" onclick="inspectNode(0)">
+                                            <circle cx="80" cy="45" r="16" fill="#0A1612" stroke="#38bdf8" stroke-width="2" class="group-hover:stroke-white transition-all" filter="url(#glow-gold)"></circle>
+                                            <text x="80" y="49" font-family="'DM Mono', monospace" font-size="9" fill="#38bdf8" text-anchor="middle" font-weight="bold">AI</text>
+                                            <text x="80" y="70" font-family="'DM Mono', monospace" font-size="7.5" fill="#a0aec0" text-anchor="middle">AGENTS</text>
+                                        </g>
+
+                                        <!-- Node 1: WA Engine -->
+                                        <g class="neural-node cursor-pointer group" onmouseenter="inspectNode(1)" onclick="inspectNode(1)">
+                                            <circle cx="80" cy="135" r="16" fill="#0A1612" stroke="#34d399" stroke-width="2" class="group-hover:stroke-white transition-all" filter="url(#glow-gold)"></circle>
+                                            <text x="80" y="139" font-family="'DM Mono', monospace" font-size="9" fill="#34d399" text-anchor="middle" font-weight="bold">WA</text>
+                                            <text x="80" y="160" font-family="'DM Mono', monospace" font-size="7.5" fill="#a0aec0" text-anchor="middle">ENGINES</text>
+                                        </g>
+
+                                        <!-- Node 2: 3D WebGL -->
+                                        <g class="neural-node cursor-pointer group" onmouseenter="inspectNode(2)" onclick="inspectNode(2)">
+                                            <circle cx="360" cy="45" r="16" fill="#0A1612" stroke="#f43f5e" stroke-width="2" class="group-hover:stroke-white transition-all" filter="url(#glow-gold)"></circle>
+                                            <text x="360" y="49" font-family="'DM Mono', monospace" font-size="9" fill="#f43f5e" text-anchor="middle" font-weight="bold">WEB</text>
+                                            <text x="360" y="70" font-family="'DM Mono', monospace" font-size="7.5" fill="#a0aec0" text-anchor="middle">THREE.JS</text>
+                                        </g>
+
+                                        <!-- Node 3: Cloud & VPS -->
+                                        <g class="neural-node cursor-pointer group" onmouseenter="inspectNode(3)" onclick="inspectNode(3)">
+                                            <circle cx="360" cy="135" r="16" fill="#0A1612" stroke="#eab308" stroke-width="2" class="group-hover:stroke-white transition-all" filter="url(#glow-gold)"></circle>
+                                            <text x="360" y="139" font-family="'DM Mono', monospace" font-size="9" fill="#eab308" text-anchor="middle" font-weight="bold">OPS</text>
+                                            <text x="360" y="160" font-family="'DM Mono', monospace" font-size="7.5" fill="#a0aec0" text-anchor="middle">CLOUD/VPS</text>
+                                        </g>
+
+                                        <!-- Center Hub: ADAM CORE -->
+                                        <g class="neural-node cursor-pointer group" onmouseenter="inspectNode('hub')" onclick="inspectNode('hub')">
+                                            <circle cx="220" cy="90" r="23" fill="#050B08" stroke="#C5A059" stroke-width="2.5" filter="url(#glow-gold)"></circle>
+                                            <circle cx="220" cy="90" r="27" fill="none" stroke="#C5A059" stroke-width="1" stroke-dasharray="3,3" opacity="0.6" class="animate-spin origin-center"></circle>
+                                            <text x="220" y="93" font-family="'Cinzel', serif" font-size="9.5" fill="#C5A059" text-anchor="middle" font-weight="bold">ADAM</text>
+                                            <text x="220" y="103" font-family="'DM Mono', monospace" font-size="6.5" fill="#ffffff" text-anchor="middle" letter-spacing="1">CORE</text>
+                                        </g>
+                                    </svg>
                                 </div>
-                                <div>
-                                    <div class="flex justify-between text-[0.65rem] uppercase tracking-wider text-white/80 mb-1"><span>REST API Integrations</span><span class="text-gold">90%</span></div>
-                                    <div class="bar-bg"><div class="bar-fill" data-width="90%"></div></div>
+
+                                <!-- Dynamic Circuit Inspector Box -->
+                                <div id="neural-inspect-box" class="mt-2 text-left text-[0.68rem] font-mono text-gold px-3 py-1.5 rounded-lg bg-black/50 border border-gold/25 flex items-center justify-between">
+                                    <span id="neural-inspect-desc">✦ Hover / klik node untuk inspeksi arsitektur sirkuit</span>
+                                    <span id="neural-inspect-tag" class="text-[0.55rem] uppercase px-1.5 py-0.5 rounded bg-gold/20 text-gold font-bold">READY</span>
                                 </div>
                             </div>
                         </div>
@@ -1258,6 +1409,12 @@
                 slide.style.pointerEvents = i === idx ? 'auto' : 'none';
                 
                 if (i === idx) {
+                    const decodeEls = slide.querySelectorAll('.decode-text');
+                    decodeEls.forEach(el => {
+                        const txt = el.getAttribute('data-text') || el.innerText;
+                        decodeGlitch(el, txt, 280);
+                    });
+
                     const counters = slide.querySelectorAll('.stat-counter');
                     counters.forEach(c => {
                         if (!animatedCounters.has(c)) {
@@ -1265,15 +1422,99 @@
                             animateCounter(c);
                         }
                     });
-                    
-                    const bars = slide.querySelectorAll('.bar-fill');
-                    bars.forEach(b => {
-                        b.style.transform = 'scaleX(0)';
-                        setTimeout(() => b.style.transform = `scaleX(${parseInt(b.getAttribute('data-width')) / 100})`, 100);
-                    });
                 }
             });
         };
+
+        /* --- Cyber Decode Glitch & Interactive Functions --- */
+        window.decodeGlitch = (el, targetText, duration = 280) => {
+            if (!el) return;
+            const chars = '01#@$%&*<>~/[]_';
+            const length = targetText.length;
+            const start = performance.now();
+            function frame(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const resolvedChars = Math.floor(progress * length);
+                let output = targetText.slice(0, resolvedChars);
+                for (let i = resolvedChars; i < length; i++) {
+                    if (targetText[i] === ' ' || targetText[i] === '\n') output += targetText[i];
+                    else output += chars[Math.floor(Math.random() * chars.length)];
+                }
+                el.innerText = output;
+                if (progress < 1) requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        };
+
+        window.copyPgpKey = (btn) => {
+            playSfx('triangle', 450, 900, 0.08, 0.1);
+            navigator.clipboard.writeText('7B4F-8E91-2A06-TGL').catch(() => {});
+            const orig = btn.innerText;
+            btn.innerText = 'COPIED! ✅';
+            btn.classList.add('text-emerald-400');
+            setTimeout(() => {
+                btn.innerText = orig;
+                btn.classList.remove('text-emerald-400');
+            }, 2000);
+        };
+
+        const NODE_INFO = {
+            0: {
+                desc: 'OmniRoute Multi-Agent Gateway · Autonomous LLM Tool-Calling · Vector Memory',
+                tag: 'AI MESH'
+            },
+            1: {
+                desc: 'Baileys WebSocket Relay · Multi-Device Keepalive · Autonomous Plugin Pipeline',
+                tag: 'BOT CORE'
+            },
+            2: {
+                desc: 'GPU-Accelerated 3D Viewport · Model-Viewer GlTF 2.0 · 60fps Micro-interactions',
+                tag: 'WEB 3D'
+            },
+            3: {
+                desc: 'Linux Kernel Daemon (PM2) · Cloudflare Zero-Trust Tunnels · Microservice Isolation',
+                tag: 'DEVOPS'
+            },
+            'hub': {
+                desc: 'Adam OS Nexus Core · Central Intelligence & Dispatching Architecture',
+                tag: 'NEXUS'
+            }
+        };
+
+        window.inspectNode = (nodeKey) => {
+            playSfx('sine', 600, 1100, 0.05, 0.09);
+            const descEl = document.getElementById('neural-inspect-desc');
+            const tagEl = document.getElementById('neural-inspect-tag');
+            const data = NODE_INFO[nodeKey];
+            if (data && descEl && tagEl) {
+                decodeGlitch(descEl, data.desc, 220);
+                tagEl.innerText = data.tag;
+            }
+
+            // Highlight corresponding edge
+            for (let i = 0; i <= 3; i++) {
+                const edge = document.getElementById(`edge-${i}`);
+                if (edge) {
+                    if (nodeKey === i || nodeKey === 'hub') {
+                        edge.setAttribute('stroke', '#C5A059');
+                        edge.setAttribute('stroke-width', '3');
+                        edge.style.opacity = '1';
+                    } else {
+                        edge.setAttribute('stroke', 'rgba(197,160,89,0.25)');
+                        edge.setAttribute('stroke-width', '2');
+                        edge.style.opacity = '0.5';
+                    }
+                }
+            }
+        };
+
+        setInterval(() => {
+            const pingEl = document.getElementById('live-latency');
+            if (pingEl) {
+                const ms = Math.floor(Math.random() * 6) + 16;
+                pingEl.innerText = `LATENCY: ${ms}ms`;
+            }
+        }, 3000);
 
         window.nextSlide = () => goToSlide(currentSlideIdx + 1);
 
@@ -1285,7 +1526,7 @@
         const animateCounter = (el) => {
             const target = parseInt(el.getAttribute('data-target'));
             if (isNaN(target)) return;
-            const duration = 2000, start = performance.now();
+            const duration = 900, start = performance.now();
             const step = (now) => {
                 const progress = Math.min((now - start) / duration, 1);
                 const easeProgress = 1 - Math.pow(1 - progress, 3);
