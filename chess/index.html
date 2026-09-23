@@ -17,7 +17,7 @@
             --gold: #C5A059;
             --gold-light: #E8D4A8;
             --emerald: #10b981;
-            --obsidian: #050B08;
+            --obsidian: #070c09;
             --danger: #ef4444;
             --board-light: #eeeed2;
             --board-dark: #769656;
@@ -28,7 +28,10 @@
             -webkit-tap-highlight-color: transparent;
         }
         body {
-            background-color: #060c09;
+            background-color: var(--obsidian);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(197, 160, 89, 0.04) 0%, transparent 40%);
             color: #fff;
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
@@ -37,22 +40,23 @@
         .font-mono { font-family: 'DM Mono', monospace; }
         .font-serif-c { font-family: 'Cinzel', serif; }
         
-        .glass-panel {
-            background: rgba(12, 22, 17, 0.75);
-            border: 1px solid rgba(197, 160, 89, 0.25);
+        .deck-card {
+            background: rgba(13, 21, 17, 0.85);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
         }
 
-        /* Chess Board Styles (Tournament Standard) */
-        .board-wrapper {
+        /* Chess Board Styles */
+        .board-container {
             position: relative;
             width: 100%;
-            max-width: 480px;
+            max-width: 460px;
             aspect-ratio: 1 / 1;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(16, 185, 129, 0.15);
-            border: 4px solid #1f3328;
+            border-radius: 10px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85), 0 0 20px rgba(16, 185, 129, 0.12);
+            border: 3px solid #1c2e24;
             overflow: hidden;
         }
         .chess-grid {
@@ -68,7 +72,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background-color 0.15s ease;
+            transition: background-color 0.12s ease;
         }
         .sq-light { background-color: #eeeed2; }
         .sq-dark { background-color: #769656; }
@@ -88,8 +92,8 @@
         .sq-target-empty::after {
             content: '';
             position: absolute;
-            width: 28%;
-            height: 28%;
+            width: 26%;
+            height: 26%;
             border-radius: 50%;
             background: rgba(0, 0, 0, 0.22);
             pointer-events: none;
@@ -104,7 +108,7 @@
             pointer-events: none;
         }
 
-        /* Board Coordinate Labels */
+        /* Board Coordinates */
         .coord-rank {
             position: absolute;
             top: 2px;
@@ -113,7 +117,7 @@
             font-weight: 700;
             line-height: 1;
             pointer-events: none;
-            opacity: 0.7;
+            opacity: 0.75;
         }
         .coord-file {
             position: absolute;
@@ -123,7 +127,7 @@
             font-weight: 700;
             line-height: 1;
             pointer-events: none;
-            opacity: 0.7;
+            opacity: 0.75;
         }
         .sq-light .coord-rank, .sq-light .coord-file { color: #769656; }
         .sq-dark .coord-rank, .sq-dark .coord-file { color: #eeeed2; }
@@ -141,247 +145,273 @@
             transform: scale(1.08);
         }
 
-        /* Custom Scrollbar */
+        /* Custom Tabs */
+        .tab-btn {
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
     </style>
 </head>
-<body class="flex flex-col justify-between p-3 md:p-6">
+<body class="p-3 md:p-6 flex flex-col justify-between items-center">
 
-    <!-- TOP BAR -->
-    <header class="max-w-6xl mx-auto w-full flex items-center justify-between mb-4">
-        <div class="flex items-center gap-3">
-            <a href="../desktop.html" class="glass-panel px-3.5 py-2 rounded-xl text-xs font-mono text-gold hover:text-white flex items-center gap-2 transition-colors">
-                <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Hub</span>
-            </a>
-            <div>
-                <h1 class="font-serif-c text-base md:text-xl font-bold tracking-wide text-white flex items-center gap-2">
-                    <span>DROSOPHILA GAMBIT</span>
-                    <span class="text-[0.6rem] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">139K NEURONS</span>
-                </h1>
-                <p class="text-[0.6rem] font-mono text-white/50">Simulasi Connectome FlyWire (Nature 2024) · Zero Stockfish / Pure Biological LIF</p>
-            </div>
-        </div>
-
-        <!-- SOUND & REINFORCEMENT STATUS -->
-        <div class="flex items-center gap-2">
-            <button id="btn-sound" onclick="toggleSound()" class="glass-panel px-3 py-1.5 rounded-xl text-xs font-mono text-gold hover:text-white flex items-center gap-1.5 transition-colors" title="Toggle Sound">
-                <i class="fas fa-volume-up" id="sound-icon"></i>
-            </button>
-            <div class="glass-panel px-3 py-1.5 rounded-xl hidden sm:flex items-center gap-2 text-xs font-mono">
-                <i class="fas fa-dna text-emerald-400"></i>
-                <span class="text-white/60">Hebbian Memory:</span>
-                <strong id="hebbian-counter" class="text-gold font-bold">0 Synapses</strong>
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN CHESS ARENA -->
-    <main class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+    <!-- MASTER WRAPPER (MAX-W 1200PX) -->
+    <div class="w-full max-w-6xl mx-auto flex flex-col gap-4">
         
-        <!-- LEFT: CHESSBOARD COLUMN (7 COLS) -->
-        <div class="lg:col-span-7 flex flex-col items-center">
-            
-            <!-- OPPONENT CARD (BLACK / THE FLY BRAIN) -->
-            <div class="glass-panel w-full max-w-[480px] p-3 rounded-2xl mb-2.5 flex items-center justify-between border-emerald-500/30">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-black/60 border border-emerald-500/50 flex items-center justify-center text-xl shrink-0">
-                        🪰
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-mono text-xs font-bold text-white">Drosophila Melanogaster</span>
-                            <span id="fly-status-badge" class="text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400">READY</span>
-                        </div>
-                        <!-- Captured Pieces by Black -->
-                        <div id="black-captured" class="flex items-center gap-1 mt-0.5 min-h-[16px]">
-                            <!-- Injected via JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-right">
-                    <p class="text-[0.55rem] font-mono text-white/40">DOPAMIN PAM</p>
-                    <p id="top-dopamine-val" class="font-mono text-xs text-gold font-bold">0.00 μM</p>
+        <!-- HEADER BAR: CLEAN & UNIFIED -->
+        <header class="deck-card px-4 py-3 rounded-2xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="../desktop.html" class="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-xs font-mono text-gold hover:text-white hover:border-gold flex items-center gap-1.5 transition-colors">
+                    <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">Hub</span>
+                </a>
+                <div>
+                    <h1 class="font-serif-c text-sm sm:text-lg md:text-xl font-bold tracking-wide text-white flex items-center gap-2">
+                        <span>DROSOPHILA GAMBIT</span>
+                        <span class="text-[0.6rem] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">139K FLYWIRE</span>
+                    </h1>
+                    <p class="text-[0.6rem] font-mono text-white/50 hidden sm:block">Bio-Connectome Leaky Integrate-and-Fire Simulation vs Human · Zero Stockfish</p>
                 </div>
             </div>
 
-            <!-- CHESSBOARD BOARD WRAPPER -->
-            <div class="board-wrapper">
-                <div id="chessboard" class="chess-grid">
-                    <!-- 64 Squares injected via JavaScript -->
+            <!-- STATUS CAPSULES -->
+            <div class="flex items-center gap-2">
+                <button id="btn-sound" onclick="toggleSound()" class="px-2.5 py-1.5 rounded-xl bg-black/40 border border-white/10 text-xs font-mono text-gold hover:text-white transition-colors" title="Toggle Sound">
+                    <i class="fas fa-volume-up" id="sound-icon"></i>
+                </button>
+                <div class="px-3 py-1.5 rounded-xl bg-black/40 border border-emerald-500/20 flex items-center gap-2 text-xs font-mono">
+                    <i class="fas fa-dna text-emerald-400"></i>
+                    <span class="text-white/50 hidden md:inline">Hebbian:</span>
+                    <strong id="hebbian-counter" class="text-emerald-400 font-bold">0 Synapses</strong>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN ARENA: 2 EQUAL BALANCED COLUMNS -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            <!-- LEFT COLUMN: CHESS ARENA (7 COLUMNS) -->
+            <section class="lg:col-span-7 flex flex-col items-center">
+                
+                <!-- OPPONENT CARD (BLACK / THE FLY) -->
+                <div class="deck-card w-full max-w-[460px] p-2.5 rounded-t-2xl border-b-0 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-black/80 border border-emerald-500/40 flex items-center justify-center text-lg shrink-0">
+                            🪰
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono text-xs font-bold text-white">Drosophila Melanogaster</span>
+                                <span id="fly-status-badge" class="text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-medium">READY</span>
+                            </div>
+                            <div id="black-captured" class="flex items-center gap-1 mt-0.5 min-h-[14px]">
+                                <!-- Captured by Black injected here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <span class="text-[0.55rem] font-mono text-white/40 block">DOPAMIN PAM</span>
+                        <span id="top-dopamine-val" class="font-mono text-xs text-gold font-bold">0.00 μM</span>
+                    </div>
                 </div>
 
-                <!-- GAME OVER BANNER -->
-                <div id="game-over-modal" class="absolute inset-0 z-20 glass-panel rounded-xl flex flex-col items-center justify-center p-6 text-center hidden bg-black/85">
-                    <h3 id="game-over-title" class="font-serif-c text-2xl font-bold text-gold mb-2">GAME OVER</h3>
-                    <p id="game-over-desc" class="text-xs font-mono text-white/80 mb-5 leading-relaxed">Status Permainan</p>
-                    <button onclick="resetGame()" class="px-5 py-2.5 rounded-xl bg-gold text-obsidian font-mono text-xs font-bold shadow-[0_0_15px_rgba(197,160,89,0.5)] hover:scale-105 active:scale-95 transition-transform">
-                        MAIN LAGI (REMATCH)
-                    </button>
+                <!-- CHESSBOARD BOARD CONTAINER -->
+                <div class="board-container">
+                    <div id="chessboard" class="chess-grid">
+                        <!-- 64 Squares injected via JavaScript -->
+                    </div>
+
+                    <!-- GAME OVER MODAL -->
+                    <div id="game-over-modal" class="absolute inset-0 z-20 deck-card rounded-xl flex flex-col items-center justify-center p-6 text-center hidden bg-black/90">
+                        <h3 id="game-over-title" class="font-serif-c text-2xl font-bold text-gold mb-2">GAME OVER</h3>
+                        <p id="game-over-desc" class="text-xs font-mono text-white/80 mb-5 leading-relaxed">Status Permainan</p>
+                        <button onclick="resetGame()" class="px-5 py-2.5 rounded-xl bg-gold text-obsidian font-mono text-xs font-bold shadow-[0_0_15px_rgba(197,160,89,0.5)] hover:scale-105 active:scale-95 transition-transform">
+                            MAIN LAGI (REMATCH)
+                        </button>
+                    </div>
+
+                    <!-- PROMOTION SELECTION MODAL -->
+                    <div id="promotion-modal" class="absolute inset-0 z-30 deck-card rounded-xl flex flex-col items-center justify-center p-4 text-center hidden bg-black/95 backdrop-blur-md">
+                        <p class="text-[0.65rem] font-mono text-gold uppercase tracking-widest font-bold mb-1">PROMOSI PION</p>
+                        <h3 class="font-serif-c text-base md:text-lg font-bold text-white mb-4">PILIH BIDAK PENGGANTI</h3>
+                        
+                        <div class="grid grid-cols-4 gap-2.5 max-w-xs w-full mb-4" id="promotion-options">
+                            <!-- Injected dynamically -->
+                        </div>
+
+                        <button onclick="cancelPromotion()" class="text-xs font-mono text-white/50 hover:text-white px-3 py-1 rounded bg-white/10 transition-colors">
+                            Batal
+                        </button>
+                    </div>
                 </div>
 
-                <!-- PROMOTION SELECTION MODAL -->
-                <div id="promotion-modal" class="absolute inset-0 z-30 glass-panel rounded-xl flex flex-col items-center justify-center p-4 text-center hidden bg-black/90 backdrop-blur-md">
-                    <p class="text-[0.65rem] font-mono text-gold uppercase tracking-widest font-bold mb-1">PROMOSI PION</p>
-                    <h3 class="font-serif-c text-lg font-bold text-white mb-4">PILIH BIDAK PENGGANTI</h3>
+                <!-- PLAYER CARD (WHITE / HUMAN) -->
+                <div class="deck-card w-full max-w-[460px] p-2.5 rounded-b-2xl border-t-0 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-900/50 to-black border border-gold/40 flex items-center justify-center text-base shrink-0">
+                            🧑💻
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono text-xs font-bold text-gold">Adam Hasani</span>
+                                <span class="text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-gold/20 text-gold font-medium">WHITE</span>
+                            </div>
+                            <div id="white-captured" class="flex items-center gap-1 mt-0.5 min-h-[14px]">
+                                <!-- Captured by White injected here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <span class="text-[0.55rem] font-mono text-white/40 block">GILIRAN</span>
+                        <span id="turn-indicator" class="font-mono text-xs text-emerald-400 font-bold">Giliranmu</span>
+                    </div>
+                </div>
+
+                <!-- GAME CONTROLS TOOLBAR -->
+                <div class="w-full max-w-[460px] mt-2 flex items-center justify-between gap-2 px-1">
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="undoMove()" class="deck-card px-3 py-1.5 rounded-xl text-xs font-mono text-white/80 hover:text-gold flex items-center gap-1.5 transition-colors">
+                            <i class="fas fa-undo"></i> <span>Undo</span>
+                        </button>
+                        <button onclick="resetGame()" class="deck-card px-3 py-1.5 rounded-xl text-xs font-mono text-white/80 hover:text-gold flex items-center gap-1.5 transition-colors">
+                            <i class="fas fa-redo"></i> <span>Reset</span>
+                        </button>
+                        <button onclick="clearBrainMemory()" class="deck-card px-3 py-1.5 rounded-xl text-xs font-mono text-amber-300 hover:text-white flex items-center gap-1.5 transition-colors">
+                            <i class="fas fa-trash-alt"></i> <span>Naive</span>
+                        </button>
+                    </div>
+
+                    <div class="text-[0.65rem] font-mono text-white/40">
+                        <span id="move-count">0 Langkah</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- RIGHT COLUMN: TELEMETRY & DECISION DECK (5 COLUMNS) -->
+            <section class="lg:col-span-5 flex flex-col gap-3.5">
+                
+                <!-- 1. BIOLOGICAL SENSORS (COMPACT 2x2 GRID) -->
+                <div class="deck-card p-3.5 rounded-2xl">
+                    <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
+                        <span class="text-xs font-mono font-bold text-white flex items-center gap-2">
+                            <i class="fas fa-wave-square text-emerald-400"></i> SENSORIK & NEUROTRANSMITTER
+                        </span>
+                        <span class="text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">LIVE LIF</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2.5 font-mono text-xs">
+                        <!-- Sensor 1: Sweet -->
+                        <div class="bg-black/40 p-2.5 rounded-xl border border-white/5">
+                            <div class="flex justify-between items-center text-[0.6rem] text-emerald-400 mb-1">
+                                <span class="flex items-center gap-1"><i class="fas fa-cube"></i> Gula/Makan</span>
+                                <strong id="val-sweet" class="text-white">0.0 mV</strong>
+                            </div>
+                            <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden">
+                                <div id="bar-sweet" class="h-full bg-emerald-400 transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Sensor 2: Threat -->
+                        <div class="bg-black/40 p-2.5 rounded-xl border border-white/5">
+                            <div class="flex justify-between items-center text-[0.6rem] text-rose-400 mb-1">
+                                <span class="flex items-center gap-1"><i class="fas fa-shield-alt"></i> Ancaman/Takut</span>
+                                <strong id="val-threat" class="text-white">0.0 mV</strong>
+                            </div>
+                            <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden">
+                                <div id="bar-threat" class="h-full bg-rose-400 transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Sensor 3: Dopamine -->
+                        <div class="bg-black/40 p-2.5 rounded-xl border border-white/5">
+                            <div class="flex justify-between items-center text-[0.6rem] text-gold mb-1">
+                                <span class="flex items-center gap-1"><i class="fas fa-bolt"></i> Dopamin PAM</span>
+                                <strong id="val-dopamine" class="text-white">0.00 μM</strong>
+                            </div>
+                            <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden">
+                                <div id="bar-dopamine" class="h-full bg-gold transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Sensor 4: Startle Escape -->
+                        <div class="bg-black/40 p-2.5 rounded-xl border border-white/5">
+                            <div class="flex justify-between items-center text-[0.6rem] text-amber-300 mb-1">
+                                <span class="flex items-center gap-1"><i class="fas fa-running"></i> Refleks Kabur</span>
+                                <strong id="val-startle" class="text-white">0.0 mV</strong>
+                            </div>
+                            <div class="w-full h-1.5 bg-black/60 rounded-full overflow-hidden">
+                                <div id="bar-startle" class="h-full bg-amber-300 transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. SYNAPTIC DECISION MATRIX (POTENSIAL AKSI LEADERBOARD) -->
+                <div class="deck-card p-3.5 rounded-2xl flex flex-col">
+                    <div class="flex items-center justify-between mb-2.5 border-b border-white/10 pb-2">
+                        <span class="text-xs font-mono font-bold text-white flex items-center gap-1.5">
+                            <i class="fas fa-microchip text-gold"></i> MATRIKS KEPUTUSAN SINAPSIS
+                        </span>
+                        <span class="text-[0.55rem] font-mono text-white/40">POTENSIAL AKSI (mV)</span>
+                    </div>
+
+                    <div class="overflow-y-auto max-h-40 text-[0.65rem] font-mono space-y-1.5 pr-1" id="candidate-list">
+                        <p class="text-white/40 italic py-6 text-center">Menunggu langkah White untuk simulasi saraf...</p>
+                    </div>
+                </div>
+
+                <!-- 3. TABBED TERMINAL: PGN NOTATION & BIOLOGICAL LOG -->
+                <div class="deck-card p-3.5 rounded-2xl flex flex-col">
                     
-                    <div class="grid grid-cols-4 gap-2.5 max-w-xs w-full mb-4" id="promotion-options">
-                        <!-- Injected dynamically -->
+                    <!-- TAB HEADERS -->
+                    <div class="flex items-center gap-2 mb-2.5 border-b border-white/10 pb-2">
+                        <button onclick="switchTab('log')" id="tab-btn-log" class="tab-btn active px-3 py-1 rounded-lg border border-transparent text-xs font-mono font-bold flex items-center gap-1.5">
+                            <i class="fas fa-terminal"></i> Log Biologis
+                        </button>
+                        <button onclick="switchTab('pgn')" id="tab-btn-pgn" class="tab-btn px-3 py-1 rounded-lg border border-transparent text-xs font-mono text-white/50 hover:text-white flex items-center gap-1.5">
+                            <i class="fas fa-list-ol"></i> Notasi PGN
+                        </button>
                     </div>
 
-                    <button onclick="cancelPromotion()" class="text-xs font-mono text-white/60 hover:text-white px-3 py-1 rounded bg-white/10 transition-colors">
-                        Batal
-                    </button>
-                </div>
-            </div>
-
-            <!-- PLAYER CARD (WHITE / HUMAN) -->
-            <div class="glass-panel w-full max-w-[480px] p-3 rounded-2xl mt-2.5 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-900/40 to-black border border-gold/40 flex items-center justify-center text-lg shrink-0">
-                        🧑💻
+                    <!-- TAB BODY 1: BIOLOGICAL THOUGHT LOG -->
+                    <div id="tab-body-log" class="min-h-[85px] max-h-[110px] overflow-y-auto bg-black/50 p-2.5 rounded-xl border border-white/5 text-xs font-mono text-white/85 leading-relaxed">
+                        <p id="thought-log">🪰 Sistem siap. Jalankan bidak Putih untuk memulai duel dengan sirkuit saraf lalat.</p>
                     </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-mono text-xs font-bold text-gold">Adam Hasani</span>
-                            <span class="text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-gold/20 text-gold">WHITE</span>
-                        </div>
-                        <!-- Captured Pieces by White -->
-                        <div id="white-captured" class="flex items-center gap-1 mt-0.5 min-h-[16px]">
-                            <!-- Injected via JS -->
+
+                    <!-- TAB BODY 2: PGN MOVE HISTORY -->
+                    <div id="tab-body-pgn" class="hidden min-h-[85px] max-h-[110px] overflow-y-auto bg-black/50 p-2.5 rounded-xl border border-white/5 text-xs font-mono text-white/70 space-y-1">
+                        <div id="pgn-history">
+                            <span class="italic text-white/30">Belum ada langkah</span>
                         </div>
                     </div>
+
                 </div>
 
-                <!-- CONTROLS -->
-                <div class="flex items-center gap-1.5">
-                    <button onclick="undoMove()" class="glass-panel px-2.5 py-1.5 rounded-xl text-[0.65rem] font-mono text-white/80 hover:text-gold flex items-center gap-1 transition-colors" title="Tarik Kembali Langkah">
-                        <i class="fas fa-undo"></i> Undo
-                    </button>
-                    <button onclick="resetGame()" class="glass-panel px-2.5 py-1.5 rounded-xl text-[0.65rem] font-mono text-white/80 hover:text-gold flex items-center gap-1 transition-colors" title="Ulang Permainan">
-                        <i class="fas fa-redo"></i> Reset
-                    </button>
-                    <button onclick="clearBrainMemory()" class="glass-panel px-2.5 py-1.5 rounded-xl text-[0.65rem] font-mono text-amber-300 hover:text-white flex items-center gap-1 transition-colors" title="Kosongkan Memori Lalat">
-                        <i class="fas fa-trash-alt"></i> Naive
-                    </button>
-                </div>
-            </div>
+            </section>
 
         </div>
 
-        <!-- RIGHT: LIVE CONNECTOME TELEMETRY HUD (5 COLS) -->
-        <div class="lg:col-span-5 flex flex-col gap-3">
-            
-            <!-- BIOLOGICAL SENSOR RECEPTOR GAUGES -->
-            <div class="glass-panel p-4 rounded-2xl">
-                <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
-                    <span class="text-xs font-mono font-bold text-white flex items-center gap-2">
-                        <i class="fas fa-brain text-emerald-400"></i> TELEMETRI RESEPTOR LALAT
-                    </span>
-                    <span class="text-[0.6rem] font-mono text-emerald-400 font-bold">139K FLYWIRE LIF</span>
-                </div>
+        <!-- FOOTER -->
+        <footer class="text-center py-2">
+            <p class="text-[0.6rem] font-mono text-white/35">
+                Drosophila Melanogaster Connectome · Dorkenwald et al. (Nature 2024) · 139,255 Neurons & 54.5M Synapses · 100% On-Device
+            </p>
+        </footer>
 
-                <!-- 4 Biological Channels -->
-                <div class="space-y-2.5 font-mono text-xs">
-                    <!-- 1. Sweet / Capture Reward -->
-                    <div>
-                        <div class="flex justify-between text-[0.65rem] mb-1">
-                            <span class="text-emerald-400 flex items-center gap-1.5"><i class="fas fa-cookie-bite"></i> GUS_GRN_SWEET (Rasa Manis / Makan Bidak)</span>
-                            <span id="val-sweet" class="text-white font-bold">0.0 mV</span>
-                        </div>
-                        <div class="w-full h-2 bg-black/60 rounded-full overflow-hidden border border-white/10">
-                            <div id="bar-sweet" class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                    </div>
+    </div>
 
-                    <!-- 2. Looming Threat / Danger -->
-                    <div>
-                        <div class="flex justify-between text-[0.65rem] mb-1">
-                            <span class="text-rose-400 flex items-center gap-1.5"><i class="fas fa-eye"></i> VIS_LC (Ancaman Bayangan / Bahaya)</span>
-                            <span id="val-threat" class="text-white font-bold">0.0 mV</span>
-                        </div>
-                        <div class="w-full h-2 bg-black/60 rounded-full overflow-hidden border border-white/10">
-                            <div id="bar-threat" class="h-full bg-gradient-to-r from-rose-600 to-rose-400 transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                    </div>
-
-                    <!-- 3. Dopamine Concentration -->
-                    <div>
-                        <div class="flex justify-between text-[0.65rem] mb-1">
-                            <span class="text-gold flex items-center gap-1.5"><i class="fas fa-bolt"></i> MB_DAN_REW (Konsentrasi Dopamin PAM)</span>
-                            <span id="val-dopamine" class="text-white font-bold">0.00 μM</span>
-                        </div>
-                        <div class="w-full h-2 bg-black/60 rounded-full overflow-hidden border border-white/10">
-                            <div id="bar-dopamine" class="h-full bg-gradient-to-r from-amber-600 to-gold transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                    </div>
-
-                    <!-- 4. Startle Escape Motor -->
-                    <div>
-                        <div class="flex justify-between text-[0.65rem] mb-1">
-                            <span class="text-amber-300 flex items-center gap-1.5"><i class="fas fa-wind"></i> DN_STARTLE (Refleks Kabur / Escape)</span>
-                            <span id="val-startle" class="text-white font-bold">0.0 mV</span>
-                        </div>
-                        <div class="w-full h-2 bg-black/60 rounded-full overflow-hidden border border-white/10">
-                            <div id="bar-startle" class="h-full bg-gradient-to-r from-amber-600 to-amber-300 transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CANDIDATE MOVES EVALUATION TABLE -->
-            <div class="glass-panel p-4 rounded-2xl flex-1 flex flex-col min-h-[220px]">
-                <div class="flex items-center justify-between mb-2 border-b border-white/10 pb-2">
-                    <span class="text-xs font-mono font-bold text-white flex items-center gap-1.5">
-                        <i class="fas fa-microchip text-gold"></i> PERTIMBANGAN POTENSIAL AKSI
-                    </span>
-                    <span class="text-[0.6rem] font-mono text-white/50">RANKED BY mV</span>
-                </div>
-
-                <div class="overflow-y-auto max-h-44 text-[0.65rem] font-mono space-y-1.5 pr-1" id="candidate-list">
-                    <p class="text-white/40 italic py-6 text-center">Menunggu langkah White untuk simulasi sinapsis...</p>
-                </div>
-            </div>
-
-            <!-- NATURAL BIOLOGICAL THOUGHT LOG & MOVE HISTORY -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <!-- Thought Log -->
-                <div class="glass-panel p-3.5 rounded-2xl flex flex-col justify-between">
-                    <div>
-                        <span class="text-[0.6rem] font-mono text-white/50 block mb-1">LOG BIOLOGIS:</span>
-                        <p id="thought-log" class="text-xs font-mono text-white/90 leading-relaxed bg-black/40 p-2.5 rounded-xl border border-white/5 min-h-[64px]">
-                            🪰 Simulasi aktif. Silakan pilih dan gerakkan bidak Putih.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Move History SAN -->
-                <div class="glass-panel p-3.5 rounded-2xl flex flex-col justify-between">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="text-[0.6rem] font-mono text-white/50">NOTASI LANGKAH:</span>
-                        <span id="move-count" class="text-[0.6rem] font-mono text-gold">0 Langkah</span>
-                    </div>
-                    <div id="pgn-history" class="overflow-y-auto max-h-20 bg-black/40 p-2 rounded-xl text-[0.65rem] font-mono text-white/70 space-y-0.5 leading-snug">
-                        <span class="italic text-white/30">Belum ada langkah</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- FOOTER CITATION -->
-    <footer class="max-w-6xl mx-auto w-full mt-4 text-center">
-        <p class="text-[0.6rem] font-mono text-white/40">
-            Drosophila Connectome Architecture · Dorkenwald et al. (Nature 2024) · Princeton FlyWire Consortium · 100% Client-Side Physics
-        </p>
-    </footer>
-
-    <!-- INTERACTION LOGIC & SOUND SYNTHESIZER -->
+    <!-- LOGIC & CHESS ENGINE BRIDGE -->
     <script>
-        // Official Lichess Vector Pieces Mapping
         const PIECE_IMAGES = {
             'wP': './pieces/wP.svg', 'wN': './pieces/wN.svg', 'wB': './pieces/wB.svg',
             'wR': './pieces/wR.svg', 'wQ': './pieces/wQ.svg', 'wK': './pieces/wK.svg',
@@ -395,16 +425,13 @@
         let selectedSquare = null;
         let legalTargetSquares = [];
         let soundEnabled = true;
+        let pendingPromotion = null;
 
-        // Web Audio API Sound Synthesizer (Zero External Audio Files Needed)
+        // Sound Synthesizer via Web Audio API
         let audioCtx = null;
         function getAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             return audioCtx;
         }
 
@@ -419,7 +446,6 @@
                 gain.connect(ctx.destination);
 
                 if (type === 'move') {
-                    // Tactile Wood Click
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(320, now);
                     osc.frequency.exponentialRampToValueAtTime(140, now + 0.08);
@@ -428,7 +454,6 @@
                     osc.start(now);
                     osc.stop(now + 0.08);
                 } else if (type === 'capture') {
-                    // Heavy Snappy Capture Click
                     osc.type = 'square';
                     osc.frequency.setValueAtTime(480, now);
                     osc.frequency.exponentialRampToValueAtTime(160, now + 0.12);
@@ -437,7 +462,6 @@
                     osc.start(now);
                     osc.stop(now + 0.12);
                 } else if (type === 'check') {
-                    // Alert Chime
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(660, now);
                     osc.frequency.setValueAtTime(880, now + 0.08);
@@ -446,14 +470,31 @@
                     osc.start(now);
                     osc.stop(now + 0.25);
                 }
-            } catch (e) {
-                // AudioContext not allowed before user gesture
-            }
+            } catch (e) {}
         }
 
         window.toggleSound = () => {
             soundEnabled = !soundEnabled;
             document.getElementById('sound-icon').className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute text-white/40';
+        };
+
+        window.switchTab = (tabName) => {
+            const btnLog = document.getElementById('tab-btn-log');
+            const btnPgn = document.getElementById('tab-btn-pgn');
+            const bodyLog = document.getElementById('tab-body-log');
+            const bodyPgn = document.getElementById('tab-body-pgn');
+
+            if (tabName === 'log') {
+                btnLog.className = 'tab-btn active px-3 py-1 rounded-lg border border-transparent text-xs font-mono font-bold flex items-center gap-1.5';
+                btnPgn.className = 'tab-btn px-3 py-1 rounded-lg border border-transparent text-xs font-mono text-white/50 hover:text-white flex items-center gap-1.5';
+                bodyLog.classList.remove('hidden');
+                bodyPgn.classList.add('hidden');
+            } else {
+                btnPgn.className = 'tab-btn active px-3 py-1 rounded-lg border border-transparent text-xs font-mono font-bold flex items-center gap-1.5';
+                btnLog.className = 'tab-btn px-3 py-1 rounded-lg border border-transparent text-xs font-mono text-white/50 hover:text-white flex items-center gap-1.5';
+                bodyPgn.classList.remove('hidden');
+                bodyLog.classList.add('hidden');
+            }
         };
 
         const boardEl = document.getElementById('chessboard');
@@ -466,8 +507,8 @@
         const blackCapturedEl = document.getElementById('black-captured');
         const pgnHistoryEl = document.getElementById('pgn-history');
         const moveCountEl = document.getElementById('move-count');
+        const turnIndicatorEl = document.getElementById('turn-indicator');
 
-        // Render Initial Board with Vector SVGs & Coordinates
         function initBoardUI() {
             boardEl.innerHTML = '';
             const board = game.board();
@@ -483,7 +524,7 @@
                     sqEl.className = `sq ${(r + c) % 2 === 0 ? 'sq-light' : 'sq-dark'}`;
                     sqEl.dataset.square = sqId;
 
-                    // Coordinates on border squares
+                    // Coordinates
                     if (c === 0) {
                         const rankLabel = document.createElement('span');
                         rankLabel.className = 'coord-rank';
@@ -497,7 +538,7 @@
                         sqEl.appendChild(fileLabel);
                     }
 
-                    // Piece Vector Image
+                    // Vector Piece
                     const pieceObj = board[r][c];
                     if (pieceObj) {
                         const key = `${pieceObj.color}${pieceObj.type.toUpperCase()}`;
@@ -517,9 +558,10 @@
             updateCapturedPieces();
             updateHebbianUI();
             updateHistoryUI();
-        }
 
-        let pendingPromotion = null;
+            turnIndicatorEl.textContent = game.turn() === 'w' ? 'Giliranmu' : 'Lalat Berpikir...';
+            turnIndicatorEl.className = game.turn() === 'w' ? 'font-mono text-xs text-emerald-400 font-bold' : 'font-mono text-xs text-amber-400 font-bold';
+        }
 
         function isPromotionMove(from, to) {
             const piece = game.get(from);
@@ -534,10 +576,8 @@
 
             const piece = game.get(sqId);
 
-            // Execute move if clicking highlighted target
             if (selectedSquare && legalTargetSquares.includes(sqId)) {
                 if (isPromotionMove(selectedSquare, sqId)) {
-                    // Open promotion dialog!
                     pendingPromotion = { from: selectedSquare, to: sqId };
                     openPromotionModal('w');
                     return;
@@ -546,7 +586,6 @@
                 return;
             }
 
-            // Select White piece
             if (piece && piece.color === 'w') {
                 selectedSquare = sqId;
                 const moves = game.moves({ square: sqId, verbose: true });
@@ -561,21 +600,21 @@
             const modal = document.getElementById('promotion-modal');
             const options = document.getElementById('promotion-options');
             options.innerHTML = `
-                <button onclick="confirmPromotion('q')" class="glass-panel p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
-                    <img src="./pieces/${color}Q.svg" class="w-12 h-12 object-contain group-hover:scale-110 transition-transform">
-                    <span class="text-[0.6rem] font-mono text-gold font-bold">Menteri (Q)</span>
+                <button onclick="confirmPromotion('q')" class="deck-card p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
+                    <img src="./pieces/${color}Q.svg" class="w-11 h-11 object-contain group-hover:scale-110 transition-transform">
+                    <span class="text-[0.6rem] font-mono text-gold font-bold">Menteri</span>
                 </button>
-                <button onclick="confirmPromotion('n')" class="glass-panel p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
-                    <img src="./pieces/${color}N.svg" class="w-12 h-12 object-contain group-hover:scale-110 transition-transform">
-                    <span class="text-[0.6rem] font-mono text-gold font-bold">Kuda (N)</span>
+                <button onclick="confirmPromotion('n')" class="deck-card p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
+                    <img src="./pieces/${color}N.svg" class="w-11 h-11 object-contain group-hover:scale-110 transition-transform">
+                    <span class="text-[0.6rem] font-mono text-gold font-bold">Kuda</span>
                 </button>
-                <button onclick="confirmPromotion('r')" class="glass-panel p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
-                    <img src="./pieces/${color}R.svg" class="w-12 h-12 object-contain group-hover:scale-110 transition-transform">
-                    <span class="text-[0.6rem] font-mono text-gold font-bold">Benteng (R)</span>
+                <button onclick="confirmPromotion('r')" class="deck-card p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
+                    <img src="./pieces/${color}R.svg" class="w-11 h-11 object-contain group-hover:scale-110 transition-transform">
+                    <span class="text-[0.6rem] font-mono text-gold font-bold">Benteng</span>
                 </button>
-                <button onclick="confirmPromotion('b')" class="glass-panel p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
-                    <img src="./pieces/${color}B.svg" class="w-12 h-12 object-contain group-hover:scale-110 transition-transform">
-                    <span class="text-[0.6rem] font-mono text-gold font-bold">Gajah (B)</span>
+                <button onclick="confirmPromotion('b')" class="deck-card p-2.5 rounded-xl border border-gold/40 hover:border-gold hover:bg-gold/20 flex flex-col items-center gap-1.5 transition-all group active:scale-95">
+                    <img src="./pieces/${color}B.svg" class="w-11 h-11 object-contain group-hover:scale-110 transition-transform">
+                    <span class="text-[0.6rem] font-mono text-gold font-bold">Gajah</span>
                 </button>
             `;
             modal.classList.remove('hidden');
@@ -597,14 +636,13 @@
 
         window.undoMove = () => {
             if (game.history().length === 0) return;
-            // Undo Black's move and White's move
-            game.undo(); // Undos Black if it was White's turn
+            game.undo();
             if (game.turn() === 'b') {
-                game.undo(); // Undos White if it was Black's turn
+                game.undo();
             }
             clearSelection();
             initBoardUI();
-            thoughtLogEl.innerHTML = '⏪ Langkah ditarik kembali (Undo). Silakan pilih langkah alternatif.';
+            thoughtLogEl.innerHTML = '⏪ Langkah ditarik kembali (Undo). Silakan tentukan langkah baru.';
         };
 
         function clearSelection() {
@@ -626,11 +664,8 @@
                     const tEl = document.getElementById(`sq-${tSq}`);
                     if (tEl) {
                         const targetPiece = game.get(tSq);
-                        if (targetPiece) {
-                            tEl.classList.add('sq-target-capture');
-                        } else {
-                            tEl.classList.add('sq-target-empty');
-                        }
+                        if (targetPiece) tEl.classList.add('sq-target-capture');
+                        else tEl.classList.add('sq-target-empty');
                     }
                 });
             }
@@ -663,16 +698,14 @@
             initBoardUI();
             highlightLastMove(from, to);
 
-            // Play sound
             if (move.captured) playSound('capture');
             else if (game.in_check()) playSound('check');
             else playSound('move');
 
             if (checkGameOver()) return;
 
-            // Trigger Fly Brain
             flyStatusBadge.textContent = "SYNAPSES FIRING";
-            flyStatusBadge.className = "text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 animate-pulse";
+            flyStatusBadge.className = "text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 animate-pulse font-medium";
 
             setTimeout(runFlyBrainTurn, 400);
         }
@@ -691,18 +724,16 @@
             initBoardUI();
             highlightLastMove(executed.from, executed.to);
 
-            // Play sound
             if (executed.captured) playSound('capture');
             else if (game.in_check()) playSound('check');
             else playSound('move');
 
-            // Dopamine reinforcement feedback
             if (executed.captured) {
                 flyEngine.applyDopamineReinforcement(executed, true);
-                thoughtLogEl.innerHTML = `🪰 <strong class="text-emerald-400">DOPAMINE SURGE!</strong> Lalat menyambar bidak <strong>${executed.captured.toUpperCase()}</strong> di <strong>${executed.to}</strong>. Reseptor manis memicu +${telem.chosen.sugarStimulus}mV. Memori sinapsis diperkuat.`;
+                thoughtLogEl.innerHTML = `🪰 <strong class="text-emerald-400">DOPAMINE SURGE!</strong> Lalat menyambar bidak <strong>${executed.captured.toUpperCase()}</strong> di <strong>${executed.to}</strong>. Reseptor manis +${telem.chosen.sugarStimulus}mV. Memori sinapsis diperkuat.`;
             } else if (executed.san.includes('+')) {
                 flyEngine.applyDopamineReinforcement(executed, true);
-                thoughtLogEl.innerHTML = `🪰 <strong class="text-gold">SKAK!</strong> Manuver <strong>${executed.san}</strong> memicu lonjakan dopamin PAM cluster di Mushroom Body.`;
+                thoughtLogEl.innerHTML = `🪰 <strong class="text-gold">SKAK!</strong> Manuver <strong>${executed.san}</strong> memicu pelepasan dopamin di Mushroom Body.`;
             } else {
                 thoughtLogEl.innerHTML = `🪰 Memilih <strong>${executed.san}</strong> (${telem.chosen.netActionPotential} mV). Refleks terkuat dari ${telem.allCandidates.length} opsi saraf.`;
             }
@@ -710,7 +741,7 @@
             updateHebbianUI();
 
             flyStatusBadge.textContent = "READY";
-            flyStatusBadge.className = "text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400";
+            flyStatusBadge.className = "text-[0.55rem] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-medium";
 
             checkGameOver();
         }
@@ -749,7 +780,7 @@
             telem.allCandidates.slice(0, 8).forEach((cand, idx) => {
                 const isSelected = idx === 0;
                 const row = document.createElement('div');
-                row.className = `flex items-center justify-between p-1.5 rounded-lg border ${isSelected ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 font-bold' : 'bg-black/30 border-white/5 text-white/70'}`;
+                row.className = `flex items-center justify-between p-1.5 rounded-lg border ${isSelected ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 font-bold' : 'bg-black/40 border-white/5 text-white/70'}`;
                 
                 row.innerHTML = `
                     <div class="flex items-center gap-2">
@@ -759,7 +790,7 @@
                     </div>
                     <div class="flex items-center gap-3">
                         <span>${cand.netActionPotential} mV</span>
-                        <span class="text-[0.6rem] text-white/40">S:${cand.sugarStimulus} | L:${cand.bitterStimulus}</span>
+                        <span class="text-[0.55rem] text-white/40">S:${cand.sugarStimulus} | L:${cand.bitterStimulus}</span>
                     </div>
                 `;
                 candidateListEl.appendChild(row);
@@ -791,7 +822,6 @@
                 }
             }
 
-            // White captured (lost by black)
             whiteCapturedEl.innerHTML = '';
             for (const [type, count] of Object.entries(fullSet)) {
                 const lost = count - currentBlack[type];
@@ -805,12 +835,11 @@
             const whiteDiff = whiteScore - blackScore;
             if (whiteDiff > 0) {
                 const badge = document.createElement('span');
-                badge.className = 'text-[0.6rem] font-mono px-1 rounded bg-gold/20 text-gold font-bold ml-1';
+                badge.className = 'text-[0.55rem] font-mono px-1 rounded bg-gold/20 text-gold font-bold ml-1';
                 badge.textContent = `+${whiteDiff}`;
                 whiteCapturedEl.appendChild(badge);
             }
 
-            // Black captured (lost by white)
             blackCapturedEl.innerHTML = '';
             for (const [type, count] of Object.entries(fullSet)) {
                 const lost = count - currentWhite[type];
@@ -824,7 +853,7 @@
             const blackDiff = blackScore - whiteScore;
             if (blackDiff > 0) {
                 const badge = document.createElement('span');
-                badge.className = 'text-[0.6rem] font-mono px-1 rounded bg-emerald-500/20 text-emerald-400 font-bold ml-1';
+                badge.className = 'text-[0.55rem] font-mono px-1 rounded bg-emerald-500/20 text-emerald-400 font-bold ml-1';
                 badge.textContent = `+${blackDiff}`;
                 blackCapturedEl.appendChild(badge);
             }
@@ -896,7 +925,6 @@
             thoughtLogEl.innerHTML = '🧬 Memori Hebbian dikosongkan. Otak lalat kembali menjadi serangga yang baru menetas (*naive instinct*).';
         };
 
-        // Start
         initBoardUI();
     </script>
 </body>
